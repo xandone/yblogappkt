@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffd04b</color>
+    <color name="colorPrimaryDark">#f4ea2a</color>
+    <color name="colorAccent">#03DAC5</color>
+
+    <color name="app_bg_color">#F3F5F8</color>
+    <color name="normal_tv">#333</color>
+    <color name="light_tv">#555</color>
+    <color name="thin_tv">#999</color>
+    <color name="black_color">#000</color>
+    <color name="white_color">#fff</color>
+    <color name="enable_click_bg_color">#aaa</color>
+    <color name="btn_color">#236ee1</color>
+    <color name="btn_press_color">#408bff</color>
+    <color name="dividle_line_color">#e3e3e3</color>
+    <color name="hint_normal">#ccc</color>
+
+    <color name="chart_fill_color1">#6b5aeb</color>
+    <color name="chart_fill_color2">#34aadc</color>
+    <color name="chart_fill_color3">#ff9500</color>
+    <color name="chart_fill_color4">#ff3ebd</color>
+    <color name="chart_fill_color5">#ff4f3e</color>
+</resources>

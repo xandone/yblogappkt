@@ -1,0 +1,4 @@
+include ':widgetlib'
+include ':baselib'
+include ':app'
+rootProject.name = "yblogappkt"
