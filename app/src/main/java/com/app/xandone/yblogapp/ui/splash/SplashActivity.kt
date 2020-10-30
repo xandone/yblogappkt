@@ -53,34 +53,25 @@ class SplashActivity : BaseSimpleActivity(), PermissionCallbacks {
                 PermissionRequest.Builder(
                     this,
                     IMyPermission.RC_WRITE_AND_READ_PERM_CODE,
-                    *IMyPermission.WRITE_AND_READ_PERMS
-                )
+                    *IMyPermission.WRITE_AND_READ_PERMS)
                     .setRationale("需要以下权限")
                     .build()
             )
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    override fun onPermissionsGranted(
-        requestCode: Int,
-        perms: List<String>
-    ) {
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
         go2NextPage()
     }
 
-    override fun onPermissionsDenied(
-        requestCode: Int,
-        perms: List<String>
-    ) {
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             AppSettingsDialog.Builder(this).build().show()
         }

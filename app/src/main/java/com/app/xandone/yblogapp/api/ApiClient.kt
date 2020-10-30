@@ -35,8 +35,7 @@ class ApiClient {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
             builder.addInterceptor(loggingInterceptor)
         }
-        val cacheFile =
-            File(getAppCacheDir(App.sContext!!))
+        val cacheFile = File(getAppCacheDir(App.sContext!!))
         val cache = Cache(cacheFile, 1024 * 1024 * 50)
         val cacheInterceptor: Interceptor = object : Interceptor {
             @Throws(IOException::class)
@@ -90,7 +89,7 @@ class ApiClient {
         get() {
             var apiService: IApiService? = null
             if (retrofit != null) {
-                apiService = retrofit!!.create(IApiService::class.java)
+                apiService = retrofit?.create(IApiService::class.java)
             }
             return apiService
         }

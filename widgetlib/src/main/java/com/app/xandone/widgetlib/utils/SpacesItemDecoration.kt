@@ -36,12 +36,10 @@ class SpacesItemDecoration : ItemDecoration {
         this.itemSpaceV = SizeUtils.dp2px(context, itemSpaceV.toFloat())
     }
 
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
-    ) {
+    override fun getItemOffsets(outRect: Rect,
+                                view: View,
+                                parent: RecyclerView,
+                                state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
         outRect.top = itemSpaceV
         outRect.right = itemSpaceH

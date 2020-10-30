@@ -68,7 +68,9 @@ class BottomDialog : BaseBottomDialog() {
     }
 
     fun setTag(tag: String?): BottomDialog {
-        fragmentTag = tag
+        if (tag != null) {
+            fragmentTag = tag
+        }
         return this
     }
 

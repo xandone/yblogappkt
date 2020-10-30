@@ -15,11 +15,7 @@ object BaseConfig {
      * app名称
      */
     var appName: String? = null
-    fun init(
-        application: Application?,
-        appName: String?,
-        isDebug: Boolean
-    ) {
+    fun init(application: Application?, appName: String?, isDebug: Boolean) {
         BaseConfig.appName = appName
 
         //初始化日志库

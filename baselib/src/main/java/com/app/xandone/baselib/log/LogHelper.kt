@@ -22,10 +22,7 @@ class LogHelper private constructor() {
             logEngine = engineType
             if (logEngine == ENGINE_LOGGER) {
                 Logger.addLogAdapter(object : AndroidLogAdapter() {
-                    override fun isLoggable(
-                        priority: Int,
-                        tag: String?
-                    ): Boolean {
+                    override fun isLoggable(priority: Int, tag: String?): Boolean {
                         return isLoggable
                     }
                 })

@@ -19,10 +19,7 @@ object JsonUtils {
         return GSON.toJson(o)
     }
 
-    fun <E> json2List(
-        json: String?,
-        type: Type?
-    ): MutableList<E>? {
+    fun <E> json2List(json: String?, type: Type?): MutableList<E>? {
         return try {
             GSON.fromJson(json, type)
         } catch (e: Exception) {

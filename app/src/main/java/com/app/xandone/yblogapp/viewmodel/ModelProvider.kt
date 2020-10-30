@@ -14,8 +14,7 @@ object ModelProvider {
     fun <T : BaseViewModel> getModel(
         activity: FragmentActivity,
         viewModel: Class<T>,
-        application: Application?
-    ): T {
+        application: Application?): T {
         return ViewModelProvider(activity, AndroidViewModelFactory(application!!))[viewModel]
             .attachLifecycleOwner(activity)
     }

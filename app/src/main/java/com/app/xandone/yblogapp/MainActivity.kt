@@ -37,7 +37,7 @@ class MainActivity : BaseSimpleActivity() {
 
     fun turn2Fragment(index: Int) {
         val toFragment = fragments[index]
-        val ft =supportFragmentManager.beginTransaction()
+        val ft = supportFragmentManager.beginTransaction()
         if (mCurrentFragment != null) {
             ft.hide(mCurrentFragment!!)
         }

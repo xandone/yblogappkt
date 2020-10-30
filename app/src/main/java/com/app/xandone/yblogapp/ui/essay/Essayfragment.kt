@@ -50,48 +50,32 @@ class Essayfragment : BaseListFragment() {
         datas = ArrayList()
         bannerList = ArrayList()
         mAdapter = object :
-            BaseQuickAdapter<EssayArticleBean, BaseViewHolder>(
-                R.layout.item_essay_list, datas
-            ) {
-            override fun convert(
-                baseViewHolder: BaseViewHolder,
-                essayArticleBean: EssayArticleBean
-            ) {
+            BaseQuickAdapter<EssayArticleBean, BaseViewHolder>(R.layout.item_essay_list, datas) {
+            override fun convert(baseViewHolder: BaseViewHolder,
+                                 essayArticleBean: EssayArticleBean) {
                 baseViewHolder.setText(R.id.essay_title_tv, essayArticleBean.title)
                 baseViewHolder.setText(R.id.essay_content_tv, essayArticleBean.content)
                 baseViewHolder.setText(R.id.essay_date_tv, essayArticleBean.postTime)
-                val codeCoverImg =
-                    baseViewHolder.getView<ImageView>(R.id.essay_cover_img)
-                val imgRecycler =
-                    baseViewHolder.getView<RecyclerView>(R.id.img_recycler)
-                val coverData =
-                    json2List<String>(
-                        essayArticleBean.coverImg,
-                        object :
-                            TypeToken<List<String?>?>() {}.type
-                    )
+                val codeCoverImg = baseViewHolder.getView<ImageView>(R.id.essay_cover_img)
+                val imgRecycler = baseViewHolder.getView<RecyclerView>(R.id.img_recycler)
+                val coverData = json2List<String>(
+                    essayArticleBean.coverImg,
+                    object : TypeToken<List<String?>?>() {}.type
+                )
                 if (coverData == null || coverData.isEmpty()) {
                     codeCoverImg.visibility = View.GONE
                     imgRecycler.visibility = View.GONE
                 } else if (coverData.size == 1) {
                     codeCoverImg.visibility = View.VISIBLE
                     imgRecycler.visibility = View.GONE
-                    ImageLoadHelper.instance
-                        .display(App.Companion.sContext, coverData[0], codeCoverImg)
+                    ImageLoadHelper.instance.display(App.sContext, coverData[0], codeCoverImg)
                 } else {
                     codeCoverImg.visibility = View.GONE
                     imgRecycler.visibility = View.VISIBLE
                     val imgAdapter: BaseQuickAdapter<String, BaseViewHolder> = object :
-                        BaseQuickAdapter<String, BaseViewHolder>(
-                            R.layout.item_img,
-                            coverData
-                        ) {
-                        protected override fun convert(
-                            baseViewHolder: BaseViewHolder,
-                            s: String
-                        ) {
-                            val img =
-                                baseViewHolder.getView<ImageView>(R.id.item_essay_cover_img)
+                        BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_img, coverData) {
+                        override fun convert(baseViewHolder: BaseViewHolder, s: String) {
+                            val img = baseViewHolder.getView<ImageView>(R.id.item_essay_cover_img)
                             ImageLoadHelper.instance.display(App.sContext, s, img)
                         }
                     }

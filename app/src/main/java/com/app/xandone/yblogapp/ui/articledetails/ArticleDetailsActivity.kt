@@ -38,6 +38,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.io.File
 import java.util.*
+import kotlinx.android.synthetic.main.act_article_details.*
 
 /**
  * author: Admin
@@ -45,17 +46,15 @@ import java.util.*
  * description:
  */
 class ArticleDetailsActivity : BaseWallActivity() {
-    @BindView(R.id.webView)
-    lateinit var webView: WebView
-    private var detailsModel: IArtDetailsModel<*>? = null
+    private lateinit var detailsModel: IArtDetailsModel<*>
     private var mId: String? = null
     private var mType = 0
     private var mTitle: String? = null
     private var transfer: Transferee? = null
     private var urls: MutableList<String>? = null
     private var task: DownloadTask? = null
-    private var mDownloadListener: DownloadListener? = null
-    private var downloadDialog: BottomDialog? = null
+    private lateinit var mDownloadListener: DownloadListener
+    private lateinit var downloadDialog: BottomDialog
     override fun getLayout(): Int {
         return R.layout.act_article_details
     }
@@ -79,13 +78,13 @@ class ArticleDetailsActivity : BaseWallActivity() {
             ModelProvider.getModel(
                 this,
                 CodeDetailsModel::class.java,
-                App.Companion.sContext
+                App.sContext
             )
         } else {
             ModelProvider.getModel(
                 this,
                 EssayDetailsModel::class.java,
-                App.Companion.sContext
+                App.sContext
             )
         }
         requestData()
@@ -93,7 +92,7 @@ class ArticleDetailsActivity : BaseWallActivity() {
 
     override fun requestData() {
         if (mType == TYPE_CODE) {
-            (detailsModel!! as CodeDetailsModel).getDetails(
+            (detailsModel as CodeDetailsModel).getDetails(
                 mId,
                 object : IRequestCallback<CodeDetailsBean> {
                     override fun success(codeDetailsBean: CodeDetailsBean) {
@@ -101,7 +100,7 @@ class ArticleDetailsActivity : BaseWallActivity() {
                             "<pre",
                             "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
                         )
-                        webView!!.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+                        webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
                         onLoadFinish()
                     }
 
@@ -110,15 +109,15 @@ class ArticleDetailsActivity : BaseWallActivity() {
                     }
                 })
         } else {
-            (detailsModel!! as EssayDetailsModel).getDetails(
+            (detailsModel as EssayDetailsModel).getDetails(
                 mId,
                 object : IRequestCallback<EssayDetailsBean> {
                     override fun success(essayDetailsBean: EssayDetailsBean) {
-                        val html = essayDetailsBean?.contentHtml!!.replace(
+                        val html = essayDetailsBean.contentHtml!!.replace(
                             "<pre",
                             "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
                         )
-                        webView!!.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+                        webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
                         onLoadFinish()
                     }
 
@@ -131,7 +130,7 @@ class ArticleDetailsActivity : BaseWallActivity() {
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     private fun initWebView() {
-        val ws = webView!!.settings
+        val ws = webView.settings
         //        // 网页内容的宽度是否可大于WebView控件的宽度
 //        ws.setLoadWithOverviewMode(false);
 //        // 是否应该支持使用其屏幕缩放控件和手势缩放
@@ -145,7 +144,7 @@ class ArticleDetailsActivity : BaseWallActivity() {
 //        // 排版适应屏幕
 //        ws.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         ws.javaScriptEnabled = true
-        webView!!.addJavascriptInterface(this, "imgClick")
+        webView.addJavascriptInterface(this, "imgClick")
 
         // webview从5.0开始默认不允许混合模式,https中不能加载http资源,需要设置开启。
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -155,9 +154,9 @@ class ArticleDetailsActivity : BaseWallActivity() {
         //修改图片大小
         val screenWidth = AppConfig.SCREEN_WIDTH
         val width =
-            (px2dp(App.Companion.sContext!!, screenWidth.toFloat()) - 20).toString()
+            (px2dp(App.sContext!!, screenWidth.toFloat()) - 20).toString()
         //        int fonsSize = SizeUtils.sp2px(App.sContext, 14);
-        webView!!.webViewClient = object : WebViewClient() {
+        webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 val javascript = "javascript:function ResizeImages() {" +
@@ -229,7 +228,7 @@ class ArticleDetailsActivity : BaseWallActivity() {
                                 else -> {
                                 }
                             }
-                            downloadDialog!!.dismiss()
+                            downloadDialog.dismiss()
                         }
                     v!!.findViewById<View>(R.id.save_img_tv).setOnClickListener(listener)
                     v.findViewById<View>(R.id.cache_img_tv)
@@ -238,15 +237,15 @@ class ArticleDetailsActivity : BaseWallActivity() {
             })
             .setLayoutRes(R.layout.dialog_download_img)
             .setDimAmount(0.6f)
-            .setHeight(dp2px(App.Companion.sContext!!, 200f))
+            .setHeight(dp2px(App.sContext!!, 200f))
             .setTag("BottomDialog")
-        downloadDialog!!.show()
+        downloadDialog.show()
     }
 
     private fun downloadImg(url: String) {
         task = DownloadTask.Builder(
             url,
-            File(getImageCache(App.Companion.sContext!!))
+            File(getImageCache(App.sContext!!))
         )
             .setFilename(
                 System.currentTimeMillis().toString() + ".jpg"
@@ -329,7 +328,7 @@ class ArticleDetailsActivity : BaseWallActivity() {
             ) {
                 LogHelper.d("image download taskEnd fileName=" + task.filename)
                 saveFile2SdCard(
-                    App.Companion.sContext!!,
+                    App.sContext!!,
                     task.file!!,
                     "yblog"
                 )

@@ -17,7 +17,6 @@ import com.app.xandone.yblogapp.model.event.SwitchEvent
 import com.app.xandone.yblogapp.rx.IRequestCallback
 import com.app.xandone.yblogapp.utils.LineValueFormatter
 import com.app.xandone.yblogapp.viewmodel.ModelProvider
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -51,7 +50,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
         managerChartModel = ModelProvider.getModel(
             this,
             ManagerChartModel::class.java,
-            App.Companion.sContext
+            App.sContext
         )
         requestData()
     }
@@ -73,7 +72,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
                         list1,
                         list3,
                         "lable_1",
-                        ContextCompat.getColor(App.Companion.sContext!!, R.color.chart_fill_color1),
+                        ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color1),
                         true,
                         R.drawable.fade_fill_blue
                     )
@@ -81,7 +80,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
                         list2,
                         list3,
                         "lable_2",
-                        ContextCompat.getColor(App.Companion.sContext!!, R.color.chart_fill_color3),
+                        ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color3),
                         true,
                         R.drawable.fade_fill_yellow
                     )
@@ -205,10 +204,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
         chart1.data = mLineData
     }
 
-    override fun onValueSelected(
-        e: Entry,
-        h: Highlight
-    ) {
+    override fun onValueSelected(e: Entry, h: Highlight) {
     }
 
     override fun onNothingSelected() {}

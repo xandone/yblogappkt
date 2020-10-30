@@ -12,8 +12,7 @@ import java.util.*
  */
 class KeyboardWatcher @JvmOverloads constructor(
     private val activityRootView: View,
-    var isSoftKeyboardOpened: Boolean = false
-) : OnGlobalLayoutListener {
+    var isSoftKeyboardOpened: Boolean = false) : OnGlobalLayoutListener {
     interface SoftKeyboardStateListener {
         fun onSoftKeyboardOpened(keyboardHeightInPx: Int)
         fun onSoftKeyboardClosed()

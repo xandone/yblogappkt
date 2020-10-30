@@ -23,19 +23,14 @@ class GlideLoader private constructor() : AbstractImageLoader(), IEngine<Request
         }
     }
 
-    override fun loadSource(
-        context: Context?,
-        file: Any?,
-        callback: SourceCallback?
-    ) {
+    override fun loadSource(context: Context?, file: Any?, callback: SourceCallback?) {
         callback?.onStart()
         Glide.with(context!!).download(file).listener(object : RequestListener<File?> {
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any,
                 target: Target<File?>,
-                isFirstResource: Boolean
-            ): Boolean {
+                isFirstResource: Boolean): Boolean {
                 callback?.onDelivered(false, null)
                 return false
             }

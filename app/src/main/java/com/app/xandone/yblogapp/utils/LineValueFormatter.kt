@@ -8,10 +8,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
  * created on: 2020/10/22 10:37
  * description:
  */
-class LineValueFormatter(
-    private val mLabels: List<Int>,
-    private val xAxisValues: List<Int>?
-) : ValueFormatter() {
+class LineValueFormatter(private val mLabels: List<Int>, private val xAxisValues: List<Int>?) :
+    ValueFormatter() {
     override fun getPointLabel(entry: Entry): String {
         return mLabels[getIndex(entry.x)].toString() + ""
     }

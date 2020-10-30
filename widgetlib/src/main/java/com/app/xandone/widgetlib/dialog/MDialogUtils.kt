@@ -11,13 +11,9 @@ import com.app.xandone.widgetlib.R
  * description:
  */
 object MDialogUtils {
-    fun showSimpleDialog(
-        context: Context?,
-        content: String?,
-        listener: MDialogOnclickListener
-    ) {
-        MaterialDialog.Builder(context!!)
-            .content(content!!)
+    fun showSimpleDialog(context: Context, content: String, listener: MDialogOnclickListener) {
+        MaterialDialog.Builder(context)
+            .content(content)
             .title(R.string.dialog_title)
             .negativeText(R.string.cancle)
             .positiveText(R.string.confirm)

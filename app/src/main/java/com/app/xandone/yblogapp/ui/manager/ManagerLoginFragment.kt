@@ -5,10 +5,6 @@ import android.text.TextUtils
 import android.view.View
 import android.view.Window
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.EditText
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.constraintlayout.widget.ConstraintLayout
-import butterknife.BindView
 import butterknife.OnClick
 import com.app.xandone.baselib.base.BaseFrament
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
@@ -37,23 +33,22 @@ import kotlinx.android.synthetic.main.frag_manager_login.*
  * description:
  */
 class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
-    private var keyboardWatcher: KeyboardWatcher? = null
-    private var managerModel: ManagerModel? = null
+    private lateinit var keyboardWatcher: KeyboardWatcher
+    private lateinit var managerModel: ManagerModel
     override fun getLayout(): Int {
         return R.layout.frag_manager_login
     }
 
     override fun init(view: View?) {
-        keyboardWatcher =
-            KeyboardWatcher(mActivity!!.findViewById(Window.ID_ANDROID_CONTENT))
-        keyboardWatcher!!.addSoftKeyboardStateListener(this)
+        keyboardWatcher =KeyboardWatcher(mActivity.findViewById(Window.ID_ANDROID_CONTENT))
+        keyboardWatcher.addSoftKeyboardStateListener(this)
     }
 
     override fun initDataObserver() {
         managerModel = ModelProvider.getModel(
             mActivity,
             ManagerModel::class.java,
-            App.Companion.sContext
+            App.sContext
         )
     }
 
@@ -69,16 +64,16 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
     private fun login() {
         val name = login_account_et.text.toString()
         var psw: String? = login_psw_et.text.toString()
-        if (TextUtils.isEmpty(name)) {
+        if (name.isEmpty()) {
             showShort("请输入账户")
             return
         }
-        if (TextUtils.isEmpty(psw)) {
+        if (name.isEmpty()) {
             showShort("请输入密码")
             return
         }
         psw = MD5(psw!!)
-        managerModel!!.login(
+        managerModel.login(
             name,
             psw,
             object : IRequestCallback<AdminBean> {
@@ -101,7 +96,7 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
      */
     private fun savaLoginInfo(adminBean: AdminBean) {
         save2DefaultSp(
-            App.Companion.sContext!!,
+            App.sContext!!,
             OSpKey.ADMIN_INFO_KEY,
             obj2Json(adminBean)
         )
@@ -139,6 +134,6 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        keyboardWatcher!!.removeSoftKeyboardStateListener(this)
+        keyboardWatcher.removeSoftKeyboardStateListener(this)
     }
 }

@@ -61,12 +61,12 @@ class CodeListFragment : BaseListFragment() {
                 } else {
                     codeCoverImg.visibility = View.VISIBLE
                     ImageLoadHelper.instance
-                        .display(App.Companion.sContext, codeArticleBean.coverImg, codeCoverImg)
+                        .display(App.sContext, codeArticleBean.coverImg, codeCoverImg)
                 }
             }
         }
         recycler.layoutManager = LinearLayoutManager(mActivity)
-        recycler.addItemDecoration(SpacesItemDecoration(App.Companion.sContext!!, 10, 10, 10))
+        recycler.addItemDecoration(SpacesItemDecoration(App.sContext!!, 10, 10, 10))
         recycler.adapter = mAdapter
         mAdapter.setOnItemClickListener(OnItemClickListener { adapter, view, position ->
             startActivity(
@@ -137,7 +137,6 @@ class CodeListFragment : BaseListFragment() {
     }
 
     override fun getDataMore() {
-        LogHelper.d("getDataMore.....")
         mPage++
         getCodeDatas(true)
     }

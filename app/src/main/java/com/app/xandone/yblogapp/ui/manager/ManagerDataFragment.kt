@@ -54,7 +54,7 @@ class ManagerDataFragment : BaseWallFragment() {
         showSimpleDialog(mActivity, "是否退出登录？", object : MDialogOnclickListener() {
             override fun onConfirm() {
                 EventBus.getDefault().post(SwitchEvent(SwitchEvent.MANAGER_LOGIN_RAG))
-                clearDefaultSp(App.Companion.sContext!!, OSpKey.ADMIN_INFO_KEY)
+                clearDefaultSp(App.sContext!!, OSpKey.ADMIN_INFO_KEY)
             }
         })
     }

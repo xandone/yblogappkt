@@ -25,7 +25,7 @@ class SettingActivity : BaseWallActivity() {
 
     public override fun wallInit() {
         try {
-            all_cache_size_tv.text = getTotalCacheSize(App.Companion.sContext!!)
+            all_cache_size_tv.text = getTotalCacheSize(App.sContext!!)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -47,7 +47,7 @@ class SettingActivity : BaseWallActivity() {
     private fun clearSettingInfo() {
         showSimpleDialog(this, "是否清除配置信息?", object : MDialogOnclickListener() {
             override fun onConfirm() {
-                clearDefaultSp(App.Companion.sContext!!, OSpKey.CODE_TYPE_KEY)
+                clearDefaultSp(App.sContext!!, OSpKey.CODE_TYPE_KEY)
                 showShort("清除完成")
             }
         })
@@ -56,7 +56,7 @@ class SettingActivity : BaseWallActivity() {
     private fun clearAllCache() {
         showSimpleDialog(this, "是否清除所有缓存文件?", object : MDialogOnclickListener() {
             override fun onConfirm() {
-                clearExternalFilesDir(App.Companion.sContext!!)
+                clearExternalFilesDir(App.sContext!!)
                 all_cache_size_tv.text = "0KB"
                 showShort("清除完成")
             }

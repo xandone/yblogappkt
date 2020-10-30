@@ -35,8 +35,7 @@ class ManagerFragment : BaseWallFragment() {
      * 自动检测缓存的Admin信息
      */
     private fun autoCheckAdminInfo() {
-        val adminJson =
-            getDefaultString(App.sContext!!, OSpKey.ADMIN_INFO_KEY)
+        val adminJson = getDefaultString(App.sContext!!, OSpKey.ADMIN_INFO_KEY)
         if (TextUtils.isEmpty(adminJson)) {
             showInitView()
             return
@@ -48,12 +47,15 @@ class ManagerFragment : BaseWallFragment() {
     }
 
     private fun showInitView() {
-        childFragmentManager.beginTransaction().replace(R.id.main_fl, ManagerLoginFragment())
+        childFragmentManager.beginTransaction()
+            .replace(R.id.main_fl, ManagerLoginFragment())
             .commit()
     }
 
     private fun switchFragment(fragment: Fragment) {
-        childFragmentManager.beginTransaction().replace(R.id.main_fl, fragment).commit()
+        childFragmentManager.beginTransaction()
+            .replace(R.id.main_fl, fragment)
+            .commit()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

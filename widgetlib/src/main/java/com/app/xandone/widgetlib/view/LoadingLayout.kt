@@ -16,11 +16,11 @@ import com.app.xandone.widgetlib.R
  * created on: 2020/8/13 16:29
  * description:
  */
-class LoadingLayout @JvmOverloads constructor(
-    private val mContext: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : LinearLayout(mContext, attrs, defStyleAttr) {
+class LoadingLayout @JvmOverloads constructor(private val mContext: Context,
+                                              attrs: AttributeSet? = null,
+                                              defStyleAttr: Int = 0) :
+    LinearLayout(mContext, attrs, defStyleAttr) {
+
     private lateinit var img_tip_logo: ImageView
     private lateinit var progressBar: ProgressBar
     private lateinit var tv_tips: TextView

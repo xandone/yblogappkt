@@ -8,7 +8,7 @@
         android:id="@+id/lock_iv"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:src="@mipmap/lock_ic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

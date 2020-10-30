@@ -26,11 +26,7 @@ object ImageUtils {
      * @param saveDirName picture子目录
      * @return 成功或者失败
      */
-    fun saveFile2SdCard(
-        context: Context,
-        sourceFile: File,
-        saveDirName: String
-    ) {
+    fun saveFile2SdCard(context: Context, sourceFile: File, saveDirName: String) {
         val mimeType = getMimeType(sourceFile)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val fileName = sourceFile.name
@@ -64,11 +60,9 @@ object ImageUtils {
                 closeIo(out!!, fis!!)
             }
         } else {
-            MediaScannerConnection.scanFile(
-                context,
+            MediaScannerConnection.scanFile(context,
                 arrayOf(sourceFile.path),
-                arrayOf(mimeType)
-            ) { path, uri -> }
+                arrayOf(mimeType)) { path, uri -> }
             ToastUtils.showShort("已保存至相册")
         }
     }

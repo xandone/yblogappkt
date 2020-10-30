@@ -35,7 +35,7 @@ class CodeEditTextView : AppCompatEditText, View.OnClickListener {
 
     private fun init(context: Context) {
         paint = Paint()
-        paint!!.isAntiAlias = true
+        paint?.isAntiAlias = true
         lineWidth = dp2px(context, 2f).toFloat()
         mLineColor = Color.BLACK
         mLineColorFilled = Color.BLACK
@@ -52,20 +52,20 @@ class CodeEditTextView : AppCompatEditText, View.OnClickListener {
     }
 
     override fun onDraw(canvas: Canvas) {
-        paint!!.color = mBgColor
-        paint!!.style = Paint.Style.FILL
+        paint?.color = mBgColor
+        paint?.style = Paint.Style.FILL
         canvas.drawRoundRect(rectF, height / 2.toFloat(), height / 2.toFloat(), paint!!)
-        paint!!.style = Paint.Style.FILL
-        paint!!.strokeWidth = 0f
-        paint!!.textSize = textSize
-        paint!!.color = textColors.defaultColor
+        paint?.style = Paint.Style.FILL
+        paint?.strokeWidth = 0f
+        paint?.textSize = textSize
+        paint?.color = textColors.defaultColor
         val chars: CharArray
         var len = 0
         if (text != null) {
             chars = text.toString().toCharArray()
             len = chars.size
             for (i in 0 until len) {
-                paint!!.getTextBounds(chars, i, 1, bounds)
+                paint?.getTextBounds(chars, i, 1, bounds)
                 canvas.drawText(
                     chars,
                     i,
@@ -76,13 +76,13 @@ class CodeEditTextView : AppCompatEditText, View.OnClickListener {
                 )
             }
         }
-        paint!!.color = mLineColor
-        paint!!.strokeWidth = lineWidth
+        paint?.color = mLineColor
+        paint?.strokeWidth = lineWidth
         for (i in 0 until MAX_LENTH) {
             if (i == 0 || i < len) {
-                paint!!.color = mLineColorFilled
+                paint?.color = mLineColorFilled
             } else {
-                paint!!.color = mLineColor
+                paint?.color = mLineColor
             }
             canvas.drawLine(
                 (paddingHorizontal + lineSpace) * i + paddingHorizontal,
@@ -95,8 +95,8 @@ class CodeEditTextView : AppCompatEditText, View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        val index = if (text == null) 0 else text!!.length
-        setSelection(index)
+        val index = if (text == null) 0 else text?.length
+        setSelection(index!!)
     }
 
     fun dp2px(context: Context, dpValue: Float): Int {

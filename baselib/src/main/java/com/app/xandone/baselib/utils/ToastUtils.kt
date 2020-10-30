@@ -55,12 +55,10 @@ object ToastUtils {
         if (toast_2 == null) {
             toast_2 = Toast(app)
         }
-        val view: View =
-            LayoutInflater.from(app).inflate(R.layout.toast_custom, null)
+        val view: View =LayoutInflater.from(app).inflate(R.layout.toast_custom, null)
         val tv = view.findViewById<View>(R.id.toast_custom_tv) as TextView
         tv.text = if (TextUtils.isEmpty(tvStr)) "" else tvStr
-        val iv =
-            view.findViewById<View>(R.id.toast_custom_iv) as ImageView
+        val iv =view.findViewById<View>(R.id.toast_custom_iv) as ImageView
         if (imageResource > 0) {
             iv.visibility = View.VISIBLE
             iv.setImageResource(imageResource)

@@ -21,21 +21,13 @@ class ImageLoadHelper private constructor() : IImageLoader<ImageView> {
         }
     }
 
-    override fun display(
-        context: Context?,
-        file: Any?,
-        view: ImageView
-    ) {
+    override fun display(context: Context?, file: Any?, view: ImageView) {
         if (imageLoader != null) {
             imageLoader!!.display(context, file, view)
         }
     }
 
-    override fun loadSource(
-        context: Context?,
-        file: Any?,
-        callback: SourceCallback?
-    ) {
+    override fun loadSource(context: Context?, file: Any?, callback: SourceCallback?) {
         if (imageLoader != null) {
             imageLoader!!.loadSource(context, file, callback)
         }

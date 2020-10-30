@@ -43,14 +43,11 @@ abstract class BaseBottomDialog : DialogFragment() {
         window.attributes = params
     }
 
-    open val height: Int
-        get() = -1
+    open val height = -1
 
-    open val cancelOutside: Boolean
-        get() = true
+    open val cancelOutside = true
 
-    open val fragmentTag: String?
-        get() = TAG
+    open val fragmentTag = TAG
 
     /**
      * 获取主题
@@ -58,24 +55,21 @@ abstract class BaseBottomDialog : DialogFragment() {
      * @return
      */
     @get:StyleRes
-    val styleRes: Int
-        get() = R.style.bottomDialog_style
+    val styleRes = R.style.bottomDialog_style
 
     /**
      * 获取对齐方式
      *
      * @return
      */
-    val gravity: Int
-        get() = Gravity.BOTTOM
+    val gravity = Gravity.BOTTOM
 
     /**
      * 对话框宽度
      *
      * @return
      */
-    val width: Int
-        get() = WindowManager.LayoutParams.MATCH_PARENT
+    val width = WindowManager.LayoutParams.MATCH_PARENT
 
     fun show(fragmentManager: FragmentManager?) {
         show(fragmentManager!!, fragmentTag)

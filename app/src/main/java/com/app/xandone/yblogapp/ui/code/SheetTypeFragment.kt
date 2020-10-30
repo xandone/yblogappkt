@@ -84,7 +84,7 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
         removeTypes = ArrayList(arguments!!.getParcelableArrayList(OConstantKey.DATA2))
         initItemTouchHelper()
         type_recycler.layoutManager = GridLayoutManager(activity, 3)
-        type_recycler.addItemDecoration(SpacesItemDecoration(App.Companion.sContext!!, 10, 10, 10))
+        type_recycler.addItemDecoration(SpacesItemDecoration(App.sContext!!, 10, 10, 10))
         mAdapter = DelegateMultiAdapter(types)
         mAdapter.addChildClickViewIds(R.id.type_del_iv)
         mAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
@@ -103,7 +103,7 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
         type_remove_recycler.layoutManager = GridLayoutManager(activity, 3)
         type_remove_recycler.addItemDecoration(
             SpacesItemDecoration(
-                App.Companion.sContext!!,
+                App.sContext!!,
                 10,
                 10,
                 10
@@ -138,7 +138,7 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
      */
     private fun save2Cache() {
         save2DefaultSp(
-            App.Companion.sContext!!,
+            App.sContext!!,
             OSpKey.CODE_TYPE_KEY,
             obj2Json(types)
         )
@@ -164,7 +164,7 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
 
     private fun loadShakeAnim(view: View) {
         val animation = AnimationUtils.loadAnimation(
-            App.Companion.sContext,
+            App.sContext,
             R.anim.shake_anim
         )
         animation.interpolator = LinearInterpolator()

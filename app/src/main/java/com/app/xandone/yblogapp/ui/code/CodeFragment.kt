@@ -106,8 +106,7 @@ class CodeFragment : BaseWallFragment() {
                 context: Context,
                 index: Int
             ): IPagerTitleView {
-                val colorTransitionPagerTitleView =
-                    ColorTransitionPagerTitleView(context)
+                val colorTransitionPagerTitleView = ColorTransitionPagerTitleView(context)
                 colorTransitionPagerTitleView.normalColor = Color.GRAY
                 colorTransitionPagerTitleView.selectedColor = ContextCompat.getColor(
                     mActivity,
