@@ -1,6 +1,7 @@
 package com.app.xandone.yblogapp.api
 
 import androidx.lifecycle.MediatorLiveData
+import com.app.xandone.yblogapp.model.base.BaseResponse
 import com.app.xandone.yblogapp.model.bean.*
 import com.app.xandone.yblogapp.rx.IRequestCallback
 import io.reactivex.disposables.Disposable
@@ -29,11 +30,10 @@ interface IFetchArticle {
     fun getEssayDatas(
         page: Int,
         row: Int,
-        isLoadMore: Boolean,
-        callback: IRequestCallback<List<EssayArticleBean>>
+        callback: IRequestCallback<BaseResponse<List<EssayArticleBean>>>
     ): Disposable?
 
-    val essayArticleLiveData: MediatorLiveData<List<EssayArticleBean>>
+    val essayArticleLiveData: MediatorLiveData<BaseResponse<List<EssayArticleBean>>>
     fun getEssayDetails(
         id: String?,
         callback: IRequestCallback<EssayDetailsBean>

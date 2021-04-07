@@ -27,4 +27,12 @@ abstract class BaseListFragment : BaseWallFragment(), IRefreshCallback {
     override fun finishLoadMore() {
         refreshLayout.finishLoadMore()
     }
+
+    override fun finishLoadNoMoreData() {
+        refreshLayout.finishLoadMoreWithNoMoreData()
+    }
+
+    override fun unableLoadMore() {
+        refreshLayout.setEnableLoadMore(false)
+    }
 }

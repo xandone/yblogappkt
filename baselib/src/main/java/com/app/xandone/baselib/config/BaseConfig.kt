@@ -19,7 +19,7 @@ object BaseConfig {
         BaseConfig.appName = appName
 
         //初始化日志库
-        LogHelper.Companion.init(LogHelper.Companion.ENGINE_LOGGER, isDebug)
+        LogHelper.init(LogHelper.ENGINE_LOGGER, isDebug)
         //初始化图片加载引擎
         ImageLoadHelper.instance.initEngine(ImageLoadHelper.Companion.ENGINE_GLIDE)
         //初始化toast，主要是获取application

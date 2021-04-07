@@ -15,6 +15,6 @@ class EssayArticleBean {
     var postTime: String? = null
     var content: String? = null
     var contentHtml: String? = null
-    var isTopping = 0
+    var isTopping = false
 
 }

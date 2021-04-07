@@ -10,4 +10,11 @@ interface IRefreshCallback {
     fun getDataMore()
     fun finishRefresh()
     fun finishLoadMore()
+
+    fun finishLoadNoMoreData()
+
+    /**
+     * 不允许上拉
+     */
+    fun unableLoadMore()
 }

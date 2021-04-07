@@ -3,6 +3,7 @@ package com.app.xandone.yblogapp.model.repository
 import androidx.lifecycle.MediatorLiveData
 import com.app.xandone.yblogapp.api.ApiClient
 import com.app.xandone.yblogapp.api.IFetchArticle
+import com.app.xandone.yblogapp.model.base.BaseResponse
 import com.app.xandone.yblogapp.model.bean.*
 import com.app.xandone.yblogapp.rx.BaseSubscriber
 import com.app.xandone.yblogapp.rx.IRequestCallback
@@ -17,7 +18,8 @@ import io.reactivex.disposables.Disposable
 class CodeRepository : IFetchArticle {
     override val codeArticleLiveData: MediatorLiveData<List<CodeArticleBean>> = MediatorLiveData()
     override val codeDetailsLiveData: MediatorLiveData<CodeDetailsBean> = MediatorLiveData()
-    override val essayArticleLiveData: MediatorLiveData<List<EssayArticleBean>> = MediatorLiveData()
+    override val essayArticleLiveData: MediatorLiveData<BaseResponse<List<EssayArticleBean>>> =
+        MediatorLiveData()
     override val essayDetailsLiveData: MediatorLiveData<EssayDetailsBean> = MediatorLiveData()
     override val bannerLiveData: MediatorLiveData<List<BannerBean>> = MediatorLiveData()
     override val codeTypeLiveData: MediatorLiveData<List<CodeTypeBean>> = MediatorLiveData()
@@ -85,28 +87,17 @@ class CodeRepository : IFetchArticle {
     override fun getEssayDatas(
         page: Int,
         row: Int,
-        isLoadMore: Boolean,
-        callback: IRequestCallback<List<EssayArticleBean>>
+        callback: IRequestCallback<BaseResponse<List<EssayArticleBean>>>
     ): Disposable? {
         return ApiClient.instance
             ?.apiService
             ?.getEssayDatas(page, row)
             ?.compose(RxHelper.handleIO())
-            ?.compose<List<EssayArticleBean>>(RxHelper.handleRespose())
+            ?.compose(RxHelper.handleBaseResponse())
             ?.subscribeWith(object :
-                BaseSubscriber<List<EssayArticleBean>>() {
-                override fun onSuccess(beans: List<EssayArticleBean>) {
-                    if (essayArticleLiveData.value == null) {
-                        essayArticleLiveData.value = beans
-                        return
-                    }
-                    if (!isLoadMore) {
-                        essayArticleLiveData.setValue(beans)
-                    } else {
-                        val list = mutableListOf<EssayArticleBean>()
-                        list.addAll(essayArticleLiveData.value!!)
-                        essayArticleLiveData.setValue(list)
-                    }
+                BaseSubscriber<BaseResponse<List<EssayArticleBean>>>() {
+                override fun onSuccess(response: BaseResponse<List<EssayArticleBean>>) {
+                    essayArticleLiveData.value = response
                 }
 
                 override fun onFail(message: String?, code: Int) {
@@ -143,7 +134,7 @@ class CodeRepository : IFetchArticle {
     override fun getBannerDatas(callback: IRequestCallback<List<BannerBean>>): Disposable? {
         return ApiClient.instance
             ?.apiService
-            ?.bannerDatas
+            ?.bannerDatas()
             ?.compose(RxHelper.handleIO())
             ?.compose(RxHelper.handleRespose())
             ?.subscribeWith(object : BaseSubscriber<List<BannerBean>>() {
@@ -162,7 +153,7 @@ class CodeRepository : IFetchArticle {
     override fun getCodeTypeDatas(callback: IRequestCallback<List<CodeTypeBean>>): Disposable? {
         return ApiClient.instance
             ?.apiService
-            ?.codeTypeDatas
+            ?.codeTypeDatas()
             ?.compose(RxHelper.handleIO())
             ?.compose(RxHelper.handleRespose())
             ?.subscribeWith(object :

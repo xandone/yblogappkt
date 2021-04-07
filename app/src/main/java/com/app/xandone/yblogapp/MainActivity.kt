@@ -17,8 +17,8 @@ class MainActivity : BaseSimpleActivity() {
     }
 
     override fun init() {
-        val a = ATest()
-        lifecycle.addObserver(a)
+//        val a = ATest()
+//        lifecycle.addObserver(a)
         fragments = ArrayList()
         fragments.add(CodeFragment())
         fragments.add(Essayfragment.instance)

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.xandone.baselib.imageload.ImageLoadHelper
 import com.app.xandone.baselib.utils.JsonUtils.json2List
+import com.app.xandone.baselib.utils.SimpleUtils
 import com.app.xandone.widgetlib.utils.SizeUtils.dp2px
 import com.app.xandone.widgetlib.utils.SpacesItemDecoration
 import com.app.xandone.yblogapp.App
@@ -16,6 +17,7 @@ import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseListFragment
 import com.app.xandone.yblogapp.constant.OConstantKey
 import com.app.xandone.yblogapp.model.EssayModel
+import com.app.xandone.yblogapp.model.base.BaseResponse
 import com.app.xandone.yblogapp.model.bean.BannerBean
 import com.app.xandone.yblogapp.model.bean.EssayArticleBean
 import com.app.xandone.yblogapp.rx.IRequestCallback
@@ -32,6 +34,7 @@ import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener
 import kotlinx.android.synthetic.main.frag_base_list.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * author: Admin
@@ -44,7 +47,6 @@ class Essayfragment : BaseListFragment() {
     private lateinit var datas: ArrayList<EssayArticleBean>
     private lateinit var bannerAdapter: BannerImageAdapter<BannerBean>
     private lateinit var bannerList: ArrayList<BannerBean>
-    private var mPage = 1
     override fun init(view: View?) {
         super.init(view)
         datas = ArrayList()
@@ -154,13 +156,12 @@ class Essayfragment : BaseListFragment() {
     }
 
     override fun requestData() {
-        mPage = 1
-        getCodeDatas(false)
+        getCodeDatas(1, false)
         getBannerDatas()
     }
 
     private fun getBannerDatas() {
-        essayModel!!.getBannerDatas(object : IRequestCallback<List<BannerBean>> {
+        essayModel?.getBannerDatas(object : IRequestCallback<List<BannerBean>> {
             override fun success(bannerBeans: List<BannerBean>) {
                 bannerList.clear()
                 bannerList.addAll(bannerBeans)
@@ -171,23 +172,29 @@ class Essayfragment : BaseListFragment() {
         })
     }
 
-    private fun getCodeDatas(isLoadMore: Boolean) {
-        essayModel!!.getEssayDatas(
-            mPage,
+    private fun getCodeDatas(page: Int, isLoadMore: Boolean) {
+        essayModel?.getEssayDatas(
+            page,
             ROW,
-            isLoadMore,
-            object : IRequestCallback<List<EssayArticleBean>> {
-                override fun success(beans: List<EssayArticleBean>) {
-                    datas = beans as ArrayList<EssayArticleBean>
-                    mAdapter.setList(datas)
+            object : IRequestCallback<BaseResponse<List<EssayArticleBean>>> {
+                override fun success(response: BaseResponse<List<EssayArticleBean>>) {
                     onLoadFinish()
                     if (!isLoadMore) {
                         finishRefresh()
-                        if (beans.isEmpty()) {
+                        if (SimpleUtils.isEmpty(response.data)) {
                             onLoadEmpty()
+                            return
                         }
+                        datas = response.data as ArrayList<EssayArticleBean>
+                        mAdapter.setList(datas)
                     } else {
-                        finishLoadMore()
+                        datas.addAll(response.data as ArrayList<EssayArticleBean>)
+                        mAdapter.setList(datas)
+                        if (datas.size >= response.total) {
+                            finishLoadNoMoreData()
+                        } else {
+                            finishLoadMore()
+                        }
                     }
                 }
 
@@ -198,14 +205,12 @@ class Essayfragment : BaseListFragment() {
     }
 
     override fun getData() {
-        mPage = 1
-        getCodeDatas(false)
+        getCodeDatas(1, false)
         getBannerDatas()
     }
 
     override fun getDataMore() {
-        mPage++
-        getCodeDatas(true)
+        getCodeDatas(datas.size / ROW + 1, true)
     }
 
     companion object {

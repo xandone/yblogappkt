@@ -41,12 +41,12 @@ object RxHelper {
 //    }
 
     fun <T> handleRespose(): FlowableTransformer<BaseResponse<T>, T> {
-        return FlowableTransformer { flowable ->
-            flowable.flatMap { bean ->
-                if (bean.code == 200) {
-                    createData(bean.data)
+        return FlowableTransformer<BaseResponse<T>, T> { flowable ->
+            flowable.flatMap { response ->
+                if (response.code == OResponseCode.SUCCESS) {
+                    createData(response.data!!)
                 } else {
-                    Flowable.error(ApiException(bean.msg, bean.code))
+                    Flowable.error(ApiException(response.msg, response.code))
                 }
             }
         }

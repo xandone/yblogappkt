@@ -3,6 +3,7 @@ package com.app.xandone.yblogapp.model
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.app.xandone.yblogapp.api.IFetchArticle
+import com.app.xandone.yblogapp.model.base.BaseResponse
 import com.app.xandone.yblogapp.model.bean.BannerBean
 import com.app.xandone.yblogapp.model.bean.EssayArticleBean
 import com.app.xandone.yblogapp.model.repository.CodeRepository
@@ -16,14 +17,14 @@ import com.app.xandone.yblogapp.viewmodel.BaseViewModel
  */
 class EssayModel : BaseViewModel() {
     private var articleRepo: IFetchArticle? = null
-    private lateinit var callback: IRequestCallback<List<EssayArticleBean>>
+    private lateinit var callback: IRequestCallback<BaseResponse<List<EssayArticleBean>>>
     private lateinit var bannerCallback: IRequestCallback<List<BannerBean>>
     override fun onCreate(owner: LifecycleOwner?) {
         articleRepo = CodeRepository()
         if (owner != null) {
             (articleRepo as CodeRepository).essayArticleLiveData.observe(
                 owner,
-                Observer<List<EssayArticleBean>> { beans ->
+                Observer { beans ->
                     callback.success(beans)
                 })
         }
@@ -39,11 +40,10 @@ class EssayModel : BaseViewModel() {
     fun getEssayDatas(
         page: Int,
         row: Int,
-        isLoadMore: Boolean,
-        callback: IRequestCallback<List<EssayArticleBean>>
+        callback: IRequestCallback<BaseResponse<List<EssayArticleBean>>>
     ) {
         this.callback = callback
-        addSubscrible(articleRepo?.getEssayDatas(page, row, isLoadMore, callback))
+        addSubscrible(articleRepo?.getEssayDatas(page, row, callback))
     }
 
     fun getBannerDatas(callback: IRequestCallback<List<BannerBean>>) {

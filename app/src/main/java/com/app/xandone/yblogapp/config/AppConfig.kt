@@ -24,9 +24,6 @@ object AppConfig {
         val windowManager =
             context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val dm = DisplayMetrics()
-        if (windowManager == null) {
-            return
-        }
         val display = windowManager.defaultDisplay
         display.getMetrics(dm)
         SCREEN_WIDTH = dm.widthPixels

@@ -30,11 +30,11 @@ interface IApiService {
     @GET("essay/essayDetails")
     fun getEssayDetails(@Query("essayId") essayId: String?): Flowable<BaseResponse<List<EssayDetailsBean>>>
 
-    @get:GET("banner/list")
-    val bannerDatas: Flowable<BaseResponse<List<BannerBean>>>
+    @GET("banner/list")
+    fun bannerDatas(): Flowable<BaseResponse<List<BannerBean>>>
 
-    @get:GET("art/artTypeList")
-    val codeTypeDatas: Flowable<BaseResponse<List<CodeTypeBean>>>
+    @GET("art/artTypeList")
+    fun codeTypeDatas(): Flowable<BaseResponse<List<CodeTypeBean>>>
 
     @FormUrlEncoded
     @POST("admin/login")

@@ -2,11 +2,8 @@ package com.app.xandone.yblogapp.base
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.app.xandone.baselib.base.BaseActivity
 import com.app.xandone.widgetlib.view.LoadingLayout
 import com.app.xandone.widgetlib.view.LoadingLayout.OnReloadListener
@@ -20,12 +17,12 @@ import java.util.*
  * description:有加载状态页的基类Fragment
  */
 abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener {
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar
+    @SuppressLint("InflateParams")
     override fun initContentView() {
         val inflater = LayoutInflater.from(this)
-        val rootView = inflater.inflate(R.layout.act_base_wall, null) as ViewGroup
+        val rootView = inflater.inflate(R.layout.act_base_wall, null)
+        toolbar = rootView.findViewById(R.id.toolbar)
         val walFrame = rootView.findViewById<FrameLayout>(R.id.wall_frame)
         val params = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
