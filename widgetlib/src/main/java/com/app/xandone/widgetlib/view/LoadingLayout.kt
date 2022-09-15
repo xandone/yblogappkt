@@ -3,6 +3,7 @@ package com.app.xandone.widgetlib.view
 import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.ImageView
@@ -95,6 +96,7 @@ class LoadingLayout @JvmOverloads constructor(private val mContext: Context,
             else -> {
             }
         }
+        Log.e("fsdgsdfffff", "finisview+   ${this.visibility}")
     }
 
     private fun startProgress(context: Context) {
@@ -121,14 +123,12 @@ class LoadingLayout @JvmOverloads constructor(private val mContext: Context,
         this.onReloadListener = onReloadListener
     }
 
-    interface ILoadingStatus {
-        companion object {
-            const val NET_ERROR = 1
-            const val SERVER_ERROR = 2
-            const val EMPTY = 3
-            const val LOADING = 4
-            const val FINISH = 5
-        }
+    object ILoadingStatus {
+        const val NET_ERROR = 1
+        const val SERVER_ERROR = 2
+        const val EMPTY = 3
+        const val LOADING = 4
+        const val FINISH = 5
     }
 
     init {

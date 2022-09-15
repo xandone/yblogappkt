@@ -265,67 +265,55 @@ class ArticleDetailsActivity : BaseWallActivity() {
             ) {
             }
 
-            override fun connectTrialEnd(
-                task: DownloadTask,
-                responseCode: Int,
-                responseHeaderFields: Map<String, List<String>>
-            ) {
+            override fun connectTrialEnd(task: DownloadTask,
+                                         responseCode: Int,
+                                         responseHeaderFields: Map<String, List<String>>) {
             }
 
-            override fun downloadFromBeginning(
-                task: DownloadTask,
-                info: BreakpointInfo,
-                cause: ResumeFailedCause
-            ) {
+            override fun downloadFromBeginning(task: DownloadTask,
+                                               info: BreakpointInfo,
+                                               cause: ResumeFailedCause) {
             }
 
-            override fun downloadFromBreakpoint(
-                task: DownloadTask,
-                info: BreakpointInfo
-            ) {
+            override fun downloadFromBreakpoint(task: DownloadTask,
+                                                info: BreakpointInfo) {
             }
 
             override fun connectStart(
                 task: DownloadTask,
                 blockIndex: Int,
-                requestHeaderFields: Map<String, List<String>>
-            ) {
+                requestHeaderFields: Map<String, List<String>>) {
             }
 
             override fun connectEnd(
                 task: DownloadTask,
                 blockIndex: Int,
                 responseCode: Int,
-                responseHeaderFields: Map<String, List<String>>
-            ) {
+                responseHeaderFields: Map<String, List<String>>) {
             }
 
             override fun fetchStart(
                 task: DownloadTask,
                 blockIndex: Int,
-                contentLength: Long
-            ) {
+                contentLength: Long) {
             }
 
             override fun fetchProgress(
                 task: DownloadTask,
                 blockIndex: Int,
-                increaseBytes: Long
-            ) {
+                increaseBytes: Long) {
             }
 
             override fun fetchEnd(
                 task: DownloadTask,
                 blockIndex: Int,
-                contentLength: Long
-            ) {
+                contentLength: Long) {
             }
 
             override fun taskEnd(
                 task: DownloadTask,
                 cause: EndCause,
-                realCause: Exception?
-            ) {
+                realCause: Exception?) {
                 LogHelper.d("image download taskEnd fileName=" + task.filename)
                 saveFile2SdCard(
                     App.sContext!!,
