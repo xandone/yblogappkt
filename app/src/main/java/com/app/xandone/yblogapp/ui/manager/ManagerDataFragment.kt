@@ -3,8 +3,6 @@ package com.app.xandone.yblogapp.ui.manager
 import android.content.Intent
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import butterknife.BindView
-import butterknife.OnClick
 import com.app.xandone.baselib.cache.CacheHelper.clearDefaultSp
 import com.app.xandone.widgetlib.dialog.MDialogOnclickListener
 import com.app.xandone.widgetlib.dialog.MDialogUtils.showSimpleDialog
@@ -17,20 +15,31 @@ import com.app.xandone.yblogapp.ui.manager.chart.ChartDataActivity
 import com.app.xandone.yblogapp.ui.manager.setting.SettingActivity
 import org.greenrobot.eventbus.EventBus
 
+import kotlinx.android.synthetic.main.frag_manager_data.*
+
 /**
  * author: Admin
  * created on: 2020/9/27 11:02
  * description:
  */
-class ManagerDataFragment : BaseWallFragment() {
-    @BindView(R.id.toolbar)
-    lateinit var toolbar: Toolbar
+class ManagerDataFragment : BaseWallFragment(), View.OnClickListener {
+    private lateinit var toolbar: Toolbar
+
     override fun getLayout(): Int {
         return R.layout.frag_manager_data
     }
 
-    override fun init(view: View?) {
+    override fun initView(view: View) {
+        super.initView(view)
+
+        toolbar = view.findViewById(R.id.toolbar)
+
         setToolBar("管理系统")
+
+        setting_cl.setOnClickListener(this)
+        exit_btn.setOnClickListener(this)
+        chart_tip_cl.setOnClickListener(this)
+
         onLoadFinish()
     }
 
@@ -39,9 +48,8 @@ class ManagerDataFragment : BaseWallFragment() {
         toolbar.title = title
     }
 
-    @OnClick(R.id.setting_cl, R.id.exit_btn, R.id.chart_tip_cl)
-    fun click(view: View) {
-        when (view.id) {
+    override fun onClick(v: View?) {
+        when (v?.id) {
             R.id.chart_tip_cl -> startActivity(Intent(mActivity, ChartDataActivity::class.java))
             R.id.setting_cl -> startActivity(Intent(mActivity, SettingActivity::class.java))
             R.id.exit_btn -> exit()

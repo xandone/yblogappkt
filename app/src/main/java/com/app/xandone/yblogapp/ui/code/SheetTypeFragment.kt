@@ -12,9 +12,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.event.SimplEvent
 import com.app.xandone.baselib.utils.JsonUtils.obj2Json
@@ -44,7 +41,7 @@ import kotlin.collections.ArrayList
  * created on: 2020/9/7 15:41
  * description:
  */
-class SheetTypeFragment : BottomSheetDialogFragment() {
+class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var mAdapter: DelegateMultiAdapter
     private lateinit var mRemoveAdapter: BaseQuickAdapter<CodeTypeBean?, BaseViewHolder>
     private lateinit var types: ArrayList<CodeTypeBean>
@@ -76,7 +73,6 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        ButterKnife.bind(this, view)
         if (arguments == null) {
             return
         }
@@ -97,6 +93,8 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
         })
         type_recycler.adapter = mAdapter
         initRemoveRecycler()
+
+        edit_tv.setOnClickListener(this)
     }
 
     private fun initRemoveRecycler() {
@@ -144,9 +142,8 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
         )
     }
 
-    @OnClick(R.id.edit_tv)
-    fun click(view: View) {
-        when (view.id) {
+    override fun onClick(v: View?) {
+        when (v?.id) {
             R.id.edit_tv -> {
                 isEditState = !isEditState
                 edit_tv!!.text = if (isEditState) "完成" else "编辑"

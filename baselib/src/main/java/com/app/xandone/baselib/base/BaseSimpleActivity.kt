@@ -1,10 +1,8 @@
 package com.app.xandone.baselib.base
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import butterknife.ButterKnife
 
 /**
  * author: Admin
@@ -18,17 +16,12 @@ abstract class BaseSimpleActivity : AppCompatActivity(), IActivityInit {
 
         doBeforeSetContentView()
         initContentView()
-        initButterKnife()
-        init()
+        initView()
         initDataObserver()
     }
 
     protected open fun initContentView() {
         setContentView(getLayout())
-    }
-
-    protected open fun initButterKnife() {
-        ButterKnife.bind(this)
     }
 
     override fun doBeforeSetContentView() {

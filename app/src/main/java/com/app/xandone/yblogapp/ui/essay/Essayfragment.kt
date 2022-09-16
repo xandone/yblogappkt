@@ -33,7 +33,6 @@ import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener
 import kotlinx.android.synthetic.main.frag_base_list.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -47,8 +46,8 @@ class Essayfragment : BaseListFragment() {
     private lateinit var datas: ArrayList<EssayArticleBean>
     private lateinit var bannerAdapter: BannerImageAdapter<BannerBean>
     private lateinit var bannerList: ArrayList<BannerBean>
-    override fun init(view: View?) {
-        super.init(view)
+    override fun initView(view: View) {
+        super.initView(view)
         datas = ArrayList()
         bannerList = ArrayList()
         mAdapter = object :

@@ -24,7 +24,8 @@ class ManagerFragment : BaseWallFragment() {
         return R.layout.frag_manager
     }
 
-    override fun init(view: View?) {
+    override fun initView(view: View) {
+        super.initView(view)
         autoCheckAdminInfo()
         onLoadFinish()
     }

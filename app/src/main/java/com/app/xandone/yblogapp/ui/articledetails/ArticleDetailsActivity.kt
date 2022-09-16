@@ -7,7 +7,6 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import butterknife.BindView
 import com.app.xandone.baselib.cache.ImageCache.getImageCache
 import com.app.xandone.baselib.log.LogHelper
 import com.app.xandone.baselib.utils.ImageUtils.saveFile2SdCard

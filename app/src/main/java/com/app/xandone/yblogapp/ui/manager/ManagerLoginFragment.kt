@@ -1,11 +1,9 @@
 package com.app.xandone.yblogapp.ui.manager
 
 import android.animation.ObjectAnimator
-import android.text.TextUtils
 import android.view.View
 import android.view.Window
 import android.view.animation.AccelerateDecelerateInterpolator
-import butterknife.OnClick
 import com.app.xandone.baselib.base.BaseFrament
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.utils.JsonUtils.obj2Json
@@ -32,16 +30,18 @@ import kotlinx.android.synthetic.main.frag_manager_login.*
  * created on: 2020/9/29 09:52
  * description:
  */
-class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
+class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener, View.OnClickListener {
     private lateinit var keyboardWatcher: KeyboardWatcher
     private lateinit var managerModel: ManagerModel
     override fun getLayout(): Int {
         return R.layout.frag_manager_login
     }
 
-    override fun init(view: View?) {
-        keyboardWatcher =KeyboardWatcher(mActivity.findViewById(Window.ID_ANDROID_CONTENT))
+    override fun initView(view: View) {
+        keyboardWatcher = KeyboardWatcher(mActivity.findViewById(Window.ID_ANDROID_CONTENT))
         keyboardWatcher.addSoftKeyboardStateListener(this)
+
+        login_btn.setOnClickListener(this)
     }
 
     override fun initDataObserver() {
@@ -52,9 +52,8 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
         )
     }
 
-    @OnClick(R.id.login_btn)
-    fun click(view: View) {
-        when (view.id) {
+    override fun onClick(v: View?) {
+        when (v?.id) {
             R.id.login_btn -> login()
             else -> {
             }

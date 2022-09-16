@@ -18,5 +18,5 @@ interface IActivityInit {
     @LayoutRes
     fun getLayout(): Int
 
-    fun init()
+    fun initView()
 }

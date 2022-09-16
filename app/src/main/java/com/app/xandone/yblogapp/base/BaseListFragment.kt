@@ -14,7 +14,8 @@ abstract class BaseListFragment : BaseWallFragment(), IRefreshCallback {
         return R.layout.frag_base_list
     }
 
-    override fun init(view: View?) {
+    override fun initView(view: View) {
+        super.initView(view)
         refreshLayout.setOnRefreshListener { getData() }
         refreshLayout.setOnLoadMoreListener { getDataMore() }
     }

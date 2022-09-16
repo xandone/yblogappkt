@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.CallSuper
 import com.app.xandone.baselib.base.BaseFrament
-import com.app.xandone.baselib.log.LogHelper
 import com.app.xandone.widgetlib.view.LoadingLayout
 import com.app.xandone.widgetlib.view.LoadingLayout.OnReloadListener
 import com.app.xandone.yblogapp.R
@@ -19,6 +19,8 @@ import kotlinx.android.synthetic.main.frag_base_wall.*
  * description:有加载状态页的基类Fragment
  */
 abstract class BaseWallFragment : BaseFrament(), ILoadingWall, OnReloadListener {
+
+    private lateinit var loadLayout: LoadingLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,9 +39,10 @@ abstract class BaseWallFragment : BaseFrament(), ILoadingWall, OnReloadListener 
         return rootView
     }
 
-    override fun initButterKnife(view: View?) {
-        super.initButterKnife(view)
-        loadLayout!!.setOnReloadListener(this)
+    @CallSuper
+    override fun initView(view: View) {
+        loadLayout = view.findViewById(R.id.loadLayout)
+        loadLayout.setOnReloadListener(this)
         onLoading()
     }
 
@@ -56,26 +59,26 @@ abstract class BaseWallFragment : BaseFrament(), ILoadingWall, OnReloadListener 
      */
     protected abstract fun requestData()
     override fun onLoading() {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.LOADING)
+        loadLayout.setLoadingStatus(LoadingLayout.ILoadingStatus.LOADING)
     }
 
     override fun onLoadEmpty() {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.EMPTY)
+        loadLayout.setLoadingStatus(LoadingLayout.ILoadingStatus.EMPTY)
     }
 
     override fun onLoadSeverError() {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.SERVER_ERROR)
+        loadLayout.setLoadingStatus(LoadingLayout.ILoadingStatus.SERVER_ERROR)
     }
 
     override fun onLoadNetError() {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.NET_ERROR)
+        loadLayout.setLoadingStatus(LoadingLayout.ILoadingStatus.NET_ERROR)
     }
 
     override fun onLoadFinish() {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.FINISH)
+        loadLayout.setLoadingStatus(LoadingLayout.ILoadingStatus.FINISH)
     }
 
     override fun onLoadStatus(statusCode: Int) {
-        loadLayout!!.setLoadingStatus(statusCode)
+        loadLayout.setLoadingStatus(statusCode)
     }
 }

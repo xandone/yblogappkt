@@ -1,7 +1,6 @@
 package com.app.xandone.yblogapp.ui.manager.setting
 
 import android.view.View
-import butterknife.OnClick
 import com.app.xandone.baselib.cache.CacheHelper.clearDefaultSp
 import com.app.xandone.baselib.cache.CacheHelper.clearExternalFilesDir
 import com.app.xandone.baselib.cache.CacheHelper.getTotalCacheSize
@@ -13,12 +12,13 @@ import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.constant.OSpKey
 import kotlinx.android.synthetic.main.act_setting.*
+
 /**
  * author: Admin
  * created on: 2020/9/29 11:09
  * description:
  */
-class SettingActivity : BaseWallActivity() {
+class SettingActivity : BaseWallActivity(), View.OnClickListener {
     override fun getLayout(): Int {
         return R.layout.act_setting
     }
@@ -29,14 +29,17 @@ class SettingActivity : BaseWallActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        clear_setting_cl.setOnClickListener(this)
+        clear_all_cache_cl.setOnClickListener(this)
+
         onLoadFinish()
     }
 
     override fun requestData() {}
 
-    @OnClick(R.id.clear_setting_cl, R.id.clear_all_cache_cl)
-    fun click(v: View) {
-        when (v.id) {
+    override fun onClick(v: View?) {
+        when (v?.id) {
             R.id.clear_setting_cl -> clearSettingInfo()
             R.id.clear_all_cache_cl -> clearAllCache()
             else -> {

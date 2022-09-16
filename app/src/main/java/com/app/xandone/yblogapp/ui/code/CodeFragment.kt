@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import butterknife.OnClick
 import com.app.xandone.baselib.cache.SpHelper.getDefaultString
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.utils.JsonUtils
@@ -40,7 +39,7 @@ import kotlinx.android.synthetic.main.frag_code.*
  * created on: 2020/9/3 09:56
  * description:
  */
-class CodeFragment : BaseWallFragment() {
+class CodeFragment : BaseWallFragment(), View.OnClickListener {
     private lateinit var fragments: ArrayList<Fragment>
     private var mSheetTypeFragment: SheetTypeFragment? = null
     private lateinit var mCodeTypeModel: CodeTypeModel
@@ -49,14 +48,19 @@ class CodeFragment : BaseWallFragment() {
     private var removeTypes: ArrayList<CodeTypeBean>? = null
     private var mTabLayoutAdapter: CommonNavigatorAdapter? = null
     private var vpAdapter: MyViewPagerAdapter? = null
+
+
     override fun getLayout(): Int {
         return R.layout.frag_code
     }
 
-    override fun init(view: View?) {
+    override fun initView(view: View) {
+        super.initView(view)
         apiTypeList = ArrayList()
         codeTypeList = ArrayList()
         removeTypes = ArrayList()
+
+        add_type_iv.setOnClickListener(this)
     }
 
     override fun initDataObserver() {
@@ -138,10 +142,14 @@ class CodeFragment : BaseWallFragment() {
         mSheetTypeFragment!!.show(childFragmentManager, "demoBottom")
     }
 
-    @OnClick(R.id.add_type_iv)
-    fun click(view: View) {
-        showDialogFrag()
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.add_type_iv -> showDialogFrag()
+            else -> {
+            }
+        }
     }
+
 
     private fun dealCacheType() {
         val codeStr =

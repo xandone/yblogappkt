@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import butterknife.ButterKnife
 import com.app.xandone.baselib.event.SimplEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -44,13 +43,8 @@ abstract class BaseSimpleFragment : Fragment(), IFragInit {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initButterKnife(view)
-        init(view)
+        initView(view)
         initDataObserver()
-    }
-
-    protected open fun initButterKnife(view: View?) {
-        ButterKnife.bind(this, view!!)
     }
 
     override fun doBeforeSetContentView() {}

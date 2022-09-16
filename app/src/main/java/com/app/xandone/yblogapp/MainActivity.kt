@@ -16,7 +16,7 @@ class MainActivity : BaseSimpleActivity() {
         return R.layout.activity_main
     }
 
-    override fun init() {
+    override fun initView() {
 //        val a = ATest()
 //        lifecycle.addObserver(a)
         fragments = ArrayList()

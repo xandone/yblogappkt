@@ -26,7 +26,7 @@ class SplashActivity : BaseSimpleActivity(), PermissionCallbacks {
         return R.layout.act_splash
     }
 
-    override fun init() {
+    override fun initView() {
         writeAndReadTask()
     }
 

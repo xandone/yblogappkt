@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.xandone.baselib.imageload.ImageLoadHelper
-import com.app.xandone.baselib.log.LogHelper
 import com.app.xandone.widgetlib.utils.SpacesItemDecoration
 import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
@@ -22,7 +21,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import kotlinx.android.synthetic.main.frag_base_list.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -37,8 +35,9 @@ class CodeListFragment : BaseListFragment() {
     private var mType = 0
     private var mPage = 1
     protected var mIsLoadedData = false
-    override fun init(view: View?) {
-        super.init(view)
+
+    override fun initView(view: View) {
+        super.initView(view)
         mType = arguments!!.getInt(TYPE)
         datas = ArrayList()
         mAdapter = object :

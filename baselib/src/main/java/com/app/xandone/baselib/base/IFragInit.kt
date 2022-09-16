@@ -17,5 +17,5 @@ interface IFragInit {
     @LayoutRes
     fun getLayout(): Int
 
-    fun init(view: View?)
+    fun initView(view: View)
 }

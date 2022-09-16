@@ -34,7 +34,7 @@ abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener
         setContentView(rootView)
     }
 
-    override fun init() {
+    override fun initView() {
         loadLayout!!.setOnReloadListener(this)
         onLoading()
         initToolbar()
