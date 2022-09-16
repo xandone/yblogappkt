@@ -42,14 +42,8 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener, View.OnCl
         keyboardWatcher.addSoftKeyboardStateListener(this)
 
         login_btn.setOnClickListener(this)
-    }
 
-    override fun initDataObserver() {
-        managerModel = ModelProvider.getModel(
-            mActivity,
-            ManagerModel::class.java,
-            App.sContext
-        )
+        managerModel = ModelProvider.getModel( mActivity,ManagerModel::class.java, App.sContext )
     }
 
     override fun onClick(v: View?) {

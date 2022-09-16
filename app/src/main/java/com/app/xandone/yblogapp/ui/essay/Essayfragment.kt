@@ -104,14 +104,8 @@ class Essayfragment : BaseListFragment() {
                     .putExtra(OConstantKey.TITLE, datas.get(position).title)
             )
         })
-    }
 
-    override fun initDataObserver() {
-        essayModel = ModelProvider.getModel(
-            mActivity,
-            EssayModel::class.java,
-            App.sContext
-        )
+        essayModel = ModelProvider.getModel( mActivity, EssayModel::class.java,App.sContext  )
         requestData()
     }
 

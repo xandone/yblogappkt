@@ -17,7 +17,6 @@ abstract class BaseSimpleActivity : AppCompatActivity(), IActivityInit {
         doBeforeSetContentView()
         initContentView()
         initView()
-        initDataObserver()
     }
 
     protected open fun initContentView() {
@@ -27,11 +26,6 @@ abstract class BaseSimpleActivity : AppCompatActivity(), IActivityInit {
     override fun doBeforeSetContentView() {
 
     }
-
-    protected open fun initDataObserver() {
-
-    }
-
     protected open fun startActivity(activity: Activity) {
 //        startActivity(Intent(this, activity::class.java))
     }

@@ -40,6 +40,7 @@ import kotlinx.android.synthetic.main.frag_code.*
  * description:
  */
 class CodeFragment : BaseWallFragment(), View.OnClickListener {
+
     private lateinit var fragments: ArrayList<Fragment>
     private var mSheetTypeFragment: SheetTypeFragment? = null
     private lateinit var mCodeTypeModel: CodeTypeModel
@@ -47,7 +48,14 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
     private var apiTypeList = mutableListOf<CodeTypeBean>()
     private var removeTypes: ArrayList<CodeTypeBean>? = null
     private var mTabLayoutAdapter: CommonNavigatorAdapter? = null
-    private var vpAdapter: MyViewPagerAdapter? = null
+
+    //by lazy 仅在第一次使用的时候初始化
+    private val vpAdapter: MyViewPagerAdapter by lazy {
+        MyViewPagerAdapter(
+            childFragmentManager,
+            FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+        )
+    }
 
 
     override fun getLayout(): Int {
@@ -61,14 +69,9 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
         removeTypes = ArrayList()
 
         add_type_iv.setOnClickListener(this)
-    }
 
-    override fun initDataObserver() {
-        mCodeTypeModel = ModelProvider.getModel(
-            mActivity,
-            CodeTypeModel::class.java,
-            App.sContext
-        )
+        mCodeTypeModel = ModelProvider.getModel(mActivity, CodeTypeModel::class.java, App.sContext)
+
         requestData()
     }
 
@@ -94,10 +97,6 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
         for (i in codeTypeList.indices) {
             fragments.add(CodeListFragment.getInstance(codeTypeList[i].type))
         }
-        vpAdapter = MyViewPagerAdapter(
-            childFragmentManager,
-            FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-        )
         viewPager.adapter = vpAdapter
     }
 
@@ -112,17 +111,17 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
                 context: Context,
                 index: Int
             ): IPagerTitleView {
-                val colorTransitionPagerTitleView = ColorTransitionPagerTitleView(context)
-                colorTransitionPagerTitleView.normalColor = Color.GRAY
-                colorTransitionPagerTitleView.selectedColor = ContextCompat.getColor(
+                val titleView = ColorTransitionPagerTitleView(context)
+                titleView.normalColor = Color.GRAY
+                titleView.selectedColor = ContextCompat.getColor(
                     mActivity,
                     R.color.colorPrimary
                 )
-                colorTransitionPagerTitleView.text = codeTypeList[index].typeName
-                colorTransitionPagerTitleView.setOnClickListener {
+                titleView.text = codeTypeList[index].typeName
+                titleView.setOnClickListener {
                     viewPager!!.currentItem = index
                 }
-                return colorTransitionPagerTitleView
+                return titleView
             }
 
             override fun getIndicator(context: Context): IPagerIndicator {
@@ -235,5 +234,9 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
         }
         mTabLayoutAdapter!!.notifyDataSetChanged()
         vpAdapter!!.notifyDataSetChanged()
+    }
+
+    override fun isRegistEventBus(): Boolean {
+        return true
     }
 }

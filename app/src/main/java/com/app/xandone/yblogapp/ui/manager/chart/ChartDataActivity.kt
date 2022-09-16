@@ -44,9 +44,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
 
     override fun wallInit() {
         initChart()
-    }
 
-    override fun initDataObserver() {
         managerChartModel = ModelProvider.getModel(
             this,
             ManagerChartModel::class.java,

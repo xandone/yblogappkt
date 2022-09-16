@@ -70,9 +70,8 @@ class ArticleDetailsActivity : BaseWallActivity() {
         urls = ArrayList()
         initWebView()
         initDownloadListener()
-    }
 
-    override fun initDataObserver() {
+
         detailsModel = if (mType == TYPE_CODE) {
             ModelProvider.getModel(
                 this,

@@ -68,4 +68,8 @@ class ManagerFragment : BaseWallFragment() {
         }
         switchFragment(fragment)
     }
+
+    override fun isRegistEventBus(): Boolean {
+        return true
+    }
 }

@@ -18,11 +18,15 @@ import org.greenrobot.eventbus.ThreadMode
  * description:
  */
 abstract class BaseSimpleFragment : Fragment(), IFragInit {
+
     protected lateinit var mActivity: FragmentActivity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         doBeforeSetContentView()
-        EventBus.getDefault().register(this)
+        if (isRegistEventBus()) {
+            EventBus.getDefault().register(this)
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -44,17 +48,21 @@ abstract class BaseSimpleFragment : Fragment(), IFragInit {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initView(view)
-        initDataObserver()
     }
 
     override fun doBeforeSetContentView() {}
-    protected open fun initDataObserver() {}
-    override fun onDestroyView() {
-        EventBus.getDefault().unregister(this)
-        super.onDestroyView()
+
+    /**
+     * 是否注册EventBus
+     */
+    open fun isRegistEventBus(): Boolean {
+        return false
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageReceived(event: SimplEvent?) {
+    override fun onDestroyView() {
+        if (isRegistEventBus()) {
+            EventBus.getDefault().unregister(this)
+        }
+        super.onDestroyView()
     }
 }

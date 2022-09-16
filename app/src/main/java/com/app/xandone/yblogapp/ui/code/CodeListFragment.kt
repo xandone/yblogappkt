@@ -84,9 +84,7 @@ class CodeListFragment : BaseListFragment() {
                     )
             )
         })
-    }
 
-    override fun initDataObserver() {
         codeModel = ModelProvider.getModel(
             mActivity,
             CodeModel::class.java,
