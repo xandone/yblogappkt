@@ -28,7 +28,9 @@ object KtTest {
 //        t7(*arrayOf("4", "5", "6"))
 //        t8()
 //        t9()
-        t10()
+//        t10()
+        Test1.test1()
+        Test1.test2()
     }
 
     /**
@@ -218,8 +220,23 @@ object KtTest {
         println("t10_2" + Thread.currentThread().name)
     }
 
-    object Test1 {
+    class Test1 {
         val a: Int = 1
+
+        /**
+         * object声明（一个类）是延迟加载的，只有当第一次被访问时才会初始化，所以被用来实现单例
+         * companion object是当包含它的类被加载时就初始化了的
+         */
+        companion object {
+            @JvmStatic
+            fun test1() {
+                println("1230")
+            }
+            fun test2() {
+                println("1232")
+            }
+        }
+
     }
 
 }

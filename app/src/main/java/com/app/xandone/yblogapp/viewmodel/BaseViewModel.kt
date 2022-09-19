@@ -15,7 +15,9 @@ import io.reactivex.disposables.Disposable
 abstract class BaseViewModel : ViewModel(), LifecycleOwner, IManagerDisposable {
     private var mLifecycleOwner: LifecycleOwner? = null
     private var mCompositeDisposable: CompositeDisposable? = null
+
     protected abstract fun onCreate(owner: LifecycleOwner?)
+
     fun <T : BaseViewModel> attachLifecycleOwner(lifecycleOwner: LifecycleOwner?): T {
         val current = this as T
         if (mLifecycleOwner != null) {

@@ -2,7 +2,6 @@ package com.app.xandone.yblogapp
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.multidex.MultiDex
 import com.app.xandone.yblogapp.config.AppConfig
 import com.scwang.smart.refresh.footer.ClassicsFooter
@@ -40,10 +39,13 @@ class App : Application() {
 
     private fun init() {
         AppConfig.init(this, BuildConfig.DEBUG)
+        //管理Activity
+        ActManager.getInstance().init(this)
     }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         MultiDex.install(this)
     }
+
 }
