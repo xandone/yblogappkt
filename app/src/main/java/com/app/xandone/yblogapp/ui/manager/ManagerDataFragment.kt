@@ -3,6 +3,7 @@ package com.app.xandone.yblogapp.ui.manager
 import android.content.Intent
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import com.app.xandone.baselib.base.setClickAction
 import com.app.xandone.baselib.cache.CacheHelper.clearDefaultSp
 import com.app.xandone.widgetlib.dialog.MDialogOnclickListener
 import com.app.xandone.widgetlib.dialog.MDialogUtils.showSimpleDialog
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.frag_manager_data.*
  * created on: 2020/9/27 11:02
  * description:
  */
-class ManagerDataFragment : BaseWallFragment(), View.OnClickListener {
+class ManagerDataFragment : BaseWallFragment() {
     private lateinit var toolbar: Toolbar
 
     override fun getLayout(): Int {
@@ -36,9 +37,15 @@ class ManagerDataFragment : BaseWallFragment(), View.OnClickListener {
 
         setToolBar("管理系统")
 
-        setting_cl.setOnClickListener(this)
-        exit_btn.setOnClickListener(this)
-        chart_tip_cl.setOnClickListener(this)
+        setClickAction(setting_cl, exit_btn, chart_tip_cl) {
+            when (this) {
+                chart_tip_cl -> startActivity(Intent(mActivity, ChartDataActivity::class.java))
+                setting_cl -> startActivity(Intent(mActivity, SettingActivity::class.java))
+                exit_btn -> exit()
+                else -> {
+                }
+            }
+        }
 
         onLoadFinish()
     }
@@ -46,16 +53,6 @@ class ManagerDataFragment : BaseWallFragment(), View.OnClickListener {
     override fun requestData() {}
     private fun setToolBar(title: CharSequence) {
         toolbar.title = title
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.chart_tip_cl -> startActivity(Intent(mActivity, ChartDataActivity::class.java))
-            R.id.setting_cl -> startActivity(Intent(mActivity, SettingActivity::class.java))
-            R.id.exit_btn -> exit()
-            else -> {
-            }
-        }
     }
 
     private fun exit() {

@@ -20,9 +20,9 @@ class MainActivity : BaseSimpleActivity() {
 //        val a = ATest()
 //        lifecycle.addObserver(a)
         fragments = ArrayList()
-        fragments.add(CodeFragment())
+        fragments.add(CodeFragment.instance)
         fragments.add(Essayfragment.instance)
-        fragments.add(ManagerFragment())
+        fragments.add(ManagerFragment.instance)
         bottom_bar.setOnTabSelectListener { tabId ->
             when (tabId) {
                 R.id.main_footer_code_rb -> mCurrentIndex = 0

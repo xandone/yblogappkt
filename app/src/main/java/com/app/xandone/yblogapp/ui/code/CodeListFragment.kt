@@ -154,6 +154,7 @@ class CodeListFragment : BaseListFragment() {
     companion object {
         private const val ROW = 10
         const val TYPE = "type"
+        
         fun getInstance(type: Int): CodeListFragment {
             val fragment = CodeListFragment()
             val bundle = Bundle()

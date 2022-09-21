@@ -20,6 +20,11 @@ import org.greenrobot.eventbus.ThreadMode
  * description:
  */
 class ManagerFragment : BaseWallFragment() {
+
+    companion object {
+        val instance=ManagerFragment()
+    }
+
     override fun getLayout(): Int {
         return R.layout.frag_manager
     }

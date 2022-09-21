@@ -5,6 +5,7 @@ import android.view.View
 import android.view.Window
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.app.xandone.baselib.base.BaseFrament
+import com.app.xandone.baselib.base.setClickAction
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.utils.JsonUtils.obj2Json
 import com.app.xandone.baselib.utils.MD5Util.MD5
@@ -30,7 +31,7 @@ import kotlinx.android.synthetic.main.frag_manager_login.*
  * created on: 2020/9/29 09:52
  * description:
  */
-class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener, View.OnClickListener {
+class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
     private lateinit var keyboardWatcher: KeyboardWatcher
     private lateinit var managerModel: ManagerModel
     override fun getLayout(): Int {
@@ -41,15 +42,14 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener, View.OnCl
         keyboardWatcher = KeyboardWatcher(mActivity.findViewById(Window.ID_ANDROID_CONTENT))
         keyboardWatcher.addSoftKeyboardStateListener(this)
 
-        login_btn.setOnClickListener(this)
+        managerModel = ModelProvider.getModel(mActivity, ManagerModel::class.java, App.sContext)
 
-        managerModel = ModelProvider.getModel( mActivity,ManagerModel::class.java, App.sContext )
-    }
+        setClickAction(login_btn) {
+            when (this) {
+                login_btn -> login()
+                else -> {
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.login_btn -> login()
-            else -> {
+                }
             }
         }
     }

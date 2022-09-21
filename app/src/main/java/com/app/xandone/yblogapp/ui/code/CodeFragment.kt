@@ -57,6 +57,10 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
         )
     }
 
+    companion object {
+        val instance = CodeFragment()
+    }
+
 
     override fun getLayout(): Int {
         return R.layout.frag_code
