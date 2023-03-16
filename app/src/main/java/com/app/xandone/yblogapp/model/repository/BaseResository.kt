@@ -1,10 +1,8 @@
-package com.xandone.manager2.model.repository
+package com.app.xandone.yblogapp.model.repository
 
 import android.net.ParseException
-import android.util.Log
-import com.google.gson.Gson
+import com.app.xandone.baselib.utils.ToastUtils
 import com.google.gson.JsonParseException
-import com.xandone.manager2.extention.showToast
 import org.json.JSONException
 import retrofit2.HttpException
 import java.io.NotSerializableException
@@ -86,7 +84,7 @@ open class BaseResository {
                 message = "未知错误"
             }
         }
-        message.showToast()
+        ToastUtils.showShort(message)
         return ApiOtherErrorResponse(t, code, message)
     }
 

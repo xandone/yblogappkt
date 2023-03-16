@@ -1,4 +1,4 @@
-package com.xandone.manager2.api
+package com.app.xandone.yblogapp.api
 
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter

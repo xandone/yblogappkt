@@ -1,4 +1,4 @@
-package com.xandone.manager2.model.repository
+package com.app.xandone.yblogapp.model.repository
 
 /**
  * @author: xiao
@@ -6,9 +6,10 @@ package com.xandone.manager2.model.repository
  * description:
  */
 open class ApiResponse<T>(
-    val code: Int? = null,
+    val code: Int = 0,
     val message: String? = null,
     val data: T? = null,
+    val total: Int = 0,
     var result: HttpResult = HttpResult.FAIL
 )
 
