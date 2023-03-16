@@ -17,4 +17,6 @@ data class AdminBean(val name: String? = null,
                      val email: String? = null,
                      val registTime: String? = null,
                      val lastLoginTime: String? = null,
+                     //身份
+                     val identity: String? = null,
                      val token: String = "") : Serializable

@@ -20,7 +20,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
  */
 class App : Application() {
     companion object {
-        var sContext: Application? = null
+        lateinit var sContext: Application
 
         //static 代码段可以防止内存泄露
         init {

@@ -35,7 +35,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
     private var mLineData: LineData? = null
 
     private val managerChartModel by lazy {
-        ViewModelProvider(this, ManagerModelFactory()).get(
+        ViewModelProvider(this, ManagerChartModelFactory()).get(
             ManagerChartModel::class.java
         )
     }

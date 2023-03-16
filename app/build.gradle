@@ -67,8 +67,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     implementation rootProject.ext.depends.appcompat
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
-
 
     //Android KTX
     implementation 'androidx.core:core-ktx:1.8.0'
@@ -108,6 +106,10 @@ dependencies {
     implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'      //核心必须依赖
     implementation 'io.github.scwang90:refresh-header-classics:2.0.5'    //经典刷新头
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'//图表
+    // 沉浸式框架：https://github.com/gyf-dev/ImmersionBar
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
+    //https://github.com/kyleduo/SwitchButton
+    implementation 'com.kyleduo.switchbutton:library:2.1.0'
 
 
     implementation 'com.github.Hitomis:transferee:1.6.1'

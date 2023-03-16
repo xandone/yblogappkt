@@ -14,7 +14,7 @@ import com.app.xandone.yblogapp.model.bean.AdminBean
 object UserInfoHelper {
     val adminId: String?
         get() {
-            val adminJson = SpHelper.getDefaultString(App.sContext!!, OSpKey.ADMIN_INFO_KEY)
+            val adminJson = SpHelper.getDefaultString(App.sContext, OSpKey.ADMIN_INFO_KEY)
             return json2Obj(
                 adminJson,
                 AdminBean::class.java
@@ -23,7 +23,7 @@ object UserInfoHelper {
 
     val adminToken: String?
         get() {
-            val adminJson = SpHelper.getDefaultString(App.sContext!!, OSpKey.ADMIN_INFO_KEY)
+            val adminJson = SpHelper.getDefaultString(App.sContext, OSpKey.ADMIN_INFO_KEY)
             if (adminJson == null || adminJson.isEmpty()) {
                 return ""
             }
@@ -31,5 +31,14 @@ object UserInfoHelper {
                 adminJson,
                 AdminBean::class.java
             ).token
+        }
+
+    val adminBean: AdminBean?
+        get() {
+            val adminJson = SpHelper.getDefaultString(App.sContext, OSpKey.ADMIN_INFO_KEY)
+            if (adminJson == null || adminJson.isEmpty()) {
+                return null
+            }
+            return json2Obj(adminJson, AdminBean::class.java)
         }
 }

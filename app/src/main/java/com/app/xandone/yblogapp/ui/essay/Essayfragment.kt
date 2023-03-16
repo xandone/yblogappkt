@@ -124,7 +124,7 @@ class Essayfragment : BaseListFragment() {
         essayModel.datas.observe(this) { response ->
             if (response.result == HttpResult.SUCCESS && response.data != null) {
                 if (mPage == 0) {
-                    mAdapter?.setList(response.data)
+                    mAdapter.setList(response.data)
                     if (response.total == 0) {
                         mStateLayout.showEmpty(
                             ApiEmptyResponse<Any>()
@@ -132,7 +132,7 @@ class Essayfragment : BaseListFragment() {
                         return@observe
                     }
                 } else {
-                    mAdapter?.addData(response.data)
+                    mAdapter.addData(response.data)
                 }
                 if (response.total <= mDatas?.size!!) {
                     mBinding.refreshLayout.finishLoadMoreWithNoMoreData()

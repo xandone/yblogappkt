@@ -25,7 +25,7 @@
         app:itemTextAppearanceActive="@style/BottomTabTextStyle"
         app:itemTextAppearanceInactive="@style/BottomTabTextStyle"
         app:itemTextColor="@drawable/home_navigation_color_selector"
-        app:labelVisibilityMode="selected"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu_home_bottom_nav" />
 

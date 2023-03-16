@@ -5,82 +5,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clear_setting_cl"
+    <com.app.xandone.widgetlib.view.SettingView
+        android:id="@+id/setting_sv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white_color"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:xwidget_bg="@drawable/setting_view_click_bg"
+        app:xwidget_left_ic="@drawable/clear_setting_ic"
+        app:xwidget_text="清除配置信息"
+        app:xwidget_text_color="@color/normal_tv" />
+
+    <com.app.xandone.widgetlib.view.SettingView
+        android:id="@+id/all_cache_sv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/setting_sv"
+        app:xwidget_bg="@drawable/setting_view_click_bg"
+        app:xwidget_left_ic="@drawable/clear_cache_ic"
+        app:xwidget_text="清除缓存文件"
+        app:xwidget_text_color="@color/normal_tv" />
+
+    <com.app.xandone.widgetlib.view.SettingView
+        android:id="@+id/version_sv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/all_cache_sv"
+        app:xwidget_bg="@drawable/setting_view_click_bg"
+        app:xwidget_left_ic="@drawable/version_ic"
+        app:xwidget_text="检查更新"
+        app:xwidget_text_color="@color/normal_tv" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/setting_view_click_bg"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/version_sv">
 
         <TextView
-            android:id="@+id/clear_setting_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/clear_setting_ic"
+            android:drawableLeft="@drawable/ic_baseline_brightness_2_24"
             android:drawablePadding="5dp"
-            android:text="清除配置信息"
+            android:text="夜间模式"
             android:textColor="@color/normal_tv"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/moon_sb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/go_arrow"
+            app:kswTintColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clear_all_cache_cl"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/exit_btn"
+        style="@style/md_btn_normal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white_color"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/clear_setting_cl">
-
-        <TextView
-            android:id="@+id/clear_all_cache_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/clear_cache_ic"
-            android:drawablePadding="5dp"
-            android:text="清除缓存文件"
-            android:textColor="@color/normal_tv"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/all_cache_size_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/thin_tv"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/clear_all_cache_iv"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="30Mb" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/clear_all_cache_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/go_arrow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginBottom="30dp"
+        android:text="退出登录"
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,4 +39,6 @@ dependencies {
 
     implementation rootProject.ext.depends.appcompat
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
+
+    api 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

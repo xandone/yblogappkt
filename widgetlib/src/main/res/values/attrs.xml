@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="xwidget_CircleImageView">
+        <attr name="xwidget_civ_border_width" format="dimension" />
+        <attr name="xwidget_civ_border_color" format="color" />
+        <attr name="xwidget_civ_border_overlay" format="boolean" />
+        <attr name="xwidget_civ_fill_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="xwidget_SettingView">
+        <attr name="xwidget_text" format="string" />
+        <attr name="xwidget_text_color" format="color" />
+        <attr name="xwidget_left_ic" format="reference" />
+        <attr name="xwidget_right_text" format="string" />
+        <attr name="xwidget_right_text_color" format="color" />
+        <attr name="xwidget_bg" format="reference" />
+    </declare-styleable>
+
+</resources>

@@ -6,4 +6,6 @@
 
     <color name="toast_white">#ffffff</color>
     <color name="toast_stroke_gray">#99d4d4d4</color>
+
+    <color name="ripple_color">#1f333333</color>
 </resources>

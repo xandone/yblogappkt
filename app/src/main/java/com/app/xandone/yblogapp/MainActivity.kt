@@ -8,32 +8,21 @@ import com.app.xandone.yblogapp.ui.manager.ManagerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseSimpleActivity() {
-
-
-    private val codeFragment by lazy {
-        CodeFragment.instance
-    }
-
-    private val essayfragment by lazy {
-        Essayfragment.instance
-    }
-
-
-    private val managerFragment by lazy {
-        ManagerFragment.instance
-    }
-
+    
+    private var codeFragment: CodeFragment? = null
+    private var essayfragment: Essayfragment? = null
+    private var managerFragment: ManagerFragment? = null
 
     override fun getLayout(): Int {
         return R.layout.activity_main
     }
 
     override fun initView() {
+        codeFragment = CodeFragment()
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.main_frame, codeFragment)
+            .add(R.id.main_frame, codeFragment!!)
             .commitAllowingStateLoss()
-
 
         bottom_bar.setOnItemSelectedListener { item ->
             var isSelect = false
@@ -42,26 +31,29 @@ class MainActivity : BaseSimpleActivity() {
                 when (item.itemId) {
                     R.id.main_footer_code_rb -> {
                         isSelect = true
-                        if (codeFragment.isAdded) {
-                            show(codeFragment)
+                        if (codeFragment == null) {
+                            codeFragment = CodeFragment()
+                            add(R.id.main_frame, codeFragment!!)
                         } else {
-                            add(R.id.main_frame, codeFragment)
+                            show(codeFragment!!)
                         }
                     }
                     R.id.main_footer_essay_rb -> {
                         isSelect = true
-                        if (essayfragment.isAdded) {
-                            show(essayfragment)
+                        if (essayfragment == null) {
+                            essayfragment = Essayfragment()
+                            add(R.id.main_frame, essayfragment!!)
                         } else {
-                            add(R.id.main_frame, essayfragment)
+                            show(essayfragment!!)
                         }
                     }
                     R.id.main_footer_manager_rb -> {
                         isSelect = true
-                        if (managerFragment.isAdded) {
-                            show(managerFragment)
+                        if (managerFragment == null) {
+                            managerFragment = ManagerFragment()
+                            add(R.id.main_frame, managerFragment!!)
                         } else {
-                            add(R.id.main_frame, managerFragment)
+                            show(managerFragment!!)
                         }
                     }
                 }
@@ -74,9 +66,9 @@ class MainActivity : BaseSimpleActivity() {
 
     private fun hideAllFragment(transaction: FragmentTransaction) {
         transaction.apply {
-            if (codeFragment.isAdded) hide(codeFragment)
-            if (codeFragment.isAdded) hide(essayfragment)
-            if (codeFragment.isAdded) hide(managerFragment)
+            if (codeFragment != null) hide(codeFragment!!)
+            if (essayfragment != null) hide(essayfragment!!)
+            if (managerFragment != null) hide(managerFragment!!)
         }
 
     }

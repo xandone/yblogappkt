@@ -87,7 +87,6 @@ class CodeListFragment : BaseListFragment() {
         }
 
         codeModel.datas.observe(this) { response ->
-            Log.d("hgfhfg", "${response.result}")
             if (response.result == HttpResult.SUCCESS && response.data != null) {
                 if (mPage == 0) {
                     mAdapter.setList(response.data)
