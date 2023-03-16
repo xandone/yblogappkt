@@ -9,6 +9,7 @@ import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallFragment
 import com.app.xandone.yblogapp.constant.OSpKey
+import com.app.xandone.yblogapp.databinding.FragManagerBinding
 import com.app.xandone.yblogapp.model.bean.AdminBean
 import com.app.xandone.yblogapp.model.event.SwitchEvent
 import org.greenrobot.eventbus.Subscribe
@@ -19,10 +20,10 @@ import org.greenrobot.eventbus.ThreadMode
  * created on: 2020/9/8 11:53
  * description:
  */
-class ManagerFragment : BaseWallFragment() {
+class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
 
     companion object {
-        val instance=ManagerFragment()
+        val instance = ManagerFragment()
     }
 
     override fun getLayout(): Int {
@@ -30,12 +31,8 @@ class ManagerFragment : BaseWallFragment() {
     }
 
     override fun initView(view: View) {
-        super.initView(view)
         autoCheckAdminInfo()
-        onLoadFinish()
     }
-
-    override fun requestData() {}
 
     /**
      * 自动检测缓存的Admin信息
@@ -66,8 +63,7 @@ class ManagerFragment : BaseWallFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun switchEvent(event: SwitchEvent) {
-        val fragment: Fragment
-        fragment = when (event.tag) {
+        val fragment: Fragment = when (event.tag) {
             SwitchEvent.MANAGER_DATA_RAG -> ManagerDataFragment()
             else -> ManagerLoginFragment()
         }
@@ -76,5 +72,9 @@ class ManagerFragment : BaseWallFragment() {
 
     override fun isRegistEventBus(): Boolean {
         return true
+    }
+
+    override fun initVB(): FragManagerBinding {
+        return FragManagerBinding.inflate(layoutInflater)
     }
 }

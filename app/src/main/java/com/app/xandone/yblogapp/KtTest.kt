@@ -1,7 +1,6 @@
 package com.app.xandone.yblogapp
 
 import kotlinx.coroutines.*
-import org.junit.Test
 
 /**
  * @author: xiao

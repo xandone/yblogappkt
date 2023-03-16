@@ -2,13 +2,15 @@ package com.app.xandone.yblogapp.ui.code
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager.widget.ViewPager
 import com.app.xandone.baselib.cache.SpHelper.getDefaultString
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.utils.JsonUtils
@@ -16,11 +18,12 @@ import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallFragment
 import com.app.xandone.yblogapp.constant.OSpKey
-import com.app.xandone.yblogapp.model.CodeTypeModel
+import com.app.xandone.yblogapp.databinding.FragCodeBinding
 import com.app.xandone.yblogapp.model.bean.CodeTypeBean
 import com.app.xandone.yblogapp.model.event.CodeTypeEvent
-import com.app.xandone.yblogapp.rx.IRequestCallback
-import com.app.xandone.yblogapp.viewmodel.ModelProvider
+import com.app.xandone.yblogapp.ui.code.list.CodeListFragment
+import kotlinx.android.synthetic.main.frag_code.*
+import kotlinx.coroutines.launch
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -32,18 +35,15 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-import kotlinx.android.synthetic.main.frag_code.*
-
 /**
  * author: Admin
  * created on: 2020/9/3 09:56
  * description:
  */
-class CodeFragment : BaseWallFragment(), View.OnClickListener {
+class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
 
     private lateinit var fragments: ArrayList<Fragment>
     private var mSheetTypeFragment: SheetTypeFragment? = null
-    private lateinit var mCodeTypeModel: CodeTypeModel
     private lateinit var codeTypeList: ArrayList<CodeTypeBean>
     private var apiTypeList = mutableListOf<CodeTypeBean>()
     private var removeTypes: ArrayList<CodeTypeBean>? = null
@@ -57,41 +57,40 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
         )
     }
 
+    private val codeTypeModel by lazy {
+        ViewModelProvider(this, CodeTypeModelFactory()).get(
+            CodeTypeModel::class.java
+        )
+    }
+
     companion object {
         val instance = CodeFragment()
     }
-
 
     override fun getLayout(): Int {
         return R.layout.frag_code
     }
 
     override fun initView(view: View) {
-        super.initView(view)
         apiTypeList = ArrayList()
         codeTypeList = ArrayList()
         removeTypes = ArrayList()
 
-        add_type_iv.setOnClickListener(this)
+        vp2 = view.findViewById(R.id.viewPager)
 
-        mCodeTypeModel = ModelProvider.getModel(mActivity, CodeTypeModel::class.java, App.sContext)
+        mBinding.addTypeIv.setOnClickListener(this)
 
-        requestData()
+        codeTypeModel.datas.observe(this) {
+            initType(it.data!!)
+        }
+
+        lifecycleScope.launch {
+            codeTypeModel.getCodeTypeDatas()
+        }
+
     }
 
-    override fun requestData() {
-        mCodeTypeModel.getCodeTypeDatas(object :
-            IRequestCallback<List<CodeTypeBean>> {
-            override fun success(codeTypeBeans: List<CodeTypeBean>) {
-                initType(codeTypeBeans)
-                onLoadFinish()
-            }
-
-            override fun error(message: String?, statusCode: Int) {
-                onLoadStatus(statusCode)
-            }
-        })
-    }
+    lateinit var vp2: ViewPager
 
     fun initType(codeTypeBeans: List<CodeTypeBean>) {
         apiTypeList.addAll(codeTypeBeans)
@@ -101,7 +100,7 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
         for (i in codeTypeList.indices) {
             fragments.add(CodeListFragment.getInstance(codeTypeList[i].type))
         }
-        viewPager.adapter = vpAdapter
+        mBinding.viewPager.adapter = vpAdapter
     }
 
     private fun initTabLayout() {
@@ -123,7 +122,7 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
                 )
                 titleView.text = codeTypeList[index].typeName
                 titleView.setOnClickListener {
-                    viewPager!!.currentItem = index
+                    mBinding.viewPager.currentItem = index
                 }
                 return titleView
             }
@@ -136,8 +135,8 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
             }
         }
         commonNavigator.adapter = mTabLayoutAdapter
-        magic_indicator.navigator = commonNavigator
-        ViewPagerHelper.bind(magic_indicator, viewPager)
+        mBinding.magicIndicator.navigator = commonNavigator
+        ViewPagerHelper.bind(mBinding.magicIndicator, mBinding.viewPager)
     }
 
     fun showDialogFrag() {
@@ -202,8 +201,7 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
     }
 
     internal inner class MyViewPagerAdapter(
-        fm: FragmentManager,
-        behavior: Int
+        fm: FragmentManager, behavior: Int
     ) : FragmentStatePagerAdapter(fm, behavior) {
         override fun getItem(position: Int): Fragment {
             return fragments[position]
@@ -234,13 +232,17 @@ class CodeFragment : BaseWallFragment(), View.OnClickListener {
         }
         fragments.clear()
         for (i in codeTypeList.indices) {
-            fragments.add(CodeListFragment.Companion.getInstance(codeTypeList[i].type))
+            fragments.add(CodeListFragment.getInstance(codeTypeList[i].type))
         }
         mTabLayoutAdapter!!.notifyDataSetChanged()
-        vpAdapter!!.notifyDataSetChanged()
+        vpAdapter.notifyDataSetChanged()
     }
 
     override fun isRegistEventBus(): Boolean {
         return true
+    }
+
+    override fun initVB(): FragCodeBinding {
+        return FragCodeBinding.inflate(layoutInflater)
     }
 }

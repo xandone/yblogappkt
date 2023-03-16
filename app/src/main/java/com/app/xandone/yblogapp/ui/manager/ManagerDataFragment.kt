@@ -11,6 +11,7 @@ import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallFragment
 import com.app.xandone.yblogapp.constant.OSpKey
+import com.app.xandone.yblogapp.databinding.FragManagerBinding
 import com.app.xandone.yblogapp.model.event.SwitchEvent
 import com.app.xandone.yblogapp.ui.manager.chart.ChartDataActivity
 import com.app.xandone.yblogapp.ui.manager.setting.SettingActivity
@@ -23,7 +24,7 @@ import kotlinx.android.synthetic.main.frag_manager_data.*
  * created on: 2020/9/27 11:02
  * description:
  */
-class ManagerDataFragment : BaseWallFragment() {
+class ManagerDataFragment : BaseWallFragment<FragManagerBinding>() {
     private lateinit var toolbar: Toolbar
 
     override fun getLayout(): Int {
@@ -31,8 +32,6 @@ class ManagerDataFragment : BaseWallFragment() {
     }
 
     override fun initView(view: View) {
-        super.initView(view)
-
         toolbar = view.findViewById(R.id.toolbar)
 
         setToolBar("管理系统")
@@ -47,10 +46,8 @@ class ManagerDataFragment : BaseWallFragment() {
             }
         }
 
-        onLoadFinish()
     }
 
-    override fun requestData() {}
     private fun setToolBar(title: CharSequence) {
         toolbar.title = title
     }
@@ -62,5 +59,9 @@ class ManagerDataFragment : BaseWallFragment() {
                 clearDefaultSp(App.sContext!!, OSpKey.ADMIN_INFO_KEY)
             }
         })
+    }
+
+    override fun initVB(): FragManagerBinding {
+        return FragManagerBinding.inflate(layoutInflater)
     }
 }

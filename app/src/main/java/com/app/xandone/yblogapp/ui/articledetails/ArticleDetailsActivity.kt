@@ -7,6 +7,8 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.app.xandone.baselib.cache.ImageCache.getImageCache
 import com.app.xandone.baselib.log.LogHelper
 import com.app.xandone.baselib.utils.ImageUtils.saveFile2SdCard
@@ -18,26 +20,16 @@ import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.config.AppConfig
 import com.app.xandone.yblogapp.constant.OConstantKey
-import com.app.xandone.yblogapp.model.CodeDetailsModel
-import com.app.xandone.yblogapp.model.EssayDetailsModel
-import com.app.xandone.yblogapp.model.IArtDetailsModel
-import com.app.xandone.yblogapp.model.bean.CodeDetailsBean
-import com.app.xandone.yblogapp.model.bean.EssayDetailsBean
-import com.app.xandone.yblogapp.rx.IRequestCallback
-import com.app.xandone.yblogapp.viewmodel.ModelProvider
-import com.hitomi.tilibrary.transfer.TransferConfig
 import com.hitomi.tilibrary.transfer.Transferee
 import com.liulishuo.okdownload.DownloadListener
 import com.liulishuo.okdownload.DownloadTask
 import com.liulishuo.okdownload.core.breakpoint.BreakpointInfo
 import com.liulishuo.okdownload.core.cause.EndCause
 import com.liulishuo.okdownload.core.cause.ResumeFailedCause
-import com.vansz.universalimageloader.UniversalImageLoader
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import java.io.File
 import java.util.*
 import kotlinx.android.synthetic.main.act_article_details.*
+import kotlinx.coroutines.launch
 
 /**
  * author: Admin
@@ -45,7 +37,7 @@ import kotlinx.android.synthetic.main.act_article_details.*
  * description:
  */
 class ArticleDetailsActivity : BaseWallActivity() {
-    private lateinit var detailsModel: IArtDetailsModel<*>
+
     private var mId: String? = null
     private var mType = 0
     private var mTitle: String? = null
@@ -54,6 +46,14 @@ class ArticleDetailsActivity : BaseWallActivity() {
     private var task: DownloadTask? = null
     private lateinit var mDownloadListener: DownloadListener
     private lateinit var downloadDialog: BottomDialog
+
+    private val detailsModel by lazy {
+        ViewModelProvider(this, CodeDetailsModelFactory()).get(
+            CodeDetailsModel::class.java
+        )
+    }
+
+
     override fun getLayout(): Int {
         return R.layout.act_article_details
     }
@@ -71,59 +71,36 @@ class ArticleDetailsActivity : BaseWallActivity() {
         initWebView()
         initDownloadListener()
 
-
-        detailsModel = if (mType == TYPE_CODE) {
-            ModelProvider.getModel(
-                this,
-                CodeDetailsModel::class.java,
-                App.sContext
+        detailsModel.datas.observe(this) {
+            val html = it.data?.get(0)?.contentHtml!!.replace(
+                "<pre",
+                "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
             )
-        } else {
-            ModelProvider.getModel(
-                this,
-                EssayDetailsModel::class.java,
-                App.sContext
-            )
+            webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+            onLoadFinish()
         }
+        detailsModel.datas2.observe(this) {
+            val html = it.data?.get(0)?.contentHtml!!.replace(
+                "<pre",
+                "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
+            )
+            webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+            onLoadFinish()
+        }
+
+
         requestData()
     }
 
     override fun requestData() {
-        if (mType == TYPE_CODE) {
-            (detailsModel as CodeDetailsModel).getDetails(
-                mId,
-                object : IRequestCallback<CodeDetailsBean> {
-                    override fun success(codeDetailsBean: CodeDetailsBean) {
-                        val html = codeDetailsBean.contentHtml!!.replace(
-                            "<pre",
-                            "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
-                        )
-                        webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
-                        onLoadFinish()
-                    }
-
-                    override fun error(message: String?, statusCode: Int) {
-                        onLoadStatus(statusCode)
-                    }
-                })
-        } else {
-            (detailsModel as EssayDetailsModel).getDetails(
-                mId,
-                object : IRequestCallback<EssayDetailsBean> {
-                    override fun success(essayDetailsBean: EssayDetailsBean) {
-                        val html = essayDetailsBean.contentHtml!!.replace(
-                            "<pre",
-                            "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
-                        )
-                        webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
-                        onLoadFinish()
-                    }
-
-                    override fun error(message: String?, statusCode: Int) {
-                        onLoadStatus(statusCode)
-                    }
-                })
+        lifecycleScope.launch {
+            if (mType == TYPE_CODE) {
+                detailsModel.getCodeDetails(mId)
+            } else {
+                detailsModel.getEssayDetails(mId)
+            }
         }
+
     }
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
@@ -195,23 +172,23 @@ class ArticleDetailsActivity : BaseWallActivity() {
     @SuppressLint("CheckResult")
     @JavascriptInterface
     fun showImg(url: String, position: Int) {
-        Observable.just(url)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { s ->
-                urls!!.clear()
-                urls!!.add(s)
-                transfer!!.apply(
-                    TransferConfig.build()
-                        .setImageLoader(UniversalImageLoader.with(applicationContext))
-                        .setSourceUrlList(urls)
-                        .setOnLongClickListener { imageView, imageUri, pos ->
-                            showDownloadDialog(
-                                imageUri
-                            )
-                        }
-                        .create()
-                ).show()
-            }
+//        Observable.just(url)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { s ->
+//                urls!!.clear()
+//                urls!!.add(s)
+//                transfer!!.apply(
+//                    TransferConfig.build()
+//                        .setImageLoader(UniversalImageLoader.with(applicationContext))
+//                        .setSourceUrlList(urls)
+//                        .setOnLongClickListener { imageView, imageUri, pos ->
+//                            showDownloadDialog(
+//                                imageUri
+//                            )
+//                        }
+//                        .create()
+//                ).show()
+//            }
     }
 
     private fun showDownloadDialog(imageUri: String) {

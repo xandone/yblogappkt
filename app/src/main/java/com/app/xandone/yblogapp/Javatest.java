@@ -1,6 +1,5 @@
 package com.app.xandone.yblogapp;
 
-import org.junit.Test;
 
 /**
  * @author: xiao

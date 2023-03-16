@@ -1,8 +1,7 @@
 package com.app.xandone.yblogapp.api
 
-import com.app.xandone.yblogapp.model.base.BaseResponse
 import com.app.xandone.yblogapp.model.bean.*
-import io.reactivex.Flowable
+import com.app.xandone.yblogapp.model.repository.ApiResponse
 import retrofit2.http.*
 
 /**
@@ -12,37 +11,37 @@ import retrofit2.http.*
  */
 interface IApiService {
     @GET("art/artlist")
-    fun getCodeDatas(
+    suspend fun getCodeDatas(
         @Query("page") page: Int,
         @Query("row") row: Int,
         @Query("type") type: Int
-    ): Flowable<BaseResponse<List<CodeArticleBean>>>
+    ): ApiResponse<List<CodeArticleBean>>
 
     @GET("art/artDetails")
-    fun getCodeDetails(@Query("artId") artId: String?): Flowable<BaseResponse<List<CodeDetailsBean>>>
+    suspend fun getCodeDetails(@Query("artId") artId: String?): ApiResponse<List<CodeDetailsBean>>
 
     @GET("essay/essaylist")
-    fun getEssayDatas(
+    suspend fun getEssayDatas(
         @Query("page") page: Int,
         @Query("row") row: Int
-    ): Flowable<BaseResponse<List<EssayArticleBean>>>
+    ): ApiResponse<List<EssayArticleBean>>
 
     @GET("essay/essayDetails")
-    fun getEssayDetails(@Query("essayId") essayId: String?): Flowable<BaseResponse<List<EssayDetailsBean>>>
+    suspend fun getEssayDetails(@Query("essayId") essayId: String?): ApiResponse<List<EssayDetailsBean>>
 
     @GET("banner/list")
-    fun bannerDatas(): Flowable<BaseResponse<List<BannerBean>>>
+    suspend fun bannerDatas(): ApiResponse<List<BannerBean>>
 
     @GET("art/artTypeList")
-    fun codeTypeDatas(): Flowable<BaseResponse<List<CodeTypeBean>>>
+    suspend fun codeTypeDatas(): ApiResponse<List<CodeTypeBean>>
 
     @FormUrlEncoded
     @POST("admin/login")
-    fun login(
+    suspend fun login(
         @Field("name") name: String?,
         @Field("psw") psw: String?
-    ): Flowable<BaseResponse<List<AdminBean>>>
+    ): ApiResponse<List<AdminBean>>
 
     @GET("admin/artInfo")
-    fun getArtInfoDatas(@Query("adminId") id: String?): Flowable<BaseResponse<ArtInfoBean>>
+    suspend fun getArtInfoDatas(@Query("adminId") id: String?): ApiResponse<ArtInfoBean>
 }

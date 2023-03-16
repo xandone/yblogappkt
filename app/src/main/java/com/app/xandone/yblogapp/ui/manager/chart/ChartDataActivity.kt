@@ -3,20 +3,15 @@ package com.app.xandone.yblogapp.ui.manager.chart
 import android.graphics.Color
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import com.app.xandone.baselib.cache.CacheHelper.clearDefaultSp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.app.xandone.baselib.utils.SimpleUtils.isEmpty
 import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.cache.UserInfoHelper
-import com.app.xandone.yblogapp.constant.OResponseCode
-import com.app.xandone.yblogapp.constant.OSpKey
-import com.app.xandone.yblogapp.model.ManagerChartModel
-import com.app.xandone.yblogapp.model.bean.ArtInfoBean
-import com.app.xandone.yblogapp.model.event.SwitchEvent
-import com.app.xandone.yblogapp.rx.IRequestCallback
+import com.app.xandone.yblogapp.ui.manager.ManagerModelFactory
 import com.app.xandone.yblogapp.utils.LineValueFormatter
-import com.app.xandone.yblogapp.viewmodel.ModelProvider
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -25,10 +20,10 @@ import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 import kotlinx.android.synthetic.main.act_chart_data.*
+import kotlinx.coroutines.launch
 
 /**
  * author: Admin
@@ -36,8 +31,16 @@ import kotlinx.android.synthetic.main.act_chart_data.*
  * description:
  */
 class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
-    private var managerChartModel: ManagerChartModel? = null
+
     private var mLineData: LineData? = null
+
+    private val managerChartModel by lazy {
+        ViewModelProvider(this, ManagerModelFactory()).get(
+            ManagerChartModel::class.java
+        )
+    }
+
+
     override fun getLayout(): Int {
         return R.layout.act_chart_data
     }
@@ -45,60 +48,40 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
     override fun wallInit() {
         initChart()
 
-        managerChartModel = ModelProvider.getModel(
-            this,
-            ManagerChartModel::class.java,
-            App.sContext
-        )
-        requestData()
+        managerChartModel.datas.observe(this) {
+            val list1: MutableList<Int> = ArrayList()
+            val list2: MutableList<Int> = ArrayList()
+            val list3: MutableList<Int> = ArrayList()
+            for (yearArtDataBean in it.data?.yearArtData!!) {
+                list1.add(yearArtDataBean.codeCount)
+                list2.add(yearArtDataBean.essayCount)
+                list3.add(yearArtDataBean.year!!.toInt())
+            }
+            addSetData(
+                list1,
+                list3,
+                "lable_1",
+                ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color1),
+                true,
+                R.drawable.fade_fill_blue
+            )
+            addSetData(
+                list2,
+                list3,
+                "lable_2",
+                ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color3),
+                true,
+                R.drawable.fade_fill_yellow
+            )
+            chart1.invalidate()
+            onLoadFinish()
+        }
+
+        lifecycleScope.launch { UserInfoHelper.adminId?.let { managerChartModel.getArtInfoData(it) } }
     }
 
     override fun requestData() {
-        managerChartModel!!.getArtInfoData(
-            UserInfoHelper.adminId,
-            object : IRequestCallback<ArtInfoBean> {
-                override fun success(artInfoBean: ArtInfoBean) {
-                    val list1: MutableList<Int> = ArrayList()
-                    val list2: MutableList<Int> = ArrayList()
-                    val list3: MutableList<Int> = ArrayList()
-                    for (yearArtDataBean in artInfoBean.yearArtData!!) {
-                        list1.add(yearArtDataBean.codeCount)
-                        list2.add(yearArtDataBean.essayCount)
-                        list3.add(yearArtDataBean.year!!.toInt())
-                    }
-                    addSetData(
-                        list1,
-                        list3,
-                        "lable_1",
-                        ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color1),
-                        true,
-                        R.drawable.fade_fill_blue
-                    )
-                    addSetData(
-                        list2,
-                        list3,
-                        "lable_2",
-                        ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color3),
-                        true,
-                        R.drawable.fade_fill_yellow
-                    )
-                    chart1.invalidate()
-                    onLoadFinish()
-                }
 
-                override fun error(message: String?, statusCode: Int) {
-                    onLoadStatus(statusCode)
-                    //token失效时，退出到登录界面
-                    if (statusCode == OResponseCode.TOKEN_FAIL) {
-                        EventBus.getDefault().post(SwitchEvent(SwitchEvent.MANAGER_LOGIN_RAG))
-                        clearDefaultSp(
-                            App.sContext!!,
-                            OSpKey.ADMIN_INFO_KEY
-                        )
-                        finish()
-                    }
-                }
-            })
     }
 
     private fun initChart() {

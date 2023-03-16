@@ -4,6 +4,8 @@ import android.animation.ObjectAnimator
 import android.view.View
 import android.view.Window
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.app.xandone.baselib.base.BaseFrament
 import com.app.xandone.baselib.base.setClickAction
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
@@ -18,31 +20,33 @@ import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.config.AppConfig
 import com.app.xandone.yblogapp.constant.OSpKey
-import com.app.xandone.yblogapp.model.ManagerModel
+import com.app.xandone.yblogapp.databinding.FragManagerLoginBinding
 import com.app.xandone.yblogapp.model.bean.AdminBean
 import com.app.xandone.yblogapp.model.event.SwitchEvent
-import com.app.xandone.yblogapp.rx.IRequestCallback
-import com.app.xandone.yblogapp.viewmodel.ModelProvider
 import org.greenrobot.eventbus.EventBus
 import kotlinx.android.synthetic.main.frag_manager_login.*
+import kotlinx.coroutines.launch
 
 /**
  * author: Admin
  * created on: 2020/9/29 09:52
  * description:
  */
-class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
+class ManagerLoginFragment : BaseFrament<FragManagerLoginBinding>(), SoftKeyboardStateListener {
     private lateinit var keyboardWatcher: KeyboardWatcher
-    private lateinit var managerModel: ManagerModel
     override fun getLayout(): Int {
         return R.layout.frag_manager_login
+    }
+
+    private val managerModel by lazy {
+        ViewModelProvider(this, ManagerModelFactory()).get(
+            ManagerModel::class.java
+        )
     }
 
     override fun initView(view: View) {
         keyboardWatcher = KeyboardWatcher(mActivity.findViewById(Window.ID_ANDROID_CONTENT))
         keyboardWatcher.addSoftKeyboardStateListener(this)
-
-        managerModel = ModelProvider.getModel(mActivity, ManagerModel::class.java, App.sContext)
 
         setClickAction(login_btn) {
             when (this) {
@@ -52,34 +56,35 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
                 }
             }
         }
+
+        managerModel.datas.observe(this) {
+            EventBus.getDefault().post(SwitchEvent(SwitchEvent.MANAGER_DATA_RAG))
+            it.data?.get(0)?.let { it1 -> savaLoginInfo(it1) }
+            showShort("登录成功")
+        }
     }
 
     private fun login() {
-        val name = login_account_et.text.toString()
+        val name: String = login_account_et.text.toString()
         var psw: String? = login_psw_et.text.toString()
         if (name.isEmpty()) {
             showShort("请输入账户")
             return
         }
-        if (name.isEmpty()) {
+        if (psw == null) {
             showShort("请输入密码")
             return
         }
-        psw = MD5(psw!!)
-        managerModel.login(
-            name,
-            psw,
-            object : IRequestCallback<AdminBean> {
-                override fun success(adminBean: AdminBean) {
-                    EventBus.getDefault().post(SwitchEvent(SwitchEvent.MANAGER_DATA_RAG))
-                    savaLoginInfo(adminBean)
-                    showShort("登录成功")
-                }
+        if (psw.isEmpty()) {
+            showShort("请输入密码")
+            return
+        }
+        psw = MD5(psw)
 
-                override fun error(message: String?, statusCode: Int) {
-                    showShort("登录异常$message")
-                }
-            })
+        lifecycleScope.launch {
+            psw?.let { managerModel.login(name, it) }
+
+        }
     }
 
     /**
@@ -128,5 +133,9 @@ class ManagerLoginFragment : BaseFrament(), SoftKeyboardStateListener {
     override fun onDestroy() {
         super.onDestroy()
         keyboardWatcher.removeSoftKeyboardStateListener(this)
+    }
+
+    override fun initVB(): FragManagerLoginBinding {
+        return FragManagerLoginBinding.inflate(layoutInflater)
     }
 }

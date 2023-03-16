@@ -2,8 +2,13 @@ package com.app.xandone.yblogapp
 
 import android.app.Application
 import android.content.Context
-import androidx.multidex.MultiDex
+import android.widget.TextView
 import com.app.xandone.yblogapp.config.AppConfig
+import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
+import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
+import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
+import com.app.xandone.yblogapp.view.statelayout.StateConfig
+import com.app.xandone.yblogapp.view.statelayout.handler.FadeStateChangedHandler
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -35,17 +40,35 @@ class App : Application() {
         super.onCreate()
         sContext = this
         init()
+
+        StateConfig.apply {
+            emptyLayout = R.layout.layout_empty
+            errorLayout = R.layout.layout_error
+            loadingLayout = R.layout.layout_loading
+            stateChangedHandler = FadeStateChangedHandler()
+            setRetryIds(R.id.msg, R.id.iv)
+
+            onError {
+                when (it) {
+                    is ApiEmptyResponse<*> -> {
+                        findViewById<TextView>(R.id.msg).text = "暂无数据"
+                    }
+                    is ApiErrorResponse<*> -> {
+                        findViewById<TextView>(R.id.msg).text = it.message
+                    }
+                    is ApiOtherErrorResponse<*> -> {
+                        findViewById<TextView>(R.id.msg).text = it.errorMessage
+                    }
+                }
+            }
+        }
     }
 
     private fun init() {
         AppConfig.init(this, BuildConfig.DEBUG)
         //管理Activity
         ActManager.getInstance().init(this)
-    }
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 
 }

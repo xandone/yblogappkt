@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.app.xandone.yblogapp.view.statelayout.StateLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,9 +9,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.app.xandone.widgetlib.view.LoadingLayout
-        android:id="@+id/loadLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</FrameLayout>
+</com.app.xandone.yblogapp.view.statelayout.StateLayout>

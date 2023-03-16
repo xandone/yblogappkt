@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.xandone.baselib.imageload.ImageLoadHelper
@@ -16,13 +18,14 @@ import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseListFragment
 import com.app.xandone.yblogapp.constant.OConstantKey
-import com.app.xandone.yblogapp.model.EssayModel
 import com.app.xandone.yblogapp.model.base.BaseResponse
 import com.app.xandone.yblogapp.model.bean.BannerBean
 import com.app.xandone.yblogapp.model.bean.EssayArticleBean
-import com.app.xandone.yblogapp.rx.IRequestCallback
+import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
+import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
+import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
+import com.app.xandone.yblogapp.model.repository.HttpResult
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
-import com.app.xandone.yblogapp.viewmodel.ModelProvider
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -33,6 +36,7 @@ import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener
 import kotlinx.android.synthetic.main.frag_base_list.*
+import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
 
 /**
@@ -41,17 +45,27 @@ import kotlin.collections.ArrayList
  * description:
  */
 class Essayfragment : BaseListFragment() {
-    private var essayModel: EssayModel? = null
+
     private lateinit var mAdapter: BaseQuickAdapter<EssayArticleBean, BaseViewHolder>
-    private lateinit var datas: ArrayList<EssayArticleBean>
+    private lateinit var mDatas: ArrayList<EssayArticleBean>
     private lateinit var bannerAdapter: BannerImageAdapter<BannerBean>
     private lateinit var bannerList: ArrayList<BannerBean>
+
+    private var mPage = 1
+
+    private val essayModel by lazy {
+        ViewModelProvider(this, EssayModelFactory()).get(
+            EssayModel::class.java
+        )
+    }
+
+
     override fun initView(view: View) {
         super.initView(view)
-        datas = ArrayList()
+        mDatas = ArrayList()
         bannerList = ArrayList()
         mAdapter = object :
-            BaseQuickAdapter<EssayArticleBean, BaseViewHolder>(R.layout.item_essay_list, datas) {
+            BaseQuickAdapter<EssayArticleBean, BaseViewHolder>(R.layout.item_essay_list, mDatas) {
             override fun convert(baseViewHolder: BaseViewHolder,
                                  essayArticleBean: EssayArticleBean) {
                 baseViewHolder.setText(R.id.essay_title_tv, essayArticleBean.title)
@@ -96,16 +110,73 @@ class Essayfragment : BaseListFragment() {
         mAdapter.setOnItemClickListener(OnItemClickListener { adapter, view, position ->
             startActivity(
                 Intent(mActivity, ArticleDetailsActivity::class.java)
-                    .putExtra(OConstantKey.ID, datas.get(position)!!.essayId)
+                    .putExtra(OConstantKey.ID, mDatas.get(position)!!.essayId)
                     .putExtra(
                         OConstantKey.TYPE,
                         ArticleDetailsActivity.TYPE_ESSAY
                     )
-                    .putExtra(OConstantKey.TITLE, datas.get(position).title)
+                    .putExtra(OConstantKey.TITLE, mDatas.get(position).title)
             )
         })
 
-        essayModel = ModelProvider.getModel( mActivity, EssayModel::class.java,App.sContext  )
+
+
+        essayModel.datas.observe(this) { response ->
+            if (response.result == HttpResult.SUCCESS && response.data != null) {
+                if (mPage == 0) {
+                    mAdapter?.setList(response.data)
+                    if (response.total == 0) {
+                        mStateLayout.showEmpty(
+                            ApiEmptyResponse<Any>()
+                        )
+                        return@observe
+                    }
+                } else {
+                    mAdapter?.addData(response.data)
+                }
+                if (response.total <= mDatas?.size!!) {
+                    mBinding.refreshLayout.finishLoadMoreWithNoMoreData()
+                } else {
+                    mBinding.refreshLayout.finishLoadMore()
+                }
+
+                mStateLayout.showContent()
+            } else {
+                when (response) {
+                    is ApiEmptyResponse -> {
+                        mStateLayout.showEmpty(response)
+                    }
+                    is ApiErrorResponse -> {
+                        mStateLayout.showError(response)
+                    }
+                    is ApiOtherErrorResponse -> {
+                        mStateLayout.showError(response)
+                    }
+                    else -> {
+                        mStateLayout.showError(
+                            ApiOtherErrorResponse<Any>(
+                                Exception(),
+                                -1000,
+                                "未知异常"
+                            )
+                        )
+                    }
+                }
+
+                if (mPage != 0) {
+                    mBinding.refreshLayout.finishLoadMore(false)
+                }
+            }
+
+            mBinding.refreshLayout.finishRefresh()
+        }
+
+        essayModel.datas2.observe(this) {
+            bannerList.clear()
+            bannerList.addAll(it.data!!)
+            bannerAdapter.notifyDataSetChanged()
+        }
+
         requestData()
     }
 
@@ -148,53 +219,21 @@ class Essayfragment : BaseListFragment() {
         })
     }
 
-    override fun requestData() {
+    fun requestData() {
         getCodeDatas(1, false)
         getBannerDatas()
     }
 
     private fun getBannerDatas() {
-        essayModel?.getBannerDatas(object : IRequestCallback<List<BannerBean>> {
-            override fun success(bannerBeans: List<BannerBean>) {
-                bannerList.clear()
-                bannerList.addAll(bannerBeans)
-                bannerAdapter.notifyDataSetChanged()
-            }
-
-            override fun error(message: String?, statusCode: Int) {}
-        })
+        lifecycleScope.launch {
+            essayModel.getBannerDatas()
+        }
     }
 
     private fun getCodeDatas(page: Int, isLoadMore: Boolean) {
-        essayModel?.getEssayDatas(
-            page,
-            ROW,
-            object : IRequestCallback<BaseResponse<List<EssayArticleBean>>> {
-                override fun success(response: BaseResponse<List<EssayArticleBean>>) {
-                    onLoadFinish()
-                    if (!isLoadMore) {
-                        finishRefresh()
-                        if (SimpleUtils.isEmpty(response.data)) {
-                            onLoadEmpty()
-                            return
-                        }
-                        datas = response.data as ArrayList<EssayArticleBean>
-                        mAdapter.setList(datas)
-                    } else {
-                        datas.addAll(response.data as ArrayList<EssayArticleBean>)
-                        mAdapter.setList(datas)
-                        if (datas.size >= response.total) {
-                            finishLoadNoMoreData()
-                        } else {
-                            finishLoadMore()
-                        }
-                    }
-                }
-
-                override fun error(message: String?, statusCode: Int) {
-                    onLoadStatus(statusCode)
-                }
-            })
+        lifecycleScope.launch {
+            essayModel.getEssayDatas(isLoadMore, page, ROW)
+        }
     }
 
     override fun getData() {
@@ -203,7 +242,7 @@ class Essayfragment : BaseListFragment() {
     }
 
     override fun getDataMore() {
-        getCodeDatas(datas.size / ROW + 1, true)
+        getCodeDatas(mDatas.size / ROW + 1, true)
     }
 
     companion object {

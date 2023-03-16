@@ -13,7 +13,7 @@ import java.io.IOException
  * created on: 2022/9/15 11:11
  * description:
  */
-class CacheInterceptor(var isCache: Boolean) : Interceptor {
+class CacheInterceptor(var isCache: Boolean = true) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()

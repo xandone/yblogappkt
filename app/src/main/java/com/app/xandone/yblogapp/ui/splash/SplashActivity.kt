@@ -1,19 +1,17 @@
 package com.app.xandone.yblogapp.ui.splash
 
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import com.app.xandone.baselib.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.MainActivity
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.config.IMyPermission
-import com.app.xandone.yblogapp.rx.RxHelper
-import io.reactivex.Flowable
-import io.reactivex.disposables.Disposable
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.EasyPermissions.PermissionCallbacks
 import pub.devrel.easypermissions.PermissionRequest
-import java.util.concurrent.TimeUnit
 
 /**
  * author: Admin
@@ -21,7 +19,6 @@ import java.util.concurrent.TimeUnit
  * description:
  */
 class SplashActivity : BaseSimpleActivity(), PermissionCallbacks {
-    private var disposable: Disposable? = null
     override fun getLayout(): Int {
         return R.layout.act_splash
     }
@@ -31,12 +28,10 @@ class SplashActivity : BaseSimpleActivity(), PermissionCallbacks {
     }
 
     private fun go2NextPage() {
-        disposable = Flowable.timer(2000, TimeUnit.MILLISECONDS)
-            .compose(RxHelper.handleIO())
-            .subscribe {
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                finish()
-            }
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
+        }, 1000)
     }
 
     private fun hasWriteAndReadPermissions(): Boolean {
@@ -79,10 +74,4 @@ class SplashActivity : BaseSimpleActivity(), PermissionCallbacks {
         finish()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (disposable != null) {
-            disposable!!.dispose()
-        }
-    }
 }
