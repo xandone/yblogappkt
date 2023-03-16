@@ -1,52 +1,83 @@
 package com.app.xandone.yblogapp
 
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.app.xandone.baselib.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.ui.code.CodeFragment
 import com.app.xandone.yblogapp.ui.essay.Essayfragment
 import com.app.xandone.yblogapp.ui.manager.ManagerFragment
-import kotlin.collections.ArrayList
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseSimpleActivity() {
-    private lateinit var fragments: ArrayList<Fragment>
-    private var mCurrentFragment: Fragment? = null
-    private var mCurrentIndex = 0
+
+
+    private val codeFragment by lazy {
+        CodeFragment.instance
+    }
+
+    private val essayfragment by lazy {
+        Essayfragment.instance
+    }
+
+
+    private val managerFragment by lazy {
+        ManagerFragment.instance
+    }
+
+
     override fun getLayout(): Int {
         return R.layout.activity_main
     }
 
     override fun initView() {
-//        val a = ATest()
-//        lifecycle.addObserver(a)
-        fragments = ArrayList()
-        fragments.add(CodeFragment.instance)
-        fragments.add(Essayfragment.instance)
-        fragments.add(ManagerFragment.instance)
-        bottom_bar.setOnTabSelectListener { tabId ->
-            when (tabId) {
-                R.id.main_footer_code_rb -> mCurrentIndex = 0
-                R.id.main_footer_essay_rb -> mCurrentIndex = 1
-                R.id.main_footer_manager_rb -> mCurrentIndex = 2
-                else -> {
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.main_frame, codeFragment)
+            .commitAllowingStateLoss()
+
+
+        bottom_bar.setOnItemSelectedListener { item ->
+            var isSelect = false
+            supportFragmentManager.beginTransaction().apply {
+                hideAllFragment(this)
+                when (item.itemId) {
+                    R.id.main_footer_code_rb -> {
+                        isSelect = true
+                        if (codeFragment.isAdded) {
+                            show(codeFragment)
+                        } else {
+                            add(R.id.main_frame, codeFragment)
+                        }
+                    }
+                    R.id.main_footer_essay_rb -> {
+                        isSelect = true
+                        if (essayfragment.isAdded) {
+                            show(essayfragment)
+                        } else {
+                            add(R.id.main_frame, essayfragment)
+                        }
+                    }
+                    R.id.main_footer_manager_rb -> {
+                        isSelect = true
+                        if (managerFragment.isAdded) {
+                            show(managerFragment)
+                        } else {
+                            add(R.id.main_frame, managerFragment)
+                        }
+                    }
                 }
-            }
-            turn2Fragment(mCurrentIndex)
+            }.commitAllowingStateLoss()
+
+            return@setOnItemSelectedListener isSelect
         }
     }
 
-    fun turn2Fragment(index: Int) {
-        val toFragment = fragments[index]
-        val ft = supportFragmentManager.beginTransaction()
-        if (mCurrentFragment != null) {
-            ft.hide(mCurrentFragment!!)
+
+    private fun hideAllFragment(transaction: FragmentTransaction) {
+        transaction.apply {
+            if (codeFragment.isAdded) hide(codeFragment)
+            if (codeFragment.isAdded) hide(essayfragment)
+            if (codeFragment.isAdded) hide(managerFragment)
         }
-        if (toFragment.isAdded) {
-            ft.show(toFragment)
-        } else {
-            ft.add(R.id.main_frame, toFragment)
-        }
-        ft.commitAllowingStateLoss()
-        mCurrentFragment = toFragment
+
     }
 }
