@@ -2,7 +2,6 @@ package com.app.xandone.yblogapp.ui.code
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -10,11 +9,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager.widget.ViewPager
 import com.app.xandone.baselib.cache.SpHelper.getDefaultString
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.utils.JsonUtils
-import com.app.xandone.baselib.utils.ToastUtils
 import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallFragment
@@ -22,11 +19,8 @@ import com.app.xandone.yblogapp.constant.OSpKey
 import com.app.xandone.yblogapp.databinding.FragCodeBinding
 import com.app.xandone.yblogapp.model.bean.CodeTypeBean
 import com.app.xandone.yblogapp.model.event.CodeTypeEvent
-import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
-import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
-import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
-import com.app.xandone.yblogapp.model.repository.ApiSuccessResponse
 import com.app.xandone.yblogapp.ui.code.list.CodeListFragment
+import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.frag_code.*
 import kotlinx.coroutines.launch
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -70,10 +64,6 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
 
     companion object {
         val instance = CodeFragment()
-    }
-
-    override fun getLayout(): Int {
-        return R.layout.frag_code
     }
 
     override fun initView(view: View) {
@@ -246,7 +236,31 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
         return true
     }
 
+    override fun isStatusBarEnabled(): Boolean {
+        return true
+    }
+
+    override fun getTitleView(): View {
+        return mBinding.magicIndicatorCl
+    }
+
+    override fun statusBarConfig(): ImmersionBar {
+        return ImmersionBar.with(this)
+            // 默认状态栏字体颜色为黑色
+            .statusBarDarkFont(true)
+            .statusBarColor(R.color.app_bg_color)
+            // 指定导航栏背景颜色
+//                .navigationBarColor(android.R.color.white)
+            // 状态栏字体和导航栏内容自动变色，必须指定状态栏颜色和导航栏颜色才可以自动变色
+            .autoDarkModeEnable(true, 0.2f);
+    }
+
     override fun initVB(): FragCodeBinding {
         return FragCodeBinding.inflate(layoutInflater)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mImmersionBar?.statusBarColor(R.color.app_bg_color)
     }
 }

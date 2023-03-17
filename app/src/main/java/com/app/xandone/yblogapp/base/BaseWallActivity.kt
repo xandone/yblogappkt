@@ -3,11 +3,13 @@ package com.app.xandone.yblogapp.base
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.annotation.NonNull
 import androidx.appcompat.widget.Toolbar
 import com.app.xandone.baselib.base.BaseActivity
 import com.app.xandone.widgetlib.view.LoadingLayout
 import com.app.xandone.widgetlib.view.LoadingLayout.OnReloadListener
 import com.app.xandone.yblogapp.R
+import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.act_base_wall.*
 import java.util.*
 
@@ -17,7 +19,9 @@ import java.util.*
  * description:有加载状态页的基类Fragment
  */
 abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener {
+
     lateinit var toolbar: Toolbar
+
     @SuppressLint("InflateParams")
     override fun initContentView() {
         val inflater = LayoutInflater.from(this)
@@ -39,6 +43,7 @@ abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener
         onLoading()
         initToolbar()
         wallInit()
+        initImmersionBar()
     }
 
     protected fun initToolbar() {
@@ -57,6 +62,40 @@ abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener
     fun setToolBar(title: CharSequence?) {
         toolbar.title = title
         toolbar.setNavigationIcon(R.mipmap.back_ic)
+    }
+
+    private var mImmersionBar: ImmersionBar? = null
+
+    private fun initImmersionBar() {
+        if (isStatusBarEnabled()) {
+            getStatusBarConfig().init()
+            ImmersionBar.setTitleBar(this, toolbar)
+        }
+    }
+
+    @NonNull
+    private fun getStatusBarConfig(): ImmersionBar {
+        if (mImmersionBar == null) {
+            mImmersionBar = statusBarConfig();
+        }
+        return mImmersionBar as ImmersionBar
+    }
+
+
+    protected open fun isStatusBarEnabled(): Boolean {
+        return true
+    }
+
+    @NonNull
+    protected open fun statusBarConfig(): ImmersionBar {
+        return ImmersionBar.with(this)
+            // 默认状态栏字体颜色为黑色
+            .statusBarDarkFont(true)
+//                .statusBarColor(R.color.white_color)
+            // 指定导航栏背景颜色
+//                .navigationBarColor(android.R.color.white)
+            // 状态栏字体和导航栏内容自动变色，必须指定状态栏颜色和导航栏颜色才可以自动变色
+            .autoDarkModeEnable(true, 0.2f);
     }
 
     /**
@@ -80,7 +119,7 @@ abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener
         loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.LOADING)
     }
 
-    override fun onLoadEmpty(tag: Any? ) {
+    override fun onLoadEmpty(tag: Any?) {
         loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.EMPTY)
     }
 

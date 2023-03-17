@@ -46,7 +46,7 @@ class App : Application() {
             errorLayout = R.layout.layout_error
             loadingLayout = R.layout.layout_loading
             stateChangedHandler = FadeStateChangedHandler()
-            setRetryIds(R.id.msg, R.id.iv)
+            setRetryIds(R.id.msg, R.id.iv, R.id.btn)
 
             onError {
                 when (it) {

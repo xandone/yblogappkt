@@ -24,9 +24,11 @@ import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
 import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
 import com.app.xandone.yblogapp.model.repository.HttpResult
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
+import com.app.xandone.yblogapp.view.statelayout.StateLayout
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.gson.reflect.TypeToken
+import com.gyf.immersionbar.ImmersionBar
 import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
@@ -205,7 +207,6 @@ class Essayfragment : BaseListFragment() {
         }
     }
 
-
     private fun getBannerDatas() {
         lifecycleScope.launch {
             essayModel.getBannerDatas()
@@ -229,8 +230,21 @@ class Essayfragment : BaseListFragment() {
         getCodeDatas(mPage, true)
     }
 
+    override fun isStatusBarEnabled(): Boolean {
+        return true
+    }
+
+    override fun getTitleView(): View {
+        return mStateLayout
+    }
+
     companion object {
         private const val ROW = 10
         val instance: Essayfragment = Essayfragment()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mImmersionBar?.statusBarColor(R.color.app_bg_color)
     }
 }

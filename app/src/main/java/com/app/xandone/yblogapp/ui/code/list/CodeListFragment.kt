@@ -3,22 +3,17 @@ package com.app.xandone.yblogapp.ui.code.list
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.xandone.baselib.imageload.ImageLoadHelper
-import com.app.xandone.baselib.utils.JsonUtils
 import com.app.xandone.widgetlib.utils.SpacesItemDecoration
 import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseListFragment
 import com.app.xandone.yblogapp.constant.OConstantKey
-import com.app.xandone.yblogapp.databinding.FragBaseListBinding
 import com.app.xandone.yblogapp.model.bean.CodeArticleBean
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -81,16 +76,16 @@ class CodeListFragment : BaseListFragment() {
             startActivity(
                 Intent(mActivity, ArticleDetailsActivity::class.java)
                     .putExtra(OConstantKey.ID, mDatas[position].artId)
-                    .putExtra(OConstantKey.TYPE, ArticleDetailsActivity.Companion.TYPE_CODE)
+                    .putExtra(OConstantKey.TYPE, ArticleDetailsActivity.TYPE_CODE)
                     .putExtra(OConstantKey.TITLE, mDatas[position].title)
             )
         }
 
         codeModel.datas.observe(this) { response ->
             if (response.result == HttpResult.SUCCESS && response.data != null) {
-                if (mPage == 0) {
+                if (mPage == 1) {
                     mAdapter.setList(response.data)
-                    if (response.total == 0) {
+                    if (response.data.isEmpty() || response.total == 0) {
                         onLoadEmpty(ApiEmptyResponse<Any>())
                         return@observe
                     }
@@ -120,7 +115,7 @@ class CodeListFragment : BaseListFragment() {
                     }
                 }
 
-                if (mPage != 0) {
+                if (mPage != 1) {
                     mBinding.refreshLayout.finishLoadMore(false)
                 }
             }
@@ -131,23 +126,23 @@ class CodeListFragment : BaseListFragment() {
 
     protected fun lazyLoadData() {
         mPage = 1
-        getCodeDatas(false)
+        getCodeDatas()
     }
 
-    private fun getCodeDatas(isLoadMore: Boolean) {
+    private fun getCodeDatas() {
         lifecycleScope.launch {
-            codeModel.getCodeDatas(isLoadMore, mPage, ROW, mType)
+            codeModel.getCodeDatas(mPage, ROW, mType)
         }
     }
 
     override fun getData() {
         mPage = 1
-        getCodeDatas(false)
+        getCodeDatas()
     }
 
     override fun getDataMore() {
-        mPage++
-        getCodeDatas(true)
+        mPage = mDatas.size / ROW + 1
+        getCodeDatas()
     }
 
     override fun onResume() {

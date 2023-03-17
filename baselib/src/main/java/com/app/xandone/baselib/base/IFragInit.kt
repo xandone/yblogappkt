@@ -14,8 +14,5 @@ interface IFragInit {
      */
     fun doBeforeSetContentView()
 
-    @LayoutRes
-    fun getLayout(): Int
-
     fun initView(view: View)
 }

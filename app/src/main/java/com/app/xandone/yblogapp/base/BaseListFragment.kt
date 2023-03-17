@@ -1,6 +1,7 @@
 package com.app.xandone.yblogapp.base
 
 import android.view.View
+import androidx.annotation.CallSuper
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.databinding.FragBaseListBinding
 import kotlinx.android.synthetic.main.frag_base_list.*
@@ -11,14 +12,11 @@ import kotlinx.android.synthetic.main.frag_base_list.*
  * description:
  */
 abstract class BaseListFragment : BaseWallFragment<FragBaseListBinding>(), IRefreshCallback {
-    override fun getLayout(): Int {
-        return R.layout.frag_base_list
-    }
-
     override fun initVB(): FragBaseListBinding {
         return FragBaseListBinding.inflate(layoutInflater)
     }
 
+    @CallSuper
     override fun initView(view: View) {
         mBinding.refreshLayout.setOnRefreshListener { getData() }
         refreshLayout.setOnLoadMoreListener { getDataMore() }

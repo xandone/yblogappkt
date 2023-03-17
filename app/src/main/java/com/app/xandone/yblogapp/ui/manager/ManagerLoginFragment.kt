@@ -34,9 +34,6 @@ import kotlinx.coroutines.launch
  */
 class ManagerLoginFragment : BaseFrament<FragManagerLoginBinding>(), SoftKeyboardStateListener {
     private lateinit var keyboardWatcher: KeyboardWatcher
-    override fun getLayout(): Int {
-        return R.layout.frag_manager_login
-    }
 
     private val managerModel by lazy {
         ViewModelProvider(this, ManagerModelFactory()).get(

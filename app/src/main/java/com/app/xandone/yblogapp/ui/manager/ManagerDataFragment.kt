@@ -19,10 +19,6 @@ import com.app.xandone.yblogapp.ui.manager.setting.SettingActivity
  */
 class ManagerDataFragment : BaseWallFragment<FragManagerDataBinding>() {
 
-    override fun getLayout(): Int {
-        return R.layout.frag_manager_data
-    }
-
     override fun initView(view: View) {
         val adminBean = UserInfoHelper.adminBean
         adminBean?.let {

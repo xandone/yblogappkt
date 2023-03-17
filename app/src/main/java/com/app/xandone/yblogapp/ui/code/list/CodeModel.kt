@@ -14,8 +14,7 @@ import com.app.xandone.yblogapp.model.repository.ApiResponse
 class CodeModel : ViewModel() {
     val datas: MutableLiveData<ApiResponse<List<CodeArticleBean>>> = MutableLiveData()
 
-    suspend fun getCodeDatas(isMore: Boolean = false,
-                             page: Int = 1,
+    suspend fun getCodeDatas(page: Int = 1,
                              pagesize: Int = 10,
                              type: Int) {
         datas.value = CodeRepository.getCodeDatas(page, pagesize, type)

@@ -12,6 +12,7 @@ import com.app.xandone.yblogapp.constant.OSpKey
 import com.app.xandone.yblogapp.databinding.FragManagerBinding
 import com.app.xandone.yblogapp.model.bean.AdminBean
 import com.app.xandone.yblogapp.model.event.SwitchEvent
+import com.gyf.immersionbar.ImmersionBar
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -24,10 +25,6 @@ class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
 
     companion object {
         val instance = ManagerFragment()
-    }
-
-    override fun getLayout(): Int {
-        return R.layout.frag_manager
     }
 
     override fun initView(view: View) {
@@ -74,7 +71,21 @@ class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
         return true
     }
 
+    override fun isStatusBarEnabled(): Boolean {
+        return true
+    }
+
+    override fun getTitleView(): View {
+        return mBinding.mainFl
+    }
+
     override fun initVB(): FragManagerBinding {
         return FragManagerBinding.inflate(layoutInflater)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        mImmersionBar?.statusBarColor(R.color.white_color)
     }
 }
