@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
 
     val cacheFile by lazy {
-        File(getAppCacheDir(App.sContext!!))
+        File(getAppCacheDir(App.sContext))
     }
     val cache by lazy {
         Cache(cacheFile, 1024 * 1024 * 50L)
@@ -40,7 +40,7 @@ object ApiClient {
         .writeTimeout(10, TimeUnit.SECONDS)
         //错误重连
         .retryOnConnectionFailure(true)
-//        .dns(WDns())
+        .dns(WDns())
         .build()
 
     private val builder = Retrofit.Builder()

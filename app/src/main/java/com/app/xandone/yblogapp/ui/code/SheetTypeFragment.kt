@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.app.xandone.baselib.base.setClickAction
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.event.SimplEvent
 import com.app.xandone.baselib.utils.JsonUtils.obj2Json
@@ -28,6 +29,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
 import com.chad.library.adapter.base.listener.OnItemChildClickListener
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.google.android.flexbox.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -41,7 +43,7 @@ import kotlin.collections.ArrayList
  * created on: 2020/9/7 15:41
  * description:
  */
-class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
+class SheetTypeFragment : BottomSheetDialogFragment() {
     private lateinit var mAdapter: DelegateMultiAdapter
     private lateinit var mRemoveAdapter: BaseQuickAdapter<CodeTypeBean?, BaseViewHolder>
     private lateinit var types: ArrayList<CodeTypeBean>
@@ -58,20 +60,15 @@ class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.frag_sheet_type, container, false)
         val height = (AppConfig.SCREEN_HEIGHT * 0.8).toInt()
-        val layoutParams =
-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height)
+        val layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height)
         view.layoutParams = layoutParams
         return view
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (arguments == null) {
             return
@@ -79,29 +76,61 @@ class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
         types = ArrayList(arguments!!.getParcelableArrayList(OConstantKey.DATA))
         removeTypes = ArrayList(arguments!!.getParcelableArrayList(OConstantKey.DATA2))
         initItemTouchHelper()
-        type_recycler.layoutManager = GridLayoutManager(activity, 3)
-        type_recycler.addItemDecoration(SpacesItemDecoration(App.sContext!!, 10, 10, 10))
+
+        val layoutManager = FlexboxLayoutManager(activity)
+        layoutManager.apply {
+            flexDirection = FlexDirection.ROW
+            alignItems = AlignItems.STRETCH
+            justifyContent = JustifyContent.FLEX_START
+            flexWrap = FlexWrap.WRAP;
+        }
+        type_recycler.layoutManager = layoutManager
+        type_recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
+
         mAdapter = DelegateMultiAdapter(types)
         mAdapter.addChildClickViewIds(R.id.type_del_iv)
-        mAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
+        mAdapter.setOnItemChildClickListener(OnItemChildClickListener { _, _, position ->
             if (view.id == R.id.type_del_iv) {
-                removeTypes!!.add(types!!.get(position))
-                types!!.removeAt(position)
+                removeTypes!!.add(types.get(position))
+                types.removeAt(position)
                 mAdapter.notifyItemRemoved(position)
                 mRemoveAdapter.notifyDataSetChanged()
             }
         })
+
         type_recycler.adapter = mAdapter
         initRemoveRecycler()
 
-        edit_tv.setOnClickListener(this)
+        setClickAction(edit_tv) {
+            when (id) {
+                R.id.edit_tv -> {
+                    isEditState = !isEditState
+                    edit_tv!!.text = if (isEditState) "完成" else "编辑"
+                    mAdapter.notifyDataSetChanged()
+                    mRemoveAdapter.notifyDataSetChanged()
+                    if (!isEditState) {
+                        EventBus.getDefault().post(CodeTypeEvent(types))
+                        save2Cache()
+                    }
+                }
+                else -> {
+                }
+            }
+        }
     }
 
     private fun initRemoveRecycler() {
-        type_remove_recycler.layoutManager = GridLayoutManager(activity, 3)
+        val layoutManager = FlexboxLayoutManager(activity)
+        layoutManager.apply {
+            flexDirection = FlexDirection.ROW
+            alignItems = AlignItems.STRETCH
+            justifyContent = JustifyContent.FLEX_START
+            flexWrap = FlexWrap.WRAP;
+        }
+        type_remove_recycler.layoutManager = layoutManager
         type_remove_recycler.addItemDecoration(
             SpacesItemDecoration(
-                App.sContext!!,
+                App.sContext,
                 10,
                 10,
                 10
@@ -111,7 +140,7 @@ class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
             R.layout.item_remove_code_type,
             removeTypes
         ) {
-            protected override fun convert(
+            override fun convert(
                 baseViewHolder: BaseViewHolder,
                 bean: CodeTypeBean?
             ) {
@@ -121,14 +150,14 @@ class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
         }
         type_remove_recycler.adapter = mRemoveAdapter
         mRemoveAdapter.addChildClickViewIds(R.id.type_del_iv)
-        mRemoveAdapter.setOnItemChildClickListener(OnItemChildClickListener { adapter, view, position ->
+        mRemoveAdapter.setOnItemChildClickListener { adapter, view, position ->
             if (view.id == R.id.type_del_iv) {
-                removeTypes!![position]?.let { types!!.add(it) }
+                removeTypes!![position]?.let { types.add(it) }
                 removeTypes!!.removeAt(position)
                 mRemoveAdapter.notifyItemRemoved(position)
                 mAdapter.notifyDataSetChanged()
             }
-        })
+        }
     }
 
     /**
@@ -140,23 +169,6 @@ class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
             OSpKey.CODE_TYPE_KEY,
             obj2Json(types)
         )
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.edit_tv -> {
-                isEditState = !isEditState
-                edit_tv!!.text = if (isEditState) "完成" else "编辑"
-                mAdapter.notifyDataSetChanged()
-                mRemoveAdapter.notifyDataSetChanged()
-                if (!isEditState) {
-                    EventBus.getDefault().post(CodeTypeEvent(types))
-                    save2Cache()
-                }
-            }
-            else -> {
-            }
-        }
     }
 
     private fun loadShakeAnim(view: View) {
@@ -216,7 +228,7 @@ class SheetTypeFragment : BottomSheetDialogFragment(), View.OnClickListener {
                         Collections.swap(types, i, i - 1)
                     }
                 }
-                mAdapter!!.notifyItemMoved(fromPosition, toPosition)
+                mAdapter.notifyItemMoved(fromPosition, toPosition)
                 return true
             }
 
