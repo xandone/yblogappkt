@@ -15,29 +15,29 @@ abstract class BaseListFragment : BaseWallFragment<FragBaseListBinding>(), IRefr
         return R.layout.frag_base_list
     }
 
+    override fun initVB(): FragBaseListBinding {
+        return FragBaseListBinding.inflate(layoutInflater)
+    }
+
     override fun initView(view: View) {
-        refreshLayout.setOnRefreshListener { getData() }
+        mBinding.refreshLayout.setOnRefreshListener { getData() }
         refreshLayout.setOnLoadMoreListener { getDataMore() }
     }
 
     override fun finishRefresh() {
-        refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishRefresh()
     }
 
-    override fun finishLoadMore() {
-        refreshLayout.finishLoadMore()
+    override fun finishLoadMore(success: Boolean) {
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     override fun finishLoadNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData()
+        mBinding.refreshLayout.finishLoadMoreWithNoMoreData()
     }
 
     override fun unableLoadMore() {
-        refreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun initVB(): FragBaseListBinding {
-        return FragBaseListBinding.inflate(layoutInflater)
+        mBinding.refreshLayout.setEnableLoadMore(false)
     }
 
     override fun reload(tag: Any?) {

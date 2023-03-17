@@ -1,7 +1,6 @@
 package com.app.xandone.yblogapp.ui.essay
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.xandone.baselib.imageload.ImageLoadHelper
-import com.app.xandone.baselib.utils.JsonUtils
 import com.app.xandone.baselib.utils.JsonUtils.json2List
 import com.app.xandone.widgetlib.utils.SizeUtils.dp2px
 import com.app.xandone.widgetlib.utils.SpacesItemDecoration
@@ -27,14 +25,12 @@ import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
 import com.app.xandone.yblogapp.model.repository.HttpResult
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.gson.reflect.TypeToken
 import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
-import com.youth.banner.listener.OnBannerListener
 import kotlinx.android.synthetic.main.frag_base_list.*
 import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
@@ -66,6 +62,62 @@ class Essayfragment : BaseListFragment() {
         super.initView(view)
         onLoading()
 
+        initAdapter()
+        initBanner()
+
+        essayModel.datas.observe(this) { response ->
+            if (response.result == HttpResult.SUCCESS && response.data != null) {
+                if (mPage == 1) {
+                    if (response.total == 0) {
+                        onLoadEmpty(ApiEmptyResponse<Any>())
+                        return@observe
+                    }
+                    mAdapter.setList(response.data)
+                } else {
+                    mAdapter.addData(response.data)
+                }
+                if (response.total <= mDatas.size) {
+                    finishLoadNoMoreData()
+                } else {
+                    finishLoadMore()
+                }
+                onLoadFinish()
+            } else {
+                when (response) {
+                    is ApiEmptyResponse -> {
+                        onLoadEmpty(response)
+                    }
+                    is ApiErrorResponse -> {
+                        onLoadSeverError(response)
+                    }
+                    is ApiOtherErrorResponse -> {
+                        onLoadSeverError(response)
+                    }
+                    else -> {
+                        onLoadSeverError(ApiOtherErrorResponse<Any>())
+                    }
+                }
+
+                if (mPage != 1) {
+                    finishLoadMore(false)
+                }
+            }
+
+            mBinding.refreshLayout.finishRefresh()
+        }
+
+        essayModel.datas2.observe(this) {
+            if (it.result == HttpResult.SUCCESS && !it.data.isNullOrEmpty()) {
+                bannerList.clear()
+                bannerList.addAll(it.data)
+                bannerAdapter.notifyDataSetChanged()
+            }
+        }
+
+        getData()
+    }
+
+    private fun initAdapter() {
         mAdapter = object :
             BaseQuickAdapter<EssayArticleBean, BaseViewHolder>(R.layout.item_essay_list, mDatas) {
             override fun convert(holder: BaseViewHolder,
@@ -79,7 +131,7 @@ class Essayfragment : BaseListFragment() {
                     item.coverImg,
                     object : TypeToken<List<String?>?>() {}.type
                 )
-                if (coverData == null || coverData.isEmpty()) {
+                if (coverData.isNullOrEmpty()) {
                     codeCoverImg.visibility = View.GONE
                     imgRecycler.visibility = View.GONE
                 } else if (coverData.size == 1) {
@@ -105,71 +157,18 @@ class Essayfragment : BaseListFragment() {
                 }
             }
         }
-        initBanner()
+
         recycler.layoutManager = LinearLayoutManager(mActivity)
         recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
         recycler.adapter = mAdapter
         mAdapter.setOnItemClickListener { _, _, position ->
             startActivity(
                 Intent(mActivity, ArticleDetailsActivity::class.java)
-                    .putExtra(OConstantKey.ID, mDatas.get(position).essayId)
+                    .putExtra(OConstantKey.ID, mDatas[position].essayId)
                     .putExtra(OConstantKey.TYPE, ArticleDetailsActivity.TYPE_ESSAY)
-                    .putExtra(OConstantKey.TITLE, mDatas.get(position).title)
+                    .putExtra(OConstantKey.TITLE, mDatas[position].title)
             )
         }
-
-
-
-        essayModel.datas.observe(this) { response ->
-            if (response.result == HttpResult.SUCCESS && response.data != null) {
-                if (mPage == 1) {
-                    if (response.total == 0) {
-                        onLoadEmpty(ApiEmptyResponse<Any>())
-                        return@observe
-                    }
-                    mAdapter.setList(response.data)
-                } else {
-                    mAdapter.addData(response.data)
-                }
-                if (response.total <= mDatas.size) {
-                    mBinding.refreshLayout.finishLoadMoreWithNoMoreData()
-                } else {
-                    mBinding.refreshLayout.finishLoadMore()
-                }
-                onLoadFinish()
-            } else {
-                when (response) {
-                    is ApiEmptyResponse -> {
-                        onLoadEmpty(response)
-                    }
-                    is ApiErrorResponse -> {
-                        onLoadSeverError(response)
-                    }
-                    is ApiOtherErrorResponse -> {
-                        onLoadSeverError(response)
-                    }
-                    else -> {
-                        onLoadSeverError(ApiOtherErrorResponse<Any>())
-                    }
-                }
-
-                if (mPage != 0) {
-                    mBinding.refreshLayout.finishLoadMore(false)
-                }
-            }
-
-            mBinding.refreshLayout.finishRefresh()
-        }
-
-        essayModel.datas2.observe(this) {
-            if (it.result == HttpResult.SUCCESS && !it.data.isNullOrEmpty()) {
-                bannerList.clear()
-                bannerList.addAll(it.data)
-                bannerAdapter.notifyDataSetChanged()
-            }
-        }
-
-        getData()
     }
 
     private fun initBanner() {
@@ -181,34 +180,29 @@ class Essayfragment : BaseListFragment() {
             dp2px(App.sContext, 200f)
         )
         banner.layoutParams = params
+
         bannerAdapter = object : BannerImageAdapter<BannerBean>(bannerList) {
             override fun onBindView(
                 holder: BannerImageHolder,
                 data: BannerBean,
                 position: Int,
-                size: Int
-            ) {
-                ImageLoadHelper.instance.display(
-                    mActivity,
+                size: Int) {
+                ImageLoadHelper.instance.display(mActivity,
                     bannerList[position].imgUrl,
-                    holder.imageView
-                )
+                    holder.imageView)
             }
         }
         banner.adapter = bannerAdapter
         banner.addBannerLifecycleObserver(this).indicator = CircleIndicator(mActivity)
         mAdapter.addHeaderView(banner)
-        bannerAdapter.setOnBannerListener(OnBannerListener<BannerBean?> { bannerBean, position ->
+        bannerAdapter.setOnBannerListener { _, position ->
             startActivity(
                 Intent(mActivity, ArticleDetailsActivity::class.java)
                     .putExtra(OConstantKey.ID, bannerList[position].articelId)
-                    .putExtra(
-                        OConstantKey.TYPE,
-                        ArticleDetailsActivity.TYPE_ESSAY
-                    )
+                    .putExtra(OConstantKey.TYPE, ArticleDetailsActivity.TYPE_ESSAY)
                     .putExtra(OConstantKey.TITLE, bannerList[position].title)
             )
-        })
+        }
     }
 
 
@@ -225,12 +219,14 @@ class Essayfragment : BaseListFragment() {
     }
 
     override fun getData() {
-        getCodeDatas(1, false)
+        mPage = 1
+        getCodeDatas(mPage, false)
         getBannerDatas()
     }
 
     override fun getDataMore() {
-        getCodeDatas(mDatas.size / ROW + 1, true)
+        mPage = mDatas.size / ROW + 1
+        getCodeDatas(mPage, true)
     }
 
     companion object {

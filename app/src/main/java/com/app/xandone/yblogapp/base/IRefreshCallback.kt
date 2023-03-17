@@ -9,7 +9,7 @@ interface IRefreshCallback {
     fun getData()
     fun getDataMore()
     fun finishRefresh()
-    fun finishLoadMore()
+    fun finishLoadMore(success: Boolean = true)
 
     fun finishLoadNoMoreData()
 

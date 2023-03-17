@@ -98,9 +98,9 @@ class CodeListFragment : BaseListFragment() {
                     mAdapter.addData(response.data)
                 }
                 if (response.total <= mDatas.size) {
-                    mBinding.refreshLayout.finishLoadMoreWithNoMoreData()
+                    finishLoadNoMoreData()
                 } else {
-                    mBinding.refreshLayout.finishLoadMore()
+                    finishLoadMore()
                 }
 
                 onLoadFinish()
@@ -125,7 +125,7 @@ class CodeListFragment : BaseListFragment() {
                 }
             }
 
-            mBinding.refreshLayout.finishRefresh()
+            finishRefresh()
         }
     }
 
