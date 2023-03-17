@@ -91,9 +91,7 @@ class CodeListFragment : BaseListFragment() {
                 if (mPage == 0) {
                     mAdapter.setList(response.data)
                     if (response.total == 0) {
-                        mStateLayout.showEmpty(
-                            ApiEmptyResponse<Any>()
-                        )
+                        onLoadEmpty(ApiEmptyResponse<Any>())
                         return@observe
                     }
                 } else {
@@ -105,26 +103,20 @@ class CodeListFragment : BaseListFragment() {
                     mBinding.refreshLayout.finishLoadMore()
                 }
 
-                mStateLayout.showContent()
+                onLoadFinish()
             } else {
                 when (response) {
                     is ApiEmptyResponse -> {
-                        mStateLayout.showEmpty(response)
+                        onLoadEmpty(response)
                     }
                     is ApiErrorResponse -> {
-                        mStateLayout.showError(response)
+                        onLoadSeverError(response)
                     }
                     is ApiOtherErrorResponse -> {
-                        mStateLayout.showError(response)
+                        onLoadSeverError(response)
                     }
                     else -> {
-                        mStateLayout.showError(
-                            ApiOtherErrorResponse<Any>(
-                                Exception(),
-                                -1000,
-                                "未知异常"
-                            )
-                        )
+                        onLoadSeverError(ApiOtherErrorResponse<Any>())
                     }
                 }
 

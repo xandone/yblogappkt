@@ -39,4 +39,8 @@ abstract class BaseListFragment : BaseWallFragment<FragBaseListBinding>(), IRefr
     override fun initVB(): FragBaseListBinding {
         return FragBaseListBinding.inflate(layoutInflater)
     }
+
+    override fun reload(tag: Any?) {
+        getData()
+    }
 }

@@ -80,23 +80,24 @@ abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener
         loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.LOADING)
     }
 
-    override fun onLoadEmpty() {
+    override fun onLoadEmpty(tag: Any? ) {
         loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.EMPTY)
     }
 
-    override fun onLoadSeverError() {
+    override fun onLoadSeverError(tag: Any?) {
         loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.SERVER_ERROR)
     }
 
-    override fun onLoadNetError() {
+    override fun onLoadNetError(tag: Any?) {
         loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.NET_ERROR)
     }
 
-    override fun onLoadFinish() {
+    override fun onLoadFinish(tag: Any?) {
         loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.FINISH)
     }
 
-    override fun onLoadStatus(statusCode: Int) {
-        loadLayout!!.setLoadingStatus(statusCode)
+
+    override fun reload(tag: Any?) {
+        TODO("Not yet implemented")
     }
 }

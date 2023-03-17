@@ -1,6 +1,8 @@
 package com.app.xandone.yblogapp.model.repository
 
 import android.net.ParseException
+import android.util.Log
+import com.app.xandone.baselib.utils.JsonUtils
 import com.app.xandone.baselib.utils.ToastUtils
 import com.google.gson.JsonParseException
 import org.json.JSONException
@@ -42,7 +44,7 @@ open class BaseResository {
             201 -> {
             }
         }
-        return ApiErrorResponse()
+        return ApiErrorResponse(resp)
     }
 
     private fun <T> handleApiOtherError(t: Throwable): ApiOtherErrorResponse<T> {

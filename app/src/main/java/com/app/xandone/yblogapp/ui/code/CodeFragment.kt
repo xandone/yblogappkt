@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager
 import com.app.xandone.baselib.cache.SpHelper.getDefaultString
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.utils.JsonUtils
+import com.app.xandone.baselib.utils.ToastUtils
 import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallFragment
@@ -21,6 +22,10 @@ import com.app.xandone.yblogapp.constant.OSpKey
 import com.app.xandone.yblogapp.databinding.FragCodeBinding
 import com.app.xandone.yblogapp.model.bean.CodeTypeBean
 import com.app.xandone.yblogapp.model.event.CodeTypeEvent
+import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
+import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
+import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
+import com.app.xandone.yblogapp.model.repository.ApiSuccessResponse
 import com.app.xandone.yblogapp.ui.code.list.CodeListFragment
 import kotlinx.android.synthetic.main.frag_code.*
 import kotlinx.coroutines.launch
@@ -45,7 +50,7 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
     private lateinit var fragments: ArrayList<Fragment>
     private var mSheetTypeFragment: SheetTypeFragment? = null
     private lateinit var codeTypeList: ArrayList<CodeTypeBean>
-    private var apiTypeList = mutableListOf<CodeTypeBean>()
+    private lateinit var apiTypeList: ArrayList<CodeTypeBean>
     private var removeTypes: ArrayList<CodeTypeBean>? = null
     private var mTabLayoutAdapter: CommonNavigatorAdapter? = null
 
@@ -76,12 +81,13 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
         codeTypeList = ArrayList()
         removeTypes = ArrayList()
 
-        vp2 = view.findViewById(R.id.viewPager)
-
         mBinding.addTypeIv.setOnClickListener(this)
 
-        codeTypeModel.datas.observe(this) {
-            initType(it.data!!)
+        codeTypeModel.datas.observe(this) { response ->
+            if (response?.data != null) {
+                initType(response.data)
+                return@observe
+            }
         }
 
         lifecycleScope.launch {
@@ -89,8 +95,6 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
         }
 
     }
-
-    lateinit var vp2: ViewPager
 
     fun initType(codeTypeBeans: List<CodeTypeBean>) {
         apiTypeList.addAll(codeTypeBeans)
@@ -155,7 +159,7 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
 
     private fun dealCacheType() {
         val codeStr =
-            getDefaultString(App.sContext!!, OSpKey.CODE_TYPE_KEY)
+            getDefaultString(App.sContext, OSpKey.CODE_TYPE_KEY)
 
         if (codeStr.isNullOrEmpty()) {
             codeTypeList.addAll(apiTypeList)

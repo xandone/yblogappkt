@@ -1,6 +1,7 @@
 package com.app.xandone.yblogapp.ui.essay
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.xandone.baselib.imageload.ImageLoadHelper
+import com.app.xandone.baselib.utils.JsonUtils
 import com.app.xandone.baselib.utils.JsonUtils.json2List
-import com.app.xandone.baselib.utils.SimpleUtils
 import com.app.xandone.widgetlib.utils.SizeUtils.dp2px
 import com.app.xandone.widgetlib.utils.SpacesItemDecoration
 import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseListFragment
 import com.app.xandone.yblogapp.constant.OConstantKey
-import com.app.xandone.yblogapp.model.base.BaseResponse
 import com.app.xandone.yblogapp.model.bean.BannerBean
 import com.app.xandone.yblogapp.model.bean.EssayArticleBean
 import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
@@ -46,35 +46,37 @@ import kotlin.collections.ArrayList
  */
 class Essayfragment : BaseListFragment() {
 
-    private lateinit var mAdapter: BaseQuickAdapter<EssayArticleBean, BaseViewHolder>
-    private lateinit var mDatas: ArrayList<EssayArticleBean>
-    private lateinit var bannerAdapter: BannerImageAdapter<BannerBean>
-    private lateinit var bannerList: ArrayList<BannerBean>
-
     private var mPage = 1
+    private lateinit var mAdapter: BaseQuickAdapter<EssayArticleBean, BaseViewHolder>
+    private lateinit var bannerAdapter: BannerImageAdapter<BannerBean>
 
+    private val bannerList: ArrayList<BannerBean> by lazy {
+        ArrayList()
+    }
+    private val mDatas: ArrayList<EssayArticleBean> by lazy {
+        ArrayList()
+    }
     private val essayModel by lazy {
         ViewModelProvider(this, EssayModelFactory()).get(
             EssayModel::class.java
         )
     }
 
-
     override fun initView(view: View) {
         super.initView(view)
-        mDatas = ArrayList()
-        bannerList = ArrayList()
+        onLoading()
+
         mAdapter = object :
             BaseQuickAdapter<EssayArticleBean, BaseViewHolder>(R.layout.item_essay_list, mDatas) {
-            override fun convert(baseViewHolder: BaseViewHolder,
-                                 essayArticleBean: EssayArticleBean) {
-                baseViewHolder.setText(R.id.essay_title_tv, essayArticleBean.title)
-                baseViewHolder.setText(R.id.essay_content_tv, essayArticleBean.content)
-                baseViewHolder.setText(R.id.essay_date_tv, essayArticleBean.postTime)
-                val codeCoverImg = baseViewHolder.getView<ImageView>(R.id.essay_cover_img)
-                val imgRecycler = baseViewHolder.getView<RecyclerView>(R.id.img_recycler)
+            override fun convert(holder: BaseViewHolder,
+                                 item: EssayArticleBean) {
+                holder.setText(R.id.essay_title_tv, item.title)
+                holder.setText(R.id.essay_content_tv, item.content)
+                holder.setText(R.id.essay_date_tv, item.postTime)
+                val codeCoverImg = holder.getView<ImageView>(R.id.essay_cover_img)
+                val imgRecycler = holder.getView<RecyclerView>(R.id.img_recycler)
                 val coverData = json2List<String>(
-                    essayArticleBean.coverImg,
+                    item.coverImg,
                     object : TypeToken<List<String?>?>() {}.type
                 )
                 if (coverData == null || coverData.isEmpty()) {
@@ -105,61 +107,49 @@ class Essayfragment : BaseListFragment() {
         }
         initBanner()
         recycler.layoutManager = LinearLayoutManager(mActivity)
-        recycler.addItemDecoration(SpacesItemDecoration(App.sContext!!, 10, 10, 10))
+        recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
         recycler.adapter = mAdapter
-        mAdapter.setOnItemClickListener(OnItemClickListener { adapter, view, position ->
+        mAdapter.setOnItemClickListener { _, _, position ->
             startActivity(
                 Intent(mActivity, ArticleDetailsActivity::class.java)
-                    .putExtra(OConstantKey.ID, mDatas.get(position)!!.essayId)
-                    .putExtra(
-                        OConstantKey.TYPE,
-                        ArticleDetailsActivity.TYPE_ESSAY
-                    )
+                    .putExtra(OConstantKey.ID, mDatas.get(position).essayId)
+                    .putExtra(OConstantKey.TYPE, ArticleDetailsActivity.TYPE_ESSAY)
                     .putExtra(OConstantKey.TITLE, mDatas.get(position).title)
             )
-        })
+        }
 
 
 
         essayModel.datas.observe(this) { response ->
             if (response.result == HttpResult.SUCCESS && response.data != null) {
-                if (mPage == 0) {
-                    mAdapter.setList(response.data)
+                if (mPage == 1) {
                     if (response.total == 0) {
-                        mStateLayout.showEmpty(
-                            ApiEmptyResponse<Any>()
-                        )
+                        onLoadEmpty(ApiEmptyResponse<Any>())
                         return@observe
                     }
+                    mAdapter.setList(response.data)
                 } else {
                     mAdapter.addData(response.data)
                 }
-                if (response.total <= mDatas?.size!!) {
+                if (response.total <= mDatas.size) {
                     mBinding.refreshLayout.finishLoadMoreWithNoMoreData()
                 } else {
                     mBinding.refreshLayout.finishLoadMore()
                 }
-
-                mStateLayout.showContent()
+                onLoadFinish()
             } else {
                 when (response) {
                     is ApiEmptyResponse -> {
-                        mStateLayout.showEmpty(response)
+                        onLoadEmpty(response)
                     }
                     is ApiErrorResponse -> {
-                        mStateLayout.showError(response)
+                        onLoadSeverError(response)
                     }
                     is ApiOtherErrorResponse -> {
-                        mStateLayout.showError(response)
+                        onLoadSeverError(response)
                     }
                     else -> {
-                        mStateLayout.showError(
-                            ApiOtherErrorResponse<Any>(
-                                Exception(),
-                                -1000,
-                                "未知异常"
-                            )
-                        )
+                        onLoadSeverError(ApiOtherErrorResponse<Any>())
                     }
                 }
 
@@ -172,12 +162,14 @@ class Essayfragment : BaseListFragment() {
         }
 
         essayModel.datas2.observe(this) {
-            bannerList.clear()
-            bannerList.addAll(it.data!!)
-            bannerAdapter.notifyDataSetChanged()
+            if (it.result == HttpResult.SUCCESS && !it.data.isNullOrEmpty()) {
+                bannerList.clear()
+                bannerList.addAll(it.data)
+                bannerAdapter.notifyDataSetChanged()
+            }
         }
 
-        requestData()
+        getData()
     }
 
     private fun initBanner() {
@@ -186,7 +178,7 @@ class Essayfragment : BaseListFragment() {
         val banner = view.findViewById<Banner<*, *>>(R.id.banner)
         val params = RecyclerView.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            dp2px(App.sContext!!, 200f)
+            dp2px(App.sContext, 200f)
         )
         banner.layoutParams = params
         bannerAdapter = object : BannerImageAdapter<BannerBean>(bannerList) {
@@ -219,10 +211,6 @@ class Essayfragment : BaseListFragment() {
         })
     }
 
-    fun requestData() {
-        getCodeDatas(1, false)
-        getBannerDatas()
-    }
 
     private fun getBannerDatas() {
         lifecycleScope.launch {

@@ -7,9 +7,11 @@ package com.app.xandone.yblogapp.base
  */
 interface ILoadingWall {
     fun onLoading()
-    fun onLoadEmpty()
-    fun onLoadSeverError()
-    fun onLoadNetError()
-    fun onLoadFinish()
-    fun onLoadStatus(statusCode: Int)
+    fun onLoadEmpty(tag: Any? = null)
+    fun onLoadSeverError(tag: Any? = null)
+    fun onLoadNetError(tag: Any? = null)
+    fun onLoadFinish(tag: Any? = null)
+
+
+    fun reload(tag: Any? = null)
 }

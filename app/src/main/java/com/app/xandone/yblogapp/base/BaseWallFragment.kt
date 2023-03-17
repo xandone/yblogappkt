@@ -16,9 +16,9 @@ import com.app.xandone.yblogapp.view.statelayout.StateLayout
  * created on: 2020/9/1 10:52
  * description:有加载状态页的基类Fragment
  */
-abstract class BaseWallFragment<VB : ViewBinding> : BaseFrament<VB>() {
+abstract class BaseWallFragment<VB : ViewBinding> : BaseFrament<VB>(), ILoadingWall {
 
-    protected lateinit var mStateLayout: StateLayout
+    private lateinit var mStateLayout: StateLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +33,34 @@ abstract class BaseWallFragment<VB : ViewBinding> : BaseFrament<VB>() {
             FrameLayout.LayoutParams.MATCH_PARENT)
         v.layoutParams = param
         walFrame.addView(v)
+        mStateLayout.onRefresh {
+            reload(tag)
+        }
         return mStateLayout
     }
+
+    override fun onLoading() {
+        mStateLayout.showLoading()
+    }
+
+    override fun onLoadEmpty(tag: Any?) {
+        mStateLayout.showEmpty(tag)
+    }
+
+    override fun onLoadSeverError(tag: Any?) {
+        mStateLayout.showError(tag)
+    }
+
+    override fun onLoadNetError(tag: Any?) {
+        mStateLayout.showError(tag)
+    }
+
+    override fun onLoadFinish(tag: Any?) {
+        mStateLayout.showContent(tag)
+    }
+
+    override fun reload(tag: Any?) {
+
+    }
+
 }

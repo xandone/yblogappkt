@@ -54,7 +54,7 @@ class App : Application() {
                         findViewById<TextView>(R.id.msg).text = "暂无数据"
                     }
                     is ApiErrorResponse<*> -> {
-                        findViewById<TextView>(R.id.msg).text = it.message
+                        findViewById<TextView>(R.id.msg).text = it.msg
                     }
                     is ApiOtherErrorResponse<*> -> {
                         findViewById<TextView>(R.id.msg).text = it.errorMessage

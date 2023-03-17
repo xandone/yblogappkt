@@ -7,7 +7,7 @@ package com.app.xandone.yblogapp.model.repository
  */
 open class ApiResponse<T>(
     val code: Int = 0,
-    val message: String? = null,
+    val msg: String? = null,
     val data: T? = null,
     val total: Int = 0,
     var result: HttpResult = HttpResult.FAIL
@@ -21,18 +21,18 @@ data class ListBean<T>(
 
 class ApiSuccessResponse<T> : ApiResponse<T>()
 
-class ApiErrorResponse<T> : ApiResponse<T>()
+class ApiEmptyResponse<T> : ApiResponse<T>()
+
+class ApiErrorResponse<T> constructor(var origin: ApiResponse<T>) : ApiResponse<T>()
 
 /**
  * data有默认值null。这里构造函数可以不用传参
  */
-data class ApiOtherErrorResponse<T>(
-    val throwable: Throwable,
-    val errorCode: Int = -1,
+class ApiOtherErrorResponse<T>(
+    val throwable: Throwable? = null,
+    val errorCode: Int = -1000,
     val errorMessage: String = "加载失败"
 ) : ApiResponse<T>()
-
-class ApiEmptyResponse<T> : ApiResponse<T>()
 
 enum class HttpResult {
     SUCCESS,
