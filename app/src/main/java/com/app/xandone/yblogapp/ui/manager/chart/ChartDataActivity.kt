@@ -11,7 +11,6 @@ import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.cache.UserInfoHelper
 import com.app.xandone.yblogapp.databinding.ActChartDataBinding
-import com.app.xandone.yblogapp.ui.manager.ManagerModelFactory
 import com.app.xandone.yblogapp.utils.LineValueFormatter
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -23,7 +22,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
 import java.util.*
 
-import kotlinx.android.synthetic.main.act_chart_data.*
 import kotlinx.coroutines.launch
 
 /**
@@ -75,7 +73,7 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
                 true,
                 R.drawable.fade_fill_yellow
             )
-            chart1.invalidate()
+            mBinding.chart1.invalidate()
             onLoadFinish()
         }
 
@@ -92,27 +90,34 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
     }
 
     private fun initChart() {
-        chart1.setViewPortOffsets(50f, 40f, 10f, 20f)
-        //        chart.setBackgroundColor(Color.rgb(104, 241, 175));
-        chart1.setBackgroundColor(Color.WHITE)
-        // no description text
-        chart1.description.isEnabled = false
+        mBinding.chart1.apply {
+            setViewPortOffsets(50f, 40f, 10f, 20f)
+            //        chart.setBackgroundColor(Color.rgb(104, 241, 175));
+            setBackgroundColor(Color.WHITE)
+            // no description text
+            description.isEnabled = false
 
-        // enable touch gestures
-        chart1.setTouchEnabled(true)
+            // enable touch gestures
+            setTouchEnabled(true)
 
-        // enable scaling and dragging
-        chart1.isDragEnabled = true
-        chart1.setScaleEnabled(true)
+            // enable scaling and dragging
+            isDragEnabled = true
+            setScaleEnabled(true)
 
-        // if disabled, scaling can be done on x- and y-axis separately
-        chart1.setPinchZoom(false)
-        chart1.setDrawGridBackground(false)
-        chart1.maxHighlightDistance = 300f
+            // if disabled, scaling can be done on x- and y-axis separately
+            setPinchZoom(false)
+            setDrawGridBackground(false)
+            maxHighlightDistance = 300f
+
+            axisRight.isEnabled = false
+            legend.isEnabled = false
+            animateXY(1500, 1500)
+        }
+
         //        chart1.setOnChartValueSelectedListener(this);
-        val x = chart1.xAxis
+        val x = mBinding.chart1.xAxis
         x.isEnabled = false
-        val axisLeft = chart1.axisLeft
+        val axisLeft = mBinding.chart1.axisLeft
         axisLeft.setLabelCount(6, true)
         axisLeft.textColor = Color.BLACK
         axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
@@ -120,9 +125,7 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
         axisLeft.axisLineColor = Color.WHITE
         axisLeft.yOffset = -6f
         axisLeft.setCenterAxisLabels(false)
-        chart1.axisRight.isEnabled = false
-        chart1.legend.isEnabled = false
-        chart1.animateXY(1500, 1500)
+
     }
 
     /**
@@ -176,7 +179,9 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
         set1.fillAlpha = 50
         set1.setDrawHorizontalHighlightIndicator(false)
         set1.fillFormatter =
-            IFillFormatter { dataSet, dataProvider -> chart1.axisLeft.axisMinimum }
+            IFillFormatter { dataSet, dataProvider ->
+                mBinding.chart1.axisLeft.axisMinimum
+            }
         set1.valueFormatter = LineValueFormatter(dList, yearList)
 
 //        XAxis xAxis = chart1.getXAxis();
@@ -189,7 +194,7 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
         //是否绘制顶点数值
         mLineData!!.setDrawValues(false)
         // set data
-        chart1.data = mLineData
+        mBinding.chart1.data = mLineData
     }
 
     override fun onValueSelected(e: Entry, h: Highlight) {

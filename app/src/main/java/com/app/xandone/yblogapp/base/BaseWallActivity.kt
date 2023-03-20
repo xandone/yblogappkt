@@ -1,7 +1,6 @@
 package com.app.xandone.yblogapp.base
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.annotation.CallSuper
@@ -9,14 +8,9 @@ import androidx.annotation.NonNull
 import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 import com.app.xandone.baselib.base.BaseActivity
-import com.app.xandone.baselib.utils.ToastUtils
-import com.app.xandone.widgetlib.view.LoadingLayout
-import com.app.xandone.widgetlib.view.LoadingLayout.OnReloadListener
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.view.statelayout.StateLayout
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.act_base_wall.*
-import java.util.*
 
 /**
  * author: Admin

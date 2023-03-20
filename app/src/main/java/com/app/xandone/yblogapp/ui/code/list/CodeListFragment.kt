@@ -31,12 +31,8 @@ import kotlin.collections.ArrayList
  * created on: 2020/8/31 17:55
  * description:
  */
-class CodeListFragment : BaseListFragment() {
-
-    private lateinit var mAdapter: BaseQuickAdapter<CodeArticleBean, BaseViewHolder>
-    private lateinit var mDatas: ArrayList<CodeArticleBean>
+class CodeListFragment : BaseListFragment<CodeArticleBean>() {
     private var mType = 0
-    private var mPage = 1
     protected var mIsLoadedData = false
 
     private val codeModel by lazy {
@@ -48,29 +44,24 @@ class CodeListFragment : BaseListFragment() {
     override fun initView(view: View) {
         super.initView(view)
         mType = arguments!!.getInt(TYPE)
-        mDatas = ArrayList()
         mAdapter = object :
-            BaseQuickAdapter<CodeArticleBean, BaseViewHolder>(
-                R.layout.item_code_list,
-                mDatas as MutableList<CodeArticleBean>?) {
+            BaseQuickAdapter<CodeArticleBean, BaseViewHolder>(R.layout.item_code_list, mDatas) {
             override fun convert(holder: BaseViewHolder, item: CodeArticleBean) {
                 holder.setText(R.id.code_title_tv, item.title)
                 holder.setText(R.id.code_type_tv, item.typeName)
                 holder.setText(R.id.code_content_tv, item.content)
                 holder.setText(R.id.code_date_tv, item.postTime)
-                val codeCoverImg =
-                    holder.getView<ImageView>(R.id.code_cover_img)
+                val codeCoverImg = holder.getView<ImageView>(R.id.code_cover_img)
                 if (TextUtils.isEmpty(item.coverImg)) {
                     codeCoverImg.visibility = View.GONE
                 } else {
                     codeCoverImg.visibility = View.VISIBLE
-                    ImageLoadHelper.instance
-                        .display(App.sContext, item.coverImg, codeCoverImg)
+                    ImageLoadHelper.instance.display(App.sContext, item.coverImg, codeCoverImg)
                 }
             }
         }
         recycler.layoutManager = LinearLayoutManager(mActivity)
-        recycler.addItemDecoration(SpacesItemDecoration(App.sContext!!, 10, 10, 10))
+        recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
         recycler.adapter = mAdapter
         mAdapter.setOnItemClickListener { _, _, position ->
             startActivity(
@@ -82,45 +73,7 @@ class CodeListFragment : BaseListFragment() {
         }
 
         codeModel.datas.observe(this) { response ->
-            if (response.result == HttpResult.SUCCESS && response.data != null) {
-                if (mPage == 1) {
-                    mAdapter.setList(response.data)
-                    if (response.data.isEmpty() || response.total == 0) {
-                        onLoadEmpty(ApiEmptyResponse<Any>())
-                        return@observe
-                    }
-                } else {
-                    mAdapter.addData(response.data)
-                }
-                if (response.total <= mDatas.size) {
-                    finishLoadNoMoreData()
-                } else {
-                    finishLoadMore()
-                }
-
-                onLoadFinish()
-            } else {
-                when (response) {
-                    is ApiEmptyResponse -> {
-                        onLoadEmpty(response)
-                    }
-                    is ApiErrorResponse -> {
-                        onLoadSeverError(response)
-                    }
-                    is ApiOtherErrorResponse -> {
-                        onLoadSeverError(response)
-                    }
-                    else -> {
-                        onLoadSeverError(ApiOtherErrorResponse<Any>())
-                    }
-                }
-
-                if (mPage != 1) {
-                    mBinding.refreshLayout.finishLoadMore(false)
-                }
-            }
-
-            finishRefresh()
+            handleDate(response)
         }
     }
 

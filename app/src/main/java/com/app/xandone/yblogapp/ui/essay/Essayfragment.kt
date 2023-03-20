@@ -42,18 +42,14 @@ import kotlin.collections.ArrayList
  * created on: 2020/9/3 16:20
  * description:
  */
-class Essayfragment : BaseListFragment() {
+class Essayfragment : BaseListFragment<EssayArticleBean>() {
 
-    private var mPage = 1
-    private lateinit var mAdapter: BaseQuickAdapter<EssayArticleBean, BaseViewHolder>
     private lateinit var bannerAdapter: BannerImageAdapter<BannerBean>
 
     private val bannerList: ArrayList<BannerBean> by lazy {
         ArrayList()
     }
-    private val mDatas: ArrayList<EssayArticleBean> by lazy {
-        ArrayList()
-    }
+
     private val essayModel by lazy {
         ViewModelProvider(this, EssayModelFactory()).get(
             EssayModel::class.java
@@ -68,44 +64,7 @@ class Essayfragment : BaseListFragment() {
         initBanner()
 
         essayModel.datas.observe(this) { response ->
-            if (response.result == HttpResult.SUCCESS && response.data != null) {
-                if (mPage == 1) {
-                    if (response.total == 0) {
-                        onLoadEmpty(ApiEmptyResponse<Any>())
-                        return@observe
-                    }
-                    mAdapter.setList(response.data)
-                } else {
-                    mAdapter.addData(response.data)
-                }
-                if (response.total <= mDatas.size) {
-                    finishLoadNoMoreData()
-                } else {
-                    finishLoadMore()
-                }
-                onLoadFinish()
-            } else {
-                when (response) {
-                    is ApiEmptyResponse -> {
-                        onLoadEmpty(response)
-                    }
-                    is ApiErrorResponse -> {
-                        onLoadSeverError(response)
-                    }
-                    is ApiOtherErrorResponse -> {
-                        onLoadSeverError(response)
-                    }
-                    else -> {
-                        onLoadSeverError(ApiOtherErrorResponse<Any>())
-                    }
-                }
-
-                if (mPage != 1) {
-                    finishLoadMore(false)
-                }
-            }
-
-            mBinding.refreshLayout.finishRefresh()
+            handleDate(response)
         }
 
         essayModel.datas2.observe(this) {

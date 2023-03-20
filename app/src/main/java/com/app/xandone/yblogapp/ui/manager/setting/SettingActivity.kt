@@ -8,12 +8,10 @@ import com.app.xandone.baselib.utils.ToastUtils.showShort
 import com.app.xandone.widgetlib.dialog.MDialogOnclickListener
 import com.app.xandone.widgetlib.dialog.MDialogUtils.showSimpleDialog
 import com.app.xandone.yblogapp.App
-import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.constant.OSpKey
 import com.app.xandone.yblogapp.databinding.ActSettingBinding
 import com.app.xandone.yblogapp.model.event.SwitchEvent
-import kotlinx.android.synthetic.main.act_setting.*
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -28,13 +26,16 @@ class SettingActivity : BaseWallActivity<ActSettingBinding>() {
 
     override fun initView() {
         super.initView()
-        all_cache_sv.setSettingRightTv(getTotalCacheSize(App.sContext))
+        mBinding.allCacheSv.setSettingRightTv(getTotalCacheSize(App.sContext))
 
-        setClickAction(setting_sv, all_cache_sv, version_sv, exit_btn) {
+        setClickAction(mBinding.settingSv,
+            mBinding.allCacheSv,
+            mBinding.versionSv,
+            mBinding.exitBtn) {
             when (this) {
-                setting_sv -> clearSettingInfo()
-                all_cache_sv -> clearAllCache()
-                exit_btn -> exit()
+                mBinding.settingSv -> clearSettingInfo()
+                mBinding.allCacheSv -> clearAllCache()
+                mBinding.exitBtn -> exit()
             }
         }
 
@@ -57,7 +58,7 @@ class SettingActivity : BaseWallActivity<ActSettingBinding>() {
         showSimpleDialog(this, "是否清除所有缓存文件?", object : MDialogOnclickListener() {
             override fun onConfirm() {
                 clearExternalFilesDir(App.sContext!!)
-                all_cache_sv.setSettingRightTv("0KB")
+                mBinding.allCacheSv.setSettingRightTv("0KB")
                 showShort("清除完成")
             }
         })
