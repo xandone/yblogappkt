@@ -21,7 +21,7 @@ data class ListBean<T>(
 
 class ApiSuccessResponse<T> : ApiResponse<T>()
 
-class ApiEmptyResponse<T> : ApiResponse<T>()
+class ApiEmptyResponse<T>(var empty: String = "暂无数据") : ApiResponse<T>()
 
 class ApiErrorResponse<T> constructor(var origin: ApiResponse<T>) : ApiResponse<T>()
 

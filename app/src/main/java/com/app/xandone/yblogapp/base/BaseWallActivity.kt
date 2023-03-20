@@ -110,7 +110,7 @@ abstract class BaseWallActivity<VB : ViewBinding> : BaseActivity<VB>(), ILoading
      */
     protected abstract fun requestData()
     override fun onLoading() {
-        mStateLayout.showLoading()
+        mStateLayout.showLoading(refresh = false)
     }
 
     override fun onLoadEmpty(tag: Any?) {

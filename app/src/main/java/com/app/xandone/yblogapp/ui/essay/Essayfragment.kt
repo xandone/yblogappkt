@@ -1,6 +1,7 @@
 package com.app.xandone.yblogapp.ui.essay
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -202,8 +203,4 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
         val instance: Essayfragment = Essayfragment()
     }
 
-    override fun onResume() {
-        super.onResume()
-        mImmersionBar?.statusBarColor(R.color.app_bg_color)
-    }
 }

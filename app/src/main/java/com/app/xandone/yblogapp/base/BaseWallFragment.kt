@@ -91,7 +91,7 @@ abstract class BaseWallFragment<VB : ViewBinding> : BaseFrament<VB>(), ILoadingW
     }
 
     override fun onLoading() {
-        mStateLayout.showLoading()
+        mStateLayout.showLoading(refresh = false)
     }
 
     override fun onLoadEmpty(tag: Any?) {

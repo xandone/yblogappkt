@@ -1,11 +1,13 @@
 package com.app.xandone.yblogapp.base
 
+import android.util.Log
 import android.view.View
 import androidx.annotation.CallSuper
 import com.app.xandone.yblogapp.databinding.FragBaseListBinding
 import com.app.xandone.yblogapp.model.repository.*
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import kotlinx.android.synthetic.main.layout_empty.*
 
 /**
  * author: Admin
@@ -37,7 +39,7 @@ abstract class BaseListFragment<T> : BaseWallFragment<FragBaseListBinding>(), IR
             if (!isMore) {
                 mAdapter.setList(response.data)
                 if (response.data.isEmpty() || response.total == 0) {
-                    onLoadEmpty(ApiEmptyResponse<Any>())
+                    onLoadEmpty(ApiEmptyResponse<Any>(empty = "不毛之地~"))
                     return
                 }
             } else {
@@ -67,7 +69,7 @@ abstract class BaseListFragment<T> : BaseWallFragment<FragBaseListBinding>(), IR
             }
 
             if (isMore) {
-                mBinding.refreshLayout.finishLoadMore(false)
+                finishLoadMore(false)
             }
         }
 

@@ -83,9 +83,4 @@ class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
         return FragManagerBinding.inflate(layoutInflater)
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        mImmersionBar?.statusBarColor(R.color.white_color)
-    }
 }

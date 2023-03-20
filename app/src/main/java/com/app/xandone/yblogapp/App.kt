@@ -2,6 +2,7 @@ package com.app.xandone.yblogapp
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import android.widget.TextView
 import com.app.xandone.yblogapp.config.AppConfig
 import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
@@ -48,11 +49,13 @@ class App : Application() {
             stateChangedHandler = FadeStateChangedHandler()
             setRetryIds(R.id.msg, R.id.iv, R.id.btn)
 
+            onEmpty {
+                var resp = it as ApiEmptyResponse<*>
+                findViewById<TextView>(R.id.msg).text = resp.empty
+            }
+
             onError {
                 when (it) {
-                    is ApiEmptyResponse<*> -> {
-                        findViewById<TextView>(R.id.msg).text = "暂无数据"
-                    }
                     is ApiErrorResponse<*> -> {
                         findViewById<TextView>(R.id.msg).text = it.msg
                     }

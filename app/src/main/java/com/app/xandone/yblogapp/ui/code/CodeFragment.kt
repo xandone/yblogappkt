@@ -258,9 +258,4 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
     override fun initVB(): FragCodeBinding {
         return FragCodeBinding.inflate(layoutInflater)
     }
-
-    override fun onResume() {
-        super.onResume()
-        mImmersionBar?.statusBarColor(R.color.app_bg_color)
-    }
 }
