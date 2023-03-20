@@ -1,6 +1,7 @@
 package com.app.xandone.yblogapp.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull
 import androidx.viewbinding.ViewBinding
 import com.app.xandone.baselib.base.BaseFrament
 import com.app.xandone.yblogapp.R
+import com.app.xandone.yblogapp.api.WDns
 import com.app.xandone.yblogapp.view.statelayout.StateLayout
 import com.gyf.immersionbar.ImmersionBar
 
@@ -35,7 +37,7 @@ abstract class BaseWallFragment<VB : ViewBinding> : BaseFrament<VB>(), ILoadingW
             FrameLayout.LayoutParams.MATCH_PARENT)
         v.layoutParams = param
         walFrame.addView(v)
-        mStateLayout.onRefresh {
+        mStateLayout.onRefresh { tag ->
             reload(tag)
         }
         return mStateLayout

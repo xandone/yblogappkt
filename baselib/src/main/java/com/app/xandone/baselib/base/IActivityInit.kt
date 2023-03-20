@@ -15,8 +15,5 @@ interface IActivityInit {
      */
     fun doBeforeSetContentView()
 
-    @LayoutRes
-    fun getLayout(): Int
-
     fun initView()
 }

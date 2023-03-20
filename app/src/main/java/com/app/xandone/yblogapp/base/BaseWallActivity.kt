@@ -1,14 +1,19 @@
 package com.app.xandone.yblogapp.base
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.annotation.CallSuper
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.Toolbar
+import androidx.viewbinding.ViewBinding
 import com.app.xandone.baselib.base.BaseActivity
+import com.app.xandone.baselib.utils.ToastUtils
 import com.app.xandone.widgetlib.view.LoadingLayout
 import com.app.xandone.widgetlib.view.LoadingLayout.OnReloadListener
 import com.app.xandone.yblogapp.R
+import com.app.xandone.yblogapp.view.statelayout.StateLayout
 import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.act_base_wall.*
 import java.util.*
@@ -18,39 +23,47 @@ import java.util.*
  * created on: 2020/9/1 10:52
  * description:有加载状态页的基类Fragment
  */
-abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener {
+abstract class BaseWallActivity<VB : ViewBinding> : BaseActivity<VB>(), ILoadingWall {
 
     lateinit var toolbar: Toolbar
 
+    protected lateinit var mStateLayout: StateLayout
+
     @SuppressLint("InflateParams")
     override fun initContentView() {
+        _binding = initVB()
         val inflater = LayoutInflater.from(this)
         val rootView = inflater.inflate(R.layout.act_base_wall, null)
+        mStateLayout = rootView.findViewById(R.id.stateLayout)
         toolbar = rootView.findViewById(R.id.toolbar)
         val walFrame = rootView.findViewById<FrameLayout>(R.id.wall_frame)
         val params = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
         )
-        val view = inflater.inflate(getLayout(), null)
+        val view = mBinding.root
         view.layoutParams = params
         walFrame.addView(view)
         setContentView(rootView)
     }
 
+    @CallSuper
     override fun initView() {
-        loadLayout!!.setOnReloadListener(this)
         onLoading()
         initToolbar()
-        wallInit()
         initImmersionBar()
+        mStateLayout.onRefresh { tag ->
+            reload(tag)
+        }
     }
 
     protected fun initToolbar() {
         setToolBar(title, R.mipmap.back_ic)
         setSupportActionBar(toolbar)
-        Objects.requireNonNull(supportActionBar)?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -99,44 +112,31 @@ abstract class BaseWallActivity : BaseActivity(), ILoadingWall, OnReloadListener
     }
 
     /**
-     * 重新加载按钮
-     */
-    override fun reLoadData() {
-        onLoading()
-        requestData()
-    }
-
-    /**
-     * 初始化，实现该方法
-     */
-    protected abstract fun wallInit()
-
-    /**
      * 加载数据，实现该方法
      */
     protected abstract fun requestData()
     override fun onLoading() {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.LOADING)
+        mStateLayout.showLoading()
     }
 
     override fun onLoadEmpty(tag: Any?) {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.EMPTY)
+        mStateLayout.showEmpty(tag)
     }
 
     override fun onLoadSeverError(tag: Any?) {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.SERVER_ERROR)
+        mStateLayout.showError(tag)
     }
 
     override fun onLoadNetError(tag: Any?) {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.NET_ERROR)
+        mStateLayout.showError(tag)
     }
 
     override fun onLoadFinish(tag: Any?) {
-        loadLayout!!.setLoadingStatus(LoadingLayout.ILoadingStatus.FINISH)
+        mStateLayout.showContent(tag)
     }
 
 
     override fun reload(tag: Any?) {
-        TODO("Not yet implemented")
+
     }
 }

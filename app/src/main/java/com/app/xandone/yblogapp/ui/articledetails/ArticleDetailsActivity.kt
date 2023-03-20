@@ -20,6 +20,7 @@ import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.config.AppConfig
 import com.app.xandone.yblogapp.constant.OConstantKey
+import com.app.xandone.yblogapp.databinding.ActArticleDetailsBinding
 import com.hitomi.tilibrary.transfer.Transferee
 import com.liulishuo.okdownload.DownloadListener
 import com.liulishuo.okdownload.DownloadTask
@@ -36,7 +37,7 @@ import kotlinx.coroutines.launch
  * created on: 2020/9/4 10:20
  * description:
  */
-class ArticleDetailsActivity : BaseWallActivity() {
+class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
 
     private var mId: String? = null
     private var mType = 0
@@ -53,12 +54,8 @@ class ArticleDetailsActivity : BaseWallActivity() {
         )
     }
 
-
-    override fun getLayout(): Int {
-        return R.layout.act_article_details
-    }
-
-    public override fun wallInit() {
+    override fun initView() {
+        super.initView()
         mId = intent.getStringExtra(OConstantKey.ID)
         mType = intent.getIntExtra(
             OConstantKey.TYPE,
@@ -101,6 +98,10 @@ class ArticleDetailsActivity : BaseWallActivity() {
             }
         }
 
+    }
+
+    override fun reload(tag: Any?) {
+        requestData()
     }
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
@@ -312,5 +313,9 @@ class ArticleDetailsActivity : BaseWallActivity() {
     companion object {
         const val TYPE_CODE = 1
         const val TYPE_ESSAY = 2
+    }
+
+    override fun initVB(): ActArticleDetailsBinding {
+        return ActArticleDetailsBinding.inflate(layoutInflater)
     }
 }

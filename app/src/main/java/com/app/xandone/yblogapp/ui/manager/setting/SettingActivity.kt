@@ -1,8 +1,6 @@
 package com.app.xandone.yblogapp.ui.manager.setting
 
-import android.view.View
 import com.app.xandone.baselib.base.setClickAction
-import com.app.xandone.baselib.cache.CacheHelper
 import com.app.xandone.baselib.cache.CacheHelper.clearDefaultSp
 import com.app.xandone.baselib.cache.CacheHelper.clearExternalFilesDir
 import com.app.xandone.baselib.cache.CacheHelper.getTotalCacheSize
@@ -13,6 +11,7 @@ import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.constant.OSpKey
+import com.app.xandone.yblogapp.databinding.ActSettingBinding
 import com.app.xandone.yblogapp.model.event.SwitchEvent
 import kotlinx.android.synthetic.main.act_setting.*
 import org.greenrobot.eventbus.EventBus
@@ -22,12 +21,13 @@ import org.greenrobot.eventbus.EventBus
  * created on: 2020/9/29 11:09
  * description:
  */
-class SettingActivity : BaseWallActivity() {
-    override fun getLayout(): Int {
-        return R.layout.act_setting
+class SettingActivity : BaseWallActivity<ActSettingBinding>() {
+    override fun initVB(): ActSettingBinding {
+        return ActSettingBinding.inflate(layoutInflater)
     }
 
-    public override fun wallInit() {
+    override fun initView() {
+        super.initView()
         all_cache_sv.setSettingRightTv(getTotalCacheSize(App.sContext))
 
         setClickAction(setting_sv, all_cache_sv, version_sv, exit_btn) {

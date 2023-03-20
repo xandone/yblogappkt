@@ -10,6 +10,7 @@ import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.cache.UserInfoHelper
+import com.app.xandone.yblogapp.databinding.ActChartDataBinding
 import com.app.xandone.yblogapp.ui.manager.ManagerModelFactory
 import com.app.xandone.yblogapp.utils.LineValueFormatter
 import com.github.mikephil.charting.components.YAxis
@@ -30,7 +31,7 @@ import kotlinx.coroutines.launch
  * created on: 2020/10/21 16:46
  * description:
  */
-class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
+class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueSelectedListener {
 
     private var mLineData: LineData? = null
 
@@ -41,18 +42,19 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
     }
 
 
-    override fun getLayout(): Int {
-        return R.layout.act_chart_data
-    }
-
-    override fun wallInit() {
+    override fun initView() {
+        super.initView()
         initChart()
 
-        managerChartModel.datas.observe(this) {
+        managerChartModel.datas.observe(this) { response ->
+            if (response.data == null || response.data.yearArtData.isNullOrEmpty()) {
+                onLoadSeverError()
+                return@observe
+            }
             val list1: MutableList<Int> = ArrayList()
             val list2: MutableList<Int> = ArrayList()
             val list3: MutableList<Int> = ArrayList()
-            for (yearArtDataBean in it.data?.yearArtData!!) {
+            for (yearArtDataBean in response.data.yearArtData!!) {
                 list1.add(yearArtDataBean.codeCount)
                 list2.add(yearArtDataBean.essayCount)
                 list3.add(yearArtDataBean.year!!.toInt())
@@ -61,7 +63,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
                 list1,
                 list3,
                 "lable_1",
-                ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color1),
+                ContextCompat.getColor(App.sContext, R.color.chart_fill_color1),
                 true,
                 R.drawable.fade_fill_blue
             )
@@ -69,7 +71,7 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
                 list2,
                 list3,
                 "lable_2",
-                ContextCompat.getColor(App.sContext!!, R.color.chart_fill_color3),
+                ContextCompat.getColor(App.sContext, R.color.chart_fill_color3),
                 true,
                 R.drawable.fade_fill_yellow
             )
@@ -77,11 +79,16 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
             onLoadFinish()
         }
 
+        requestData()
+    }
+
+
+    override fun requestData() {
         lifecycleScope.launch { UserInfoHelper.adminId?.let { managerChartModel.getArtInfoData(it) } }
     }
 
-    override fun requestData() {
-
+    override fun reload(tag: Any?) {
+        requestData()
     }
 
     private fun initChart() {
@@ -189,4 +196,8 @@ class ChartDataActivity : BaseWallActivity(), OnChartValueSelectedListener {
     }
 
     override fun onNothingSelected() {}
+
+    override fun initVB(): ActChartDataBinding {
+        return ActChartDataBinding.inflate(layoutInflater)
+    }
 }

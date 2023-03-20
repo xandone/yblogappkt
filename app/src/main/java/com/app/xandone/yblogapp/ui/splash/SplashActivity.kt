@@ -7,6 +7,7 @@ import com.app.xandone.baselib.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.MainActivity
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.config.IMyPermission
+import com.app.xandone.yblogapp.databinding.ActSplashBinding
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -18,9 +19,10 @@ import pub.devrel.easypermissions.PermissionRequest
  * created on: 2020/9/1 14:05
  * description:
  */
-class SplashActivity : BaseSimpleActivity(), PermissionCallbacks {
-    override fun getLayout(): Int {
-        return R.layout.act_splash
+class SplashActivity : BaseSimpleActivity<ActSplashBinding>(), PermissionCallbacks {
+
+    override fun initVB(): ActSplashBinding {
+        return ActSplashBinding.inflate(layoutInflater)
     }
 
     override fun initView() {

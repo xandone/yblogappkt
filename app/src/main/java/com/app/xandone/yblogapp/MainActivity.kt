@@ -2,20 +2,22 @@ package com.app.xandone.yblogapp
 
 import androidx.fragment.app.FragmentTransaction
 import com.app.xandone.baselib.base.BaseSimpleActivity
+import com.app.xandone.yblogapp.databinding.ActivityMainBinding
 import com.app.xandone.yblogapp.ui.code.CodeFragment
 import com.app.xandone.yblogapp.ui.essay.Essayfragment
 import com.app.xandone.yblogapp.ui.manager.ManagerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseSimpleActivity() {
-    
+class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
+
     private var codeFragment: CodeFragment? = null
     private var essayfragment: Essayfragment? = null
     private var managerFragment: ManagerFragment? = null
 
-    override fun getLayout(): Int {
-        return R.layout.activity_main
+    override fun initVB(): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
     }
+
 
     override fun initView() {
         codeFragment = CodeFragment()
