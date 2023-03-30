@@ -91,7 +91,7 @@ class ManagerLoginFragment : BaseFrament<FragManagerLoginBinding>(), SoftKeyboar
      */
     private fun savaLoginInfo(adminBean: AdminBean) {
         save2DefaultSp(
-            App.sContext!!,
+            App.sContext,
             OSpKey.ADMIN_INFO_KEY,
             obj2Json(adminBean)
         )

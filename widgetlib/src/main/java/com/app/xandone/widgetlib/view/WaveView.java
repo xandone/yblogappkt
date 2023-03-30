@@ -15,9 +15,11 @@ import android.view.View;
  */
 public class WaveView extends View {
 
-    private Path mAbovePath, mBelowWavePath;
-    private Paint mAboveWavePaint, mBelowWavePaint;
-    private DrawFilter mDrawFilter;
+    private final Path mAbovePath;
+    private final Path mBelowWavePath;
+    private final Paint mAboveWavePaint;
+    private final Paint mBelowWavePaint;
+    private final DrawFilter mDrawFilter;
     private float φ;
     private OnWaveAnimationListener mWaveAnimationListener;
 

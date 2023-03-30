@@ -17,7 +17,7 @@ class CacheInterceptor(var isCache: Boolean = true) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        if (!NetworkUtils.isConnected(App.sContext!!) && isCache) {
+        if (!NetworkUtils.isConnected(App.sContext) && isCache) {
             val maxStale = 2 * 24 * 60 * 60
             request = request.newBuilder()
                 .cacheControl(CacheControl.FORCE_CACHE)

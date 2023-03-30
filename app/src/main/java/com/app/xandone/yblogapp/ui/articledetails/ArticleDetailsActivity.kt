@@ -130,7 +130,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
         //修改图片大小
         val screenWidth = AppConfig.SCREEN_WIDTH
         val width =
-            (px2dp(App.sContext!!, screenWidth.toFloat()) - 20).toString()
+            (px2dp(App.sContext, screenWidth.toFloat()) - 20).toString()
         //        int fonsSize = SizeUtils.sp2px(App.sContext, 14);
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
@@ -213,7 +213,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
             })
             .setLayoutRes(R.layout.dialog_download_img)
             .setDimAmount(0.6f)
-            .setHeight(dp2px(App.sContext!!, 200f))
+            .setHeight(dp2px(App.sContext, 200f))
             .setTag("BottomDialog")
         downloadDialog.show()
     }
@@ -221,7 +221,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
     private fun downloadImg(url: String) {
         task = DownloadTask.Builder(
             url,
-            File(getImageCache(App.sContext!!))
+            File(getImageCache(App.sContext))
         )
             .setFilename(
                 System.currentTimeMillis().toString() + ".jpg"
@@ -292,7 +292,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
                 realCause: Exception?) {
                 LogHelper.d("image download taskEnd fileName=" + task.filename)
                 saveFile2SdCard(
-                    App.sContext!!,
+                    App.sContext,
                     task.file!!,
                     "yblog"
                 )

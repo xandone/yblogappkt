@@ -1,22 +1,16 @@
 package com.app.xandone.yblogapp
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 
 /**
  * author: Admin
  * created on: 2020/8/11 11:21
  * description:
  */
-class ATest : LifecycleObserver {
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
-        Log.d(TAG, "Atest====>onCreate..")
+class ATest : LifecycleEventObserver {
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+     Log.d("hfghfg",event.name)
     }
 
-    companion object {
-        val TAG = ATest::class.java.name
-    }
 }

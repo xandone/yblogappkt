@@ -8,6 +8,4 @@ import androidx.viewbinding.ViewBinding
  * created on: 2020/10/26 10:50
  * description:
  */
-abstract class BaseActivity<VB : ViewBinding> : BaseSimpleActivity<VB>() {
-
-}
+abstract class BaseActivity<VB : ViewBinding> : BaseSimpleActivity<VB>()

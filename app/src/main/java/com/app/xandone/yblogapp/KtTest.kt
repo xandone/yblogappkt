@@ -171,9 +171,9 @@ object KtTest {
     }
 
     fun t9() {
-        val bird1 = Bird();
+        val bird1 = Bird()
         bird1.printAge()
-        val bird2 = Bird(11.1);
+        val bird2 = Bird(11.1)
         bird2.printAge()
         bird2.printWeight()
     }

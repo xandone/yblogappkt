@@ -41,4 +41,7 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
 
     api 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    api "androidx.activity:activity-ktx:1.5.1"
+    api "androidx.fragment:fragment-ktx:1.5.1"
 }

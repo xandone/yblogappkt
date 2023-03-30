@@ -48,7 +48,7 @@ class SettingActivity : BaseWallActivity<ActSettingBinding>() {
     private fun clearSettingInfo() {
         showSimpleDialog(this, "是否清除配置信息?", object : MDialogOnclickListener() {
             override fun onConfirm() {
-                clearDefaultSp(App.sContext!!, OSpKey.CODE_TYPE_KEY)
+                clearDefaultSp(App.sContext, OSpKey.CODE_TYPE_KEY)
                 showShort("清除完成")
             }
         })
@@ -57,7 +57,7 @@ class SettingActivity : BaseWallActivity<ActSettingBinding>() {
     private fun clearAllCache() {
         showSimpleDialog(this, "是否清除所有缓存文件?", object : MDialogOnclickListener() {
             override fun onConfirm() {
-                clearExternalFilesDir(App.sContext!!)
+                clearExternalFilesDir(App.sContext)
                 mBinding.allCacheSv.setSettingRightTv("0KB")
                 showShort("清除完成")
             }
@@ -68,7 +68,7 @@ class SettingActivity : BaseWallActivity<ActSettingBinding>() {
         showSimpleDialog(this, "是否退出?", object : MDialogOnclickListener() {
             override fun onConfirm() {
                 EventBus.getDefault().post(SwitchEvent(SwitchEvent.MANAGER_LOGIN_RAG))
-                clearDefaultSp(App.sContext, OSpKey.ADMIN_INFO_KEY);
+                clearDefaultSp(App.sContext, OSpKey.ADMIN_INFO_KEY)
                 finish()
             }
 

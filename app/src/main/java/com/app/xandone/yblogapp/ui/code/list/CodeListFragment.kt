@@ -25,6 +25,7 @@ import com.app.xandone.yblogapp.model.repository.HttpResult
 import kotlinx.android.synthetic.main.frag_base_list.*
 import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
+import androidx.fragment.app.Fragment
 
 /**
  * author: Admin

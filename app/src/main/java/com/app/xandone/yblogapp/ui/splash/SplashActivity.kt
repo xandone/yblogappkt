@@ -3,6 +3,7 @@ package com.app.xandone.yblogapp.ui.splash
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.app.xandone.baselib.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.MainActivity
 import com.app.xandone.yblogapp.R
@@ -76,4 +77,9 @@ class SplashActivity : BaseSimpleActivity<ActSplashBinding>(), PermissionCallbac
         finish()
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("tagerr","$isChangingConfigurations")
+    }
 }

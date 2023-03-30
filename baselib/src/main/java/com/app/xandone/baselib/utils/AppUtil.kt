@@ -24,7 +24,7 @@ import java.util.*
 object AppUtil {
 
     @JvmStatic
-    private lateinit var sApp: Application;
+    private lateinit var sApp: Application
 
     fun init(app: Application) {
         sApp = app
@@ -105,7 +105,7 @@ object AppUtil {
             if (TextUtils.isEmpty(deviceBrand)) {
                 deviceBrand = "unknown"
             }
-            return deviceBrand.toLowerCase(Locale.getDefault())
+            return deviceBrand.lowercase(Locale.getDefault())
         }
 
     private var deviceSerial: String? = null

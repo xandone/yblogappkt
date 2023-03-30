@@ -82,7 +82,7 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
             flexDirection = FlexDirection.ROW
             alignItems = AlignItems.STRETCH
             justifyContent = JustifyContent.FLEX_START
-            flexWrap = FlexWrap.WRAP;
+            flexWrap = FlexWrap.WRAP
         }
         type_recycler.layoutManager = layoutManager
         type_recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
@@ -125,7 +125,7 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
             flexDirection = FlexDirection.ROW
             alignItems = AlignItems.STRETCH
             justifyContent = JustifyContent.FLEX_START
-            flexWrap = FlexWrap.WRAP;
+            flexWrap = FlexWrap.WRAP
         }
         type_remove_recycler.layoutManager = layoutManager
         type_remove_recycler.addItemDecoration(
@@ -165,7 +165,7 @@ class SheetTypeFragment : BottomSheetDialogFragment() {
      */
     private fun save2Cache() {
         save2DefaultSp(
-            App.sContext!!,
+            App.sContext,
             OSpKey.CODE_TYPE_KEY,
             obj2Json(types)
         )

@@ -52,7 +52,7 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
             val list1: MutableList<Int> = ArrayList()
             val list2: MutableList<Int> = ArrayList()
             val list3: MutableList<Int> = ArrayList()
-            for (yearArtDataBean in response.data.yearArtData!!) {
+            for (yearArtDataBean in response.data.yearArtData) {
                 list1.add(yearArtDataBean.codeCount)
                 list2.add(yearArtDataBean.essayCount)
                 list3.add(yearArtDataBean.year!!.toInt())
@@ -168,11 +168,11 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
         if (Utils.getSDKInt() >= 18) {
             // drawables only supported on api level 18 and above
             val drawable =
-                ContextCompat.getDrawable(App.sContext!!, fillDrawable)
+                ContextCompat.getDrawable(App.sContext, fillDrawable)
             set1.fillDrawable = drawable
         } else {
             set1.fillColor = ContextCompat.getColor(
-                App.sContext!!,
+                App.sContext,
                 R.color.chart_fill_color1
             )
         }

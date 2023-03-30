@@ -50,4 +50,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
     implementation 'jp.wasabeef:glide-transformations:4.1.0'
+
+    api "androidx.activity:activity-ktx:1.5.1"
+    api "androidx.fragment:fragment-ktx:1.5.1"
 }

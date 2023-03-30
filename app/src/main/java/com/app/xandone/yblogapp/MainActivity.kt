@@ -1,5 +1,7 @@
 package com.app.xandone.yblogapp
 
+import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.FragmentTransaction
 import com.app.xandone.baselib.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.databinding.ActivityMainBinding
@@ -18,8 +20,9 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
         return ActivityMainBinding.inflate(layoutInflater)
     }
 
-
     override fun initView() {
+        val aTest = ATest()
+        lifecycle.addObserver(aTest)
         codeFragment = CodeFragment()
         supportFragmentManager
             .beginTransaction()
@@ -74,4 +77,10 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
         }
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("tagerr","$isChangingConfigurations")
+    }
+
 }

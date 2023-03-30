@@ -9,7 +9,5 @@ class KtTest2 {
     var a: Int? = 1
     val test = false
 
-    object AA {
-
-    }
+    object AA
 }

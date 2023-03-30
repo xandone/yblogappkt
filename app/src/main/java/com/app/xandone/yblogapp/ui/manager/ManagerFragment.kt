@@ -35,7 +35,7 @@ class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
      * 自动检测缓存的Admin信息
      */
     private fun autoCheckAdminInfo() {
-        val adminJson = getDefaultString(App.sContext!!, OSpKey.ADMIN_INFO_KEY)
+        val adminJson = getDefaultString(App.sContext, OSpKey.ADMIN_INFO_KEY)
         if (TextUtils.isEmpty(adminJson)) {
             showInitView()
             return

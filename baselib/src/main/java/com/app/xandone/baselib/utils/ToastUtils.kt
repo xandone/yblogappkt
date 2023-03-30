@@ -65,7 +65,7 @@ object ToastUtils {
         } else {
             iv.visibility = View.GONE
         }
-        toast_2!!.setView(view)
+        toast_2!!.view = view
         toast_2!!.setGravity(Gravity.CENTER, 0, 0)
         toast_2!!.show()
         return toast_2
