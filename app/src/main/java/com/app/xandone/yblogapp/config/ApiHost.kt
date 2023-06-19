@@ -7,6 +7,6 @@ package com.app.xandone.yblogapp.config
  */
 object ApiHost {
     //    const val DEFAULT_HOST = "https://xandone.pub/yblog/"
-    const val DEFAULT_HOST = "http://www.test.com/yblog/";
+    const val DEFAULT_HOST = "http://www.test.com/yblog/"
     //    public static final String DEFAULT_HOST = "http://192.168.3.237:8081";
 }

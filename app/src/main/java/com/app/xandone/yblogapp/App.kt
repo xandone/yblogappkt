@@ -28,7 +28,10 @@ class App : Application() {
             //设置全局的Header构建器
             SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
                 layout.setPrimaryColorsId(R.color.app_bg_color, R.color.light_tv)
-                ClassicsHeader(context)
+                val header = ClassicsHeaderVisible(context)
+                header.setEnableLastTime(false)
+                header.setTextSizeTitle(0F)
+                header
             }
             //设置全局的Footer构建器
             SmartRefreshLayout.setDefaultRefreshFooterCreator { context, layout -> //指定为经典Footer，默认是 BallPulseFooter

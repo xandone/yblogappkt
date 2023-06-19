@@ -12,7 +12,7 @@ import java.net.InetAddress
 class WDns : Dns {
     override fun lookup(hostname: String): List<InetAddress> {
         if (BuildConfig.DEBUG && hostname in host) {
-            return listOf(*InetAddress.getAllByName("192.168.8.127"))
+            return listOf(*InetAddress.getAllByName("192.168.3.110"))
         }
         return Dns.SYSTEM.lookup(hostname)
     }
