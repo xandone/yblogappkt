@@ -10,6 +10,7 @@ import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
 import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
 import com.app.xandone.yblogapp.view.statelayout.StateConfig
 import com.app.xandone.yblogapp.view.statelayout.handler.FadeStateChangedHandler
+import com.app.xandone.yblogapp.widget.ClassicsHeaderVisible
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
