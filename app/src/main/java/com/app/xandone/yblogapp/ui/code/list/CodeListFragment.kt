@@ -3,6 +3,7 @@ package com.app.xandone.yblogapp.ui.code.list
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
@@ -23,9 +24,11 @@ import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
 import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
 import com.app.xandone.yblogapp.model.repository.HttpResult
 import kotlinx.android.synthetic.main.frag_base_list.*
-import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.*
+import okhttp3.internal.wait
+import java.util.*
 
 /**
  * author: Admin
@@ -85,8 +88,29 @@ class CodeListFragment : BaseListFragment<CodeArticleBean>() {
 
     private fun getCodeDatas() {
         lifecycleScope.launch {
-            codeModel.getCodeDatas(mPage, ROW, mType)
+            val l1 = System.currentTimeMillis()
+
+            //个人总结
+            //1.launch和async都可以达到异步的效果,但是async有await挂起函数，这样可以等子协程结束后再执行接下来下面的代码
+            //2.这里如果创建子协程，那么所有代码同步执行，适合场景：等A接口结束后拿到参数再执行B接口
+            //3.launch适用场景：一个界面多个接口同时请求且互不干扰的情况
+            //4.async适用场景：一个界面多个接口同时请求，但是必须等待所有接口成功才能显示的情况
+            val result1 = launch {
+                codeModel.getCodeDatas(mPage, ROW, mType)
+            }
+            val l2 = System.currentTimeMillis()
+            val result2 = async {
+                codeModel.getCodeDatas(mPage, 100, mType)
+            }
+            result2.await()
+            val l3 = System.currentTimeMillis()
+            Log.e("gfdgdfgdfgd", "${l2 - l1},${l3 - l2}")
+//            Log.e("gfdgdfgdfgd", "await=${result1.await()},${result2.await()}")
+
+            val l4 = System.currentTimeMillis()
+            Log.e("gfdgdfgdfgd", "${l4 - l3}")
         }
+
     }
 
     override fun getData() {

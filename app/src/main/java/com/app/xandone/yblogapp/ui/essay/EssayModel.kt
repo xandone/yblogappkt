@@ -22,6 +22,7 @@ class EssayModel : ViewModel() {
     }
 
     suspend fun getBannerDatas() {
+//        val x = 5 / 0
         datas2.value = CodeRepository.getBannerDatas()
     }
 

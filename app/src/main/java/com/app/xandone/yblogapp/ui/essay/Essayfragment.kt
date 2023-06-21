@@ -25,6 +25,7 @@ import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
 import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
 import com.app.xandone.yblogapp.model.repository.HttpResult
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
+import com.app.xandone.yblogapp.ui.code.list.CodeListFragment
 import com.app.xandone.yblogapp.view.statelayout.StateLayout
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -35,6 +36,7 @@ import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.frag_base_list.*
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
 
@@ -82,8 +84,10 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
     private fun initAdapter() {
         mAdapter = object :
             BaseQuickAdapter<EssayArticleBean, BaseViewHolder>(R.layout.item_essay_list, mDatas) {
-            override fun convert(holder: BaseViewHolder,
-                                 item: EssayArticleBean) {
+            override fun convert(
+                holder: BaseViewHolder,
+                item: EssayArticleBean
+            ) {
                 holder.setText(R.id.essay_title_tv, item.title)
                 holder.setText(R.id.essay_content_tv, item.content)
                 holder.setText(R.id.essay_date_tv, item.postTime)
@@ -148,10 +152,13 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
                 holder: BannerImageHolder,
                 data: BannerBean,
                 position: Int,
-                size: Int) {
-                ImageLoadHelper.instance.display(mActivity,
+                size: Int
+            ) {
+                ImageLoadHelper.instance.display(
+                    mActivity,
                     bannerList[position].imgUrl,
-                    holder.imageView)
+                    holder.imageView
+                )
             }
         }
         banner.adapter = bannerAdapter
@@ -179,10 +186,20 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
         }
     }
 
-    override fun getData() {
+    private fun getAllData() {
         mPage = 1
-        getCodeDatas(mPage, false)
-        getBannerDatas()
+        lifecycleScope.launch {
+            val result1 = async {
+                essayModel.getBannerDatas()
+            }
+            val result2 = async {
+                essayModel.getEssayDatas(false, mPage, ROW)
+            }
+        }
+    }
+
+    override fun getData() {
+        getAllData()
     }
 
     override fun getDataMore() {
