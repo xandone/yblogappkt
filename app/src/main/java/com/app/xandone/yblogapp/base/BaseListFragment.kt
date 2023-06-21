@@ -1,13 +1,11 @@
 package com.app.xandone.yblogapp.base
 
-import android.util.Log
 import android.view.View
 import androidx.annotation.CallSuper
 import com.app.xandone.yblogapp.databinding.FragBaseListBinding
 import com.app.xandone.yblogapp.model.repository.*
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import kotlinx.android.synthetic.main.layout_empty.*
 
 /**
  * author: Admin
@@ -60,11 +58,11 @@ abstract class BaseListFragment<T> : BaseWallFragment<FragBaseListBinding>(), IR
                 is ApiErrorResponse -> {
                     onLoadSeverError(response)
                 }
-                is ApiOtherErrorResponse -> {
+                is ExceptionResponse -> {
                     onLoadSeverError(response)
                 }
                 else -> {
-                    onLoadSeverError(ApiOtherErrorResponse<Any>())
+                    onLoadSeverError(ExceptionResponse<Any>())
                 }
             }
 

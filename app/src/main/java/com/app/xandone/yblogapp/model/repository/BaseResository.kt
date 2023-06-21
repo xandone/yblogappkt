@@ -1,8 +1,6 @@
 package com.app.xandone.yblogapp.model.repository
 
 import android.net.ParseException
-import android.util.Log
-import com.app.xandone.baselib.utils.JsonUtils
 import com.app.xandone.baselib.utils.ToastUtils
 import com.google.gson.JsonParseException
 import org.json.JSONException
@@ -19,13 +17,16 @@ import javax.net.ssl.SSLHandshakeException
  * description:
  */
 open class BaseResository {
-    suspend fun <T> excuteHttp(block: suspend () -> ApiResponse<T>): ApiResponse<T> {
+    suspend fun <T> excuteHttp(
+        isShowError: Boolean = true,
+        block: suspend () -> ApiResponse<T>
+    ): ApiResponse<T> {
         kotlin.runCatching {
             block.invoke()
         }.onSuccess { resp: ApiResponse<T> ->
             return handleApiSuccess(resp)
         }.onFailure { t: Throwable ->
-            return handleApiOtherError(t)
+            return handleException(isShowError, t)
         }
         return ApiEmptyResponse()
     }
@@ -47,7 +48,10 @@ open class BaseResository {
         return ApiErrorResponse(resp)
     }
 
-    private fun <T> handleApiOtherError(t: Throwable): ApiOtherErrorResponse<T> {
+    private fun <T> handleException(
+        isShowError: Boolean,
+        t: Throwable
+    ): ExceptionResponse<T> {
         var code = -1000
         var message = ""
         when (t) {
@@ -86,8 +90,10 @@ open class BaseResository {
                 message = "未知错误"
             }
         }
-        ToastUtils.showShort(message)
-        return ApiOtherErrorResponse(t, code, message)
+        if (isShowError){
+            ToastUtils.showShort(message)
+        }
+        return ExceptionResponse(t, code, message)
     }
 
 

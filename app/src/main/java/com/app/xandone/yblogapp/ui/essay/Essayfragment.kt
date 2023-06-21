@@ -1,7 +1,6 @@
 package com.app.xandone.yblogapp.ui.essay
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,17 +19,11 @@ import com.app.xandone.yblogapp.base.BaseListFragment
 import com.app.xandone.yblogapp.constant.OConstantKey
 import com.app.xandone.yblogapp.model.bean.BannerBean
 import com.app.xandone.yblogapp.model.bean.EssayArticleBean
-import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
-import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
-import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
 import com.app.xandone.yblogapp.model.repository.HttpResult
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
-import com.app.xandone.yblogapp.ui.code.list.CodeListFragment
-import com.app.xandone.yblogapp.view.statelayout.StateLayout
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.gson.reflect.TypeToken
-import com.gyf.immersionbar.ImmersionBar
 import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder

@@ -19,16 +19,8 @@ import com.app.xandone.yblogapp.model.bean.CodeArticleBean
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.app.xandone.yblogapp.model.repository.ApiEmptyResponse
-import com.app.xandone.yblogapp.model.repository.ApiErrorResponse
-import com.app.xandone.yblogapp.model.repository.ApiOtherErrorResponse
-import com.app.xandone.yblogapp.model.repository.HttpResult
 import kotlinx.android.synthetic.main.frag_base_list.*
-import kotlin.collections.ArrayList
-import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
-import java.util.*
 
 /**
  * author: Admin
