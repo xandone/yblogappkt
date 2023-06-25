@@ -167,26 +167,21 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
         }
     }
 
-    private fun getBannerDatas() {
+    private fun getCodeDatas(page: Int) {
         lifecycleScope.launch {
-            essayModel.getBannerDatas()
-        }
-    }
-
-    private fun getCodeDatas(page: Int, isLoadMore: Boolean) {
-        lifecycleScope.launch {
-            essayModel.getEssayDatas(isLoadMore, page, ROW)
+            essayModel.getEssayDatas(page, ROW)
         }
     }
 
     private fun getAllData() {
         mPage = 1
         lifecycleScope.launch {
+            //1.同步和异步请求，协程1=false都不影响协程2的执行
             val result1 = async {
                 essayModel.getBannerDatas()
             }
             val result2 = async {
-                essayModel.getEssayDatas(false, mPage, ROW)
+                essayModel.getEssayDatas(mPage, ROW)
             }
         }
     }
@@ -197,7 +192,7 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
 
     override fun getDataMore() {
         mPage = mDatas.size / ROW + 1
-        getCodeDatas(mPage, true)
+        getCodeDatas(mPage)
     }
 
     override fun isStatusBarEnabled(): Boolean {

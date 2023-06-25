@@ -1,6 +1,7 @@
 package com.app.xandone.yblogapp.model.repository
 
 import android.net.ParseException
+import com.app.xandone.baselib.utils.SimpleUtils
 import com.app.xandone.baselib.utils.ToastUtils
 import com.google.gson.JsonParseException
 import org.json.JSONException
@@ -24,26 +25,32 @@ open class BaseResository {
         kotlin.runCatching {
             block.invoke()
         }.onSuccess { resp: ApiResponse<T> ->
-            return handleApiSuccess(resp)
+            return handleApiSuccess(isShowError, resp)
         }.onFailure { t: Throwable ->
             return handleException(isShowError, t)
         }
         return ApiEmptyResponse()
     }
 
-    private fun <T> handleApiSuccess(resp: ApiResponse<T>): ApiResponse<T> {
-        if (resp.code == 200) {
+    private fun <T> handleApiSuccess(isShowError: Boolean, resp: ApiResponse<T>): ApiResponse<T> {
+        return if (resp.code == 200) {
             resp.result = HttpResult.SUCCESS
-            return resp
+            resp
         } else {
-            return handleApiError(resp)
+            handleApiError(isShowError, resp)
         }
     }
 
-    private fun <T> handleApiError(resp: ApiResponse<T>): ApiErrorResponse<T> {
+    private fun <T> handleApiError(
+        isShowError: Boolean,
+        resp: ApiResponse<T>
+    ): ApiErrorResponse<T> {
         when (resp.code) {
             201 -> {
             }
+        }
+        if (isShowError && !SimpleUtils.isEmpty(resp.msg)) {
+            ToastUtils.showShort(resp.msg!!)
         }
         return ApiErrorResponse(resp)
     }
@@ -90,7 +97,7 @@ open class BaseResository {
                 message = "未知错误"
             }
         }
-        if (isShowError){
+        if (isShowError) {
             ToastUtils.showShort(message)
         }
         return ExceptionResponse(t, code, message)

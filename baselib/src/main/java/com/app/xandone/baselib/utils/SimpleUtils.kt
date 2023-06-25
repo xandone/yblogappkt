@@ -16,7 +16,7 @@ object SimpleUtils {
             true
         } else if (obj.javaClass.isArray && Array.getLength(obj) == 0) {
             true
-        } else if (obj is CharSequence && obj.toString().length == 0) {
+        } else if (obj is CharSequence && obj.toString().isEmpty()) {
             true
         } else if (obj is Collection<*> && obj.isEmpty()) {
             true

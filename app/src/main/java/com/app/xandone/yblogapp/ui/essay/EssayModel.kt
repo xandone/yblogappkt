@@ -6,6 +6,7 @@ import com.app.xandone.yblogapp.model.bean.BannerBean
 import com.app.xandone.yblogapp.model.bean.EssayArticleBean
 import com.app.xandone.yblogapp.model.repository.CodeRepository
 import com.app.xandone.yblogapp.model.repository.ApiResponse
+import com.app.xandone.yblogapp.model.repository.HttpResult
 
 /**
  * author: Admin
@@ -17,13 +18,18 @@ class EssayModel : ViewModel() {
 
     val datas2: MutableLiveData<ApiResponse<List<BannerBean>>> = MutableLiveData()
 
-    suspend fun getEssayDatas(isMore: Boolean = false, page: Int = 1, pagesize: Int = 10) {
+    suspend fun getEssayDatas(page: Int = 1, pagesize: Int = 10) {
+
         datas.value = CodeRepository.getEssayDatas(page, pagesize)
     }
 
     suspend fun getBannerDatas() {
 //        val x = 5 / 0
-        datas2.value = CodeRepository.getBannerDatas()
+
+        //异步请求getEssayDatas和getBannerDatas，其中一个接口false的情况
+        val resp = CodeRepository.getBannerDatas()
+        resp.result = HttpResult.FAIL
+        datas2.value = resp
     }
 
 }
