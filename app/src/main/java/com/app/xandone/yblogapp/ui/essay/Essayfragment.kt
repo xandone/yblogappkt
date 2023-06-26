@@ -28,7 +28,6 @@ import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
-import kotlinx.android.synthetic.main.frag_base_list.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
@@ -117,9 +116,9 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
             }
         }
 
-        recycler.layoutManager = LinearLayoutManager(mActivity)
-        recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
-        recycler.adapter = mAdapter
+        mBinding.recycler.layoutManager = LinearLayoutManager(mActivity)
+        mBinding.recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
+        mBinding.recycler.adapter = mAdapter
         mAdapter.setOnItemClickListener { _, _, position ->
             startActivity(
                 Intent(mActivity, ArticleDetailsActivity::class.java)
@@ -200,7 +199,7 @@ class Essayfragment : BaseListFragment<EssayArticleBean>() {
     }
 
     override fun getTitleView(): View {
-        return mStateLayout
+        return mWallBinding.stateLayout
     }
 
     companion object {

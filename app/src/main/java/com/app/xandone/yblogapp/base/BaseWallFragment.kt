@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding
 import com.app.xandone.baselib.base.BaseFrament
 import com.app.xandone.yblogapp.R
 import com.app.xandone.yblogapp.api.WDns
+import com.app.xandone.yblogapp.databinding.FragBaseWallBinding
 import com.app.xandone.yblogapp.view.statelayout.StateLayout
 import com.gyf.immersionbar.ImmersionBar
 
@@ -18,33 +19,45 @@ import com.gyf.immersionbar.ImmersionBar
 /**
  * author: Admin
  * created on: 2020/9/1 10:52
- * description:有加载状态页的基类Fragment
+ * description:有加载状态页的Fragment基类
  */
-abstract class BaseWallFragment<VB : ViewBinding> : BaseFrament<VB>(), ILoadingWall {
+abstract class BaseWallFragment<VB : ViewBinding>(private val initVb: (LayoutInflater) -> VB) :
+    BaseFrament(), ILoadingWall {
 
-    protected lateinit var mStateLayout: StateLayout
+    private var _wallBinding: FragBaseWallBinding? = null
+    protected val mWallBinding
+        get() = _wallBinding!!
+
+    private var _binding: VB? = null
+    protected val mBinding
+        get() = _binding!!
+
+    override fun doBeforeSetContentView() {
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = initVB()
-        mStateLayout = inflater.inflate(R.layout.frag_base_wall, container, false) as StateLayout
-        val walFrame = mStateLayout.findViewById<FrameLayout>(R.id.wall_frame)
-        val v = mBinding.root
-        val param = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT)
-        v.layoutParams = param
-        walFrame.addView(v)
-        mStateLayout.onRefresh { tag ->
-            reload(tag)
-        }
-        return mStateLayout
+        _wallBinding = FragBaseWallBinding.inflate(layoutInflater)
+        _binding = initVb(layoutInflater)
+
+        val param = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+        mBinding.root.layoutParams = param
+        mWallBinding.wallFrame.addView(mBinding.root)
+        return mWallBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mWallBinding.stateLayout.onRefresh { tag ->
+            reload(tag)
+        }
         initImmersionBar()
     }
 
@@ -91,27 +104,37 @@ abstract class BaseWallFragment<VB : ViewBinding> : BaseFrament<VB>(), ILoadingW
     }
 
     override fun onLoading() {
-        mStateLayout.showLoading(refresh = false)
+        mWallBinding.stateLayout.showLoading(refresh = false)
     }
 
     override fun onLoadEmpty(tag: Any?) {
-        mStateLayout.showEmpty(tag)
+        mWallBinding.stateLayout.showEmpty(tag)
     }
 
     override fun onLoadSeverError(tag: Any?) {
-        mStateLayout.showError(tag)
+        mWallBinding.stateLayout.showError(tag)
     }
 
     override fun onLoadNetError(tag: Any?) {
-        mStateLayout.showError(tag)
+        mWallBinding.stateLayout.showError(tag)
     }
 
     override fun onLoadFinish(tag: Any?) {
-        mStateLayout.showContent(tag)
+        mWallBinding.stateLayout.showContent(tag)
     }
 
     override fun reload(tag: Any?) {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (_wallBinding != null) {
+            _wallBinding = null
+        }
+        if (_binding != null) {
+            _binding = null
+        }
     }
 
 }

@@ -19,7 +19,6 @@ import com.app.xandone.yblogapp.model.bean.CodeArticleBean
 import com.app.xandone.yblogapp.ui.articledetails.ArticleDetailsActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import kotlinx.android.synthetic.main.frag_base_list.*
 import kotlinx.coroutines.*
 
 /**
@@ -56,9 +55,9 @@ class CodeListFragment : BaseListFragment<CodeArticleBean>() {
                 }
             }
         }
-        recycler.layoutManager = LinearLayoutManager(mActivity)
-        recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
-        recycler.adapter = mAdapter
+        mBinding.recycler.layoutManager = LinearLayoutManager(mActivity)
+        mBinding.recycler.addItemDecoration(SpacesItemDecoration(App.sContext, 10, 10, 10))
+        mBinding.recycler.adapter = mAdapter
         mAdapter.setOnItemClickListener { _, _, position ->
             startActivity(
                 Intent(mActivity, ArticleDetailsActivity::class.java)

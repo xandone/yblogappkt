@@ -6,7 +6,6 @@ import android.view.Window
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.app.xandone.baselib.base.BaseFrament
 import com.app.xandone.baselib.base.setClickAction
 import com.app.xandone.baselib.cache.SpHelper.save2DefaultSp
 import com.app.xandone.baselib.utils.JsonUtils.obj2Json
@@ -18,6 +17,7 @@ import com.app.xandone.widgetlib.utils.KeyboardWatcher
 import com.app.xandone.widgetlib.utils.KeyboardWatcher.SoftKeyboardStateListener
 import com.app.xandone.yblogapp.App
 import com.app.xandone.yblogapp.R
+import com.app.xandone.yblogapp.base.BaseSimpleFragment
 import com.app.xandone.yblogapp.config.AppConfig
 import com.app.xandone.yblogapp.constant.OSpKey
 import com.app.xandone.yblogapp.databinding.FragManagerLoginBinding
@@ -32,7 +32,8 @@ import kotlinx.coroutines.launch
  * created on: 2020/9/29 09:52
  * description:
  */
-class ManagerLoginFragment : BaseFrament<FragManagerLoginBinding>(), SoftKeyboardStateListener {
+class ManagerLoginFragment : BaseSimpleFragment<FragManagerLoginBinding>(FragManagerLoginBinding::inflate),
+    SoftKeyboardStateListener {
     private lateinit var keyboardWatcher: KeyboardWatcher
 
     private val managerModel by lazy {
@@ -130,9 +131,5 @@ class ManagerLoginFragment : BaseFrament<FragManagerLoginBinding>(), SoftKeyboar
     override fun onDestroy() {
         super.onDestroy()
         keyboardWatcher.removeSoftKeyboardStateListener(this)
-    }
-
-    override fun initVB(): FragManagerLoginBinding {
-        return FragManagerLoginBinding.inflate(layoutInflater)
     }
 }

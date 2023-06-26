@@ -29,7 +29,6 @@ import com.liulishuo.okdownload.core.cause.EndCause
 import com.liulishuo.okdownload.core.cause.ResumeFailedCause
 import java.io.File
 import java.util.*
-import kotlinx.android.synthetic.main.act_article_details.*
 import kotlinx.coroutines.launch
 
 /**
@@ -37,7 +36,8 @@ import kotlinx.coroutines.launch
  * created on: 2020/9/4 10:20
  * description:
  */
-class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
+class ArticleDetailsActivity :
+    BaseWallActivity<ActArticleDetailsBinding>(ActArticleDetailsBinding::inflate) {
 
     private var mId: String? = null
     private var mType = 0
@@ -73,7 +73,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
                 "<pre",
                 "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
             )
-            webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+            mBinding.webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
             onLoadFinish()
         }
         detailsModel.datas2.observe(this) {
@@ -81,7 +81,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
                 "<pre",
                 "<pre style=\"overflow: auto;background-color: #F3F5F8;padding:10px;\""
             )
-            webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+            mBinding.webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
             onLoadFinish()
         }
 
@@ -106,7 +106,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     private fun initWebView() {
-        val ws = webView.settings
+        val ws = mBinding.webView.settings
         //        // 网页内容的宽度是否可大于WebView控件的宽度
 //        ws.setLoadWithOverviewMode(false);
 //        // 是否应该支持使用其屏幕缩放控件和手势缩放
@@ -120,7 +120,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
 //        // 排版适应屏幕
 //        ws.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         ws.javaScriptEnabled = true
-        webView.addJavascriptInterface(this, "imgClick")
+        mBinding.webView.addJavascriptInterface(this, "imgClick")
 
         // webview从5.0开始默认不允许混合模式,https中不能加载http资源,需要设置开启。
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -132,7 +132,7 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
         val width =
             (px2dp(App.sContext, screenWidth.toFloat()) - 20).toString()
         //        int fonsSize = SizeUtils.sp2px(App.sContext, 14);
-        webView.webViewClient = object : WebViewClient() {
+        mBinding.webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 val javascript = "javascript:function ResizeImages() {" +
@@ -241,55 +241,67 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
             ) {
             }
 
-            override fun connectTrialEnd(task: DownloadTask,
-                                         responseCode: Int,
-                                         responseHeaderFields: Map<String, List<String>>) {
+            override fun connectTrialEnd(
+                task: DownloadTask,
+                responseCode: Int,
+                responseHeaderFields: Map<String, List<String>>
+            ) {
             }
 
-            override fun downloadFromBeginning(task: DownloadTask,
-                                               info: BreakpointInfo,
-                                               cause: ResumeFailedCause) {
+            override fun downloadFromBeginning(
+                task: DownloadTask,
+                info: BreakpointInfo,
+                cause: ResumeFailedCause
+            ) {
             }
 
-            override fun downloadFromBreakpoint(task: DownloadTask,
-                                                info: BreakpointInfo) {
+            override fun downloadFromBreakpoint(
+                task: DownloadTask,
+                info: BreakpointInfo
+            ) {
             }
 
             override fun connectStart(
                 task: DownloadTask,
                 blockIndex: Int,
-                requestHeaderFields: Map<String, List<String>>) {
+                requestHeaderFields: Map<String, List<String>>
+            ) {
             }
 
             override fun connectEnd(
                 task: DownloadTask,
                 blockIndex: Int,
                 responseCode: Int,
-                responseHeaderFields: Map<String, List<String>>) {
+                responseHeaderFields: Map<String, List<String>>
+            ) {
             }
 
             override fun fetchStart(
                 task: DownloadTask,
                 blockIndex: Int,
-                contentLength: Long) {
+                contentLength: Long
+            ) {
             }
 
             override fun fetchProgress(
                 task: DownloadTask,
                 blockIndex: Int,
-                increaseBytes: Long) {
+                increaseBytes: Long
+            ) {
             }
 
             override fun fetchEnd(
                 task: DownloadTask,
                 blockIndex: Int,
-                contentLength: Long) {
+                contentLength: Long
+            ) {
             }
 
             override fun taskEnd(
                 task: DownloadTask,
                 cause: EndCause,
-                realCause: Exception?) {
+                realCause: Exception?
+            ) {
                 LogHelper.d("image download taskEnd fileName=" + task.filename)
                 saveFile2SdCard(
                     App.sContext,
@@ -313,9 +325,5 @@ class ArticleDetailsActivity : BaseWallActivity<ActArticleDetailsBinding>() {
     companion object {
         const val TYPE_CODE = 1
         const val TYPE_ESSAY = 2
-    }
-
-    override fun initVB(): ActArticleDetailsBinding {
-        return ActArticleDetailsBinding.inflate(layoutInflater)
     }
 }

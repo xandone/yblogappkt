@@ -19,19 +19,18 @@ import org.greenrobot.eventbus.EventBus
  * created on: 2020/9/29 11:09
  * description:
  */
-class SettingActivity : BaseWallActivity<ActSettingBinding>() {
-    override fun initVB(): ActSettingBinding {
-        return ActSettingBinding.inflate(layoutInflater)
-    }
+class SettingActivity : BaseWallActivity<ActSettingBinding>(ActSettingBinding::inflate) {
 
     override fun initView() {
         super.initView()
         mBinding.allCacheSv.setSettingRightTv(getTotalCacheSize(App.sContext))
 
-        setClickAction(mBinding.settingSv,
+        setClickAction(
+            mBinding.settingSv,
             mBinding.allCacheSv,
             mBinding.versionSv,
-            mBinding.exitBtn) {
+            mBinding.exitBtn
+        ) {
             when (this) {
                 mBinding.settingSv -> clearSettingInfo()
                 mBinding.allCacheSv -> clearAllCache()

@@ -11,7 +11,7 @@ import java.util.*
  */
 object JsonUtils {
     private val GSON = Gson()
-    fun <T> json2Obj(json: String?, clazz: Class<T>?): T {
+    fun <T> json2Obj(json: String?, clazz: Class<T>?): T? {
         return GSON.fromJson(json, clazz)
     }
 

@@ -15,5 +15,7 @@ interface IActivityInit {
      */
     fun doBeforeSetContentView()
 
+    fun initContentView()
+
     fun initView()
 }

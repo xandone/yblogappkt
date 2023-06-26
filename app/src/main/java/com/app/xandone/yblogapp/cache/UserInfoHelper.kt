@@ -18,7 +18,7 @@ object UserInfoHelper {
             return json2Obj(
                 adminJson,
                 AdminBean::class.java
-            ).adminId
+            )?.adminId
         }
 
     val adminToken: String?
@@ -30,7 +30,7 @@ object UserInfoHelper {
             return json2Obj(
                 adminJson,
                 AdminBean::class.java
-            ).token
+            )?.token
         }
 
     val adminBean: AdminBean?

@@ -1,6 +1,7 @@
 package com.app.xandone.yblogapp.ui.manager
 
 import android.content.Intent
+import android.graphics.Paint
 import android.view.View
 import com.app.xandone.baselib.base.setClickAction
 import com.app.xandone.baselib.imageload.ImageLoadHelper
@@ -17,21 +18,26 @@ import com.app.xandone.yblogapp.ui.manager.setting.SettingActivity
  * created on: 2020/9/27 11:02
  * description:
  */
-class ManagerDataFragment : BaseWallFragment<FragManagerDataBinding>() {
+class ManagerDataFragment : BaseWallFragment<FragManagerDataBinding>(FragManagerDataBinding::inflate) {
 
     override fun initView(view: View) {
         val adminBean = UserInfoHelper.adminBean
         adminBean?.let {
             ImageLoadHelper.instance.display(mActivity, it.adminIcon, mBinding.adminIconUv)
-            mBinding.adminNameTv.text=it.nickname
-            mBinding.adminIdentityTv.text=it.identity
-            mBinding.adminLastLoginTv.text=it.lastLoginTime
+            mBinding.adminNameTv.text = it.nickname
+            mBinding.adminIdentityTv.text = it.identity
+            mBinding.adminLastLoginTv.text = it.lastLoginTime
+            mBinding.adminNameTv.paint.flags = Paint.UNDERLINE_TEXT_FLAG
         }
 
         setClickAction(mBinding.settingCl, mBinding.chartTipCl) {
             when (this) {
-                mBinding.chartTipCl -> startActivity(Intent(mActivity,
-                    ChartDataActivity::class.java))
+                mBinding.chartTipCl -> startActivity(
+                    Intent(
+                        mActivity,
+                        ChartDataActivity::class.java
+                    )
+                )
                 mBinding.settingCl -> startActivity(Intent(mActivity, SettingActivity::class.java))
                 else -> {
                 }
@@ -40,7 +46,4 @@ class ManagerDataFragment : BaseWallFragment<FragManagerDataBinding>() {
 
     }
 
-    override fun initVB(): FragManagerDataBinding {
-        return FragManagerDataBinding.inflate(layoutInflater)
-    }
 }

@@ -12,21 +12,16 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
  * created on: 2020/9/2 09:27
  * description:
  */
-abstract class BaseListFragment<T> : BaseWallFragment<FragBaseListBinding>(), IRefreshCallback {
+abstract class BaseListFragment<T> : BaseWallFragment<FragBaseListBinding>(FragBaseListBinding::inflate), IRefreshCallback {
     protected var mPage = 1
     protected val mDatas = mutableListOf<T>()
     protected lateinit var mAdapter: BaseQuickAdapter<T, BaseViewHolder>
-
-    override fun initVB(): FragBaseListBinding {
-        return FragBaseListBinding.inflate(layoutInflater)
-    }
 
     @CallSuper
     override fun initView(view: View) {
         mBinding.refreshLayout.setOnRefreshListener { getData() }
         mBinding.refreshLayout.setOnLoadMoreListener { getDataMore() }
     }
-
 
     /**
      * 统一处理接口列表数据

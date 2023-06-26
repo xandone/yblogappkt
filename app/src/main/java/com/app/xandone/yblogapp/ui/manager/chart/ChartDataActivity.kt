@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
  * created on: 2020/10/21 16:46
  * description:
  */
-class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueSelectedListener {
+class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(ActChartDataBinding::inflate),
+    OnChartValueSelectedListener {
 
     private var mLineData: LineData? = null
 
@@ -202,7 +203,4 @@ class ChartDataActivity : BaseWallActivity<ActChartDataBinding>(), OnChartValueS
 
     override fun onNothingSelected() {}
 
-    override fun initVB(): ActChartDataBinding {
-        return ActChartDataBinding.inflate(layoutInflater)
-    }
 }

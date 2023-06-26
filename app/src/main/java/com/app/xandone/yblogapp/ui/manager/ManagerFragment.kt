@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.ThreadMode
  * created on: 2020/9/8 11:53
  * description:
  */
-class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
+class ManagerFragment : BaseWallFragment<FragManagerBinding>(FragManagerBinding::inflate) {
 
     companion object {
         val instance = ManagerFragment()
@@ -41,7 +41,7 @@ class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
             return
         }
         val adminBean = json2Obj(adminJson, AdminBean::class.java)
-        if (adminBean.adminId != null) {
+        if (adminBean?.adminId != null) {
             switchFragment(ManagerDataFragment())
         }
     }
@@ -49,13 +49,13 @@ class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
     private fun showInitView() {
         childFragmentManager.beginTransaction()
             .replace(R.id.main_fl, ManagerLoginFragment())
-            .commit()
+            .commitAllowingStateLoss()
     }
 
     private fun switchFragment(fragment: Fragment) {
         childFragmentManager.beginTransaction()
             .replace(R.id.main_fl, fragment)
-            .commit()
+            .commitAllowingStateLoss()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -77,10 +77,6 @@ class ManagerFragment : BaseWallFragment<FragManagerBinding>() {
 
     override fun getTitleView(): View {
         return mBinding.mainFl
-    }
-
-    override fun initVB(): FragManagerBinding {
-        return FragManagerBinding.inflate(layoutInflater)
     }
 
 }

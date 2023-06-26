@@ -1,15 +1,13 @@
 package com.app.xandone.yblogapp.base
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.annotation.CallSuper
 import androidx.annotation.NonNull
-import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 import com.app.xandone.baselib.base.BaseActivity
 import com.app.xandone.yblogapp.R
-import com.app.xandone.yblogapp.view.statelayout.StateLayout
+import com.app.xandone.yblogapp.databinding.ActBaseWallBinding
 import com.gyf.immersionbar.ImmersionBar
 
 /**
@@ -17,28 +15,33 @@ import com.gyf.immersionbar.ImmersionBar
  * created on: 2020/9/1 10:52
  * description:有加载状态页的基类Fragment
  */
-abstract class BaseWallActivity<VB : ViewBinding> : BaseActivity<VB>(), ILoadingWall {
+abstract class BaseWallActivity<VB : ViewBinding>(val initVb: (LayoutInflater) -> VB) :
+    BaseActivity(), ILoadingWall {
 
-    lateinit var toolbar: Toolbar
+    private var _wallBinding: ActBaseWallBinding? = null
+    protected val mWallABinding
+        get() = _wallBinding!!
 
-    protected lateinit var mStateLayout: StateLayout
+    private var _binding: VB? = null
+    protected val mBinding
+        get() = _binding!!
 
-    @SuppressLint("InflateParams")
+    override fun doBeforeSetContentView() {
+
+    }
+
     override fun initContentView() {
-        _binding = initVB()
-        val inflater = LayoutInflater.from(this)
-        val rootView = inflater.inflate(R.layout.act_base_wall, null)
-        mStateLayout = rootView.findViewById(R.id.stateLayout)
-        toolbar = rootView.findViewById(R.id.toolbar)
-        val walFrame = rootView.findViewById<FrameLayout>(R.id.wall_frame)
+        _wallBinding = ActBaseWallBinding.inflate(layoutInflater)
+        _binding = initVb(layoutInflater)
+
         val params = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
         )
-        val view = mBinding.root
-        view.layoutParams = params
-        walFrame.addView(view)
-        setContentView(rootView)
+        mBinding.root.layoutParams = params
+        mWallABinding.wallFrame.addView(mBinding.root)
+
+        setContentView(mWallABinding.root)
     }
 
     @CallSuper
@@ -46,29 +49,29 @@ abstract class BaseWallActivity<VB : ViewBinding> : BaseActivity<VB>(), ILoading
         onLoading()
         initToolbar()
         initImmersionBar()
-        mStateLayout.onRefresh { tag ->
+        mWallABinding.stateLayout.onRefresh { tag ->
             reload(tag)
         }
     }
 
     protected fun initToolbar() {
         setToolBar(title, R.mipmap.back_ic)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(mWallABinding.vToolBar.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-        toolbar.setNavigationOnClickListener { finish() }
+        mWallABinding.vToolBar.toolbar.setNavigationOnClickListener { finish() }
     }
 
     fun setToolBar(title: CharSequence?, icon: Int) {
         setToolBar(title)
-        toolbar.setNavigationIcon(icon)
+        mWallABinding.vToolBar.toolbar.setNavigationIcon(icon)
     }
 
     fun setToolBar(title: CharSequence?) {
-        toolbar.title = title
-        toolbar.setNavigationIcon(R.mipmap.back_ic)
+        mWallABinding.vToolBar.toolbar.title = title
+        mWallABinding.vToolBar.toolbar.setNavigationIcon(R.mipmap.back_ic)
     }
 
     private var mImmersionBar: ImmersionBar? = null
@@ -76,7 +79,7 @@ abstract class BaseWallActivity<VB : ViewBinding> : BaseActivity<VB>(), ILoading
     private fun initImmersionBar() {
         if (isStatusBarEnabled()) {
             getStatusBarConfig().init()
-            ImmersionBar.setTitleBar(this, toolbar)
+            ImmersionBar.setTitleBar(this, mWallABinding.vToolBar.toolbar)
         }
     }
 
@@ -110,27 +113,37 @@ abstract class BaseWallActivity<VB : ViewBinding> : BaseActivity<VB>(), ILoading
      */
     protected abstract fun requestData()
     override fun onLoading() {
-        mStateLayout.showLoading(refresh = false)
+        mWallABinding.stateLayout.showLoading(refresh = false)
     }
 
     override fun onLoadEmpty(tag: Any?) {
-        mStateLayout.showEmpty(tag)
+        mWallABinding.stateLayout.showEmpty(tag)
     }
 
     override fun onLoadSeverError(tag: Any?) {
-        mStateLayout.showError(tag)
+        mWallABinding.stateLayout.showError(tag)
     }
 
     override fun onLoadNetError(tag: Any?) {
-        mStateLayout.showError(tag)
+        mWallABinding.stateLayout.showError(tag)
     }
 
     override fun onLoadFinish(tag: Any?) {
-        mStateLayout.showContent(tag)
+        mWallABinding.stateLayout.showContent(tag)
     }
 
 
     override fun reload(tag: Any?) {
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (_wallBinding != null) {
+            _wallBinding = null
+        }
+        if (_binding != null) {
+            _binding = null
+        }
     }
 }

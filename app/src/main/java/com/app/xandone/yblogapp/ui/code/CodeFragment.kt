@@ -21,7 +21,6 @@ import com.app.xandone.yblogapp.model.bean.CodeTypeBean
 import com.app.xandone.yblogapp.model.event.CodeTypeEvent
 import com.app.xandone.yblogapp.ui.code.list.CodeListFragment
 import com.gyf.immersionbar.ImmersionBar
-import kotlinx.android.synthetic.main.frag_code.*
 import kotlinx.coroutines.launch
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -39,7 +38,8 @@ import java.util.*
  * created on: 2020/9/3 09:56
  * description:
  */
-class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
+class CodeFragment : BaseWallFragment<FragCodeBinding>(FragCodeBinding::inflate),
+    View.OnClickListener {
 
     private lateinit var fragments: ArrayList<Fragment>
     private var mSheetTypeFragment: SheetTypeFragment? = null
@@ -255,7 +255,4 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(), View.OnClickListener {
             .autoDarkModeEnable(true, 0.2f)
     }
 
-    override fun initVB(): FragCodeBinding {
-        return FragCodeBinding.inflate(layoutInflater)
-    }
 }

@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.app.xandone.baselib.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.MainActivity
 import com.app.xandone.yblogapp.R
+import com.app.xandone.yblogapp.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.config.IMyPermission
 import com.app.xandone.yblogapp.databinding.ActSplashBinding
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -20,11 +20,8 @@ import pub.devrel.easypermissions.PermissionRequest
  * created on: 2020/9/1 14:05
  * description:
  */
-class SplashActivity : BaseSimpleActivity<ActSplashBinding>(), PermissionCallbacks {
-
-    override fun initVB(): ActSplashBinding {
-        return ActSplashBinding.inflate(layoutInflater)
-    }
+class SplashActivity : BaseSimpleActivity<ActSplashBinding>(ActSplashBinding::inflate),
+    PermissionCallbacks {
 
     override fun initView() {
         writeAndReadTask()
@@ -51,16 +48,19 @@ class SplashActivity : BaseSimpleActivity<ActSplashBinding>(), PermissionCallbac
                 PermissionRequest.Builder(
                     this,
                     IMyPermission.RC_WRITE_AND_READ_PERM_CODE,
-                    *IMyPermission.WRITE_AND_READ_PERMS)
+                    *IMyPermission.WRITE_AND_READ_PERMS
+                )
                     .setRationale("需要以下权限")
                     .build()
             )
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
@@ -80,6 +80,6 @@ class SplashActivity : BaseSimpleActivity<ActSplashBinding>(), PermissionCallbac
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("tagerr","$isChangingConfigurations")
+        Log.d("tagerr", "$isChangingConfigurations")
     }
 }

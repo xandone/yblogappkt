@@ -1,24 +1,18 @@
 package com.app.xandone.yblogapp
 
-import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentTransaction
-import com.app.xandone.baselib.base.BaseSimpleActivity
+import com.app.xandone.yblogapp.base.BaseSimpleActivity
 import com.app.xandone.yblogapp.databinding.ActivityMainBinding
 import com.app.xandone.yblogapp.ui.code.CodeFragment
 import com.app.xandone.yblogapp.ui.essay.Essayfragment
 import com.app.xandone.yblogapp.ui.manager.ManagerFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
+class MainActivity : BaseSimpleActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
     private var codeFragment: CodeFragment? = null
     private var essayfragment: Essayfragment? = null
     private var managerFragment: ManagerFragment? = null
-
-    override fun initVB(): ActivityMainBinding {
-        return ActivityMainBinding.inflate(layoutInflater)
-    }
 
     override fun initView() {
         val aTest = ATest()
@@ -29,7 +23,7 @@ class MainActivity : BaseSimpleActivity<ActivityMainBinding>() {
             .add(R.id.main_frame, codeFragment!!)
             .commitAllowingStateLoss()
 
-        bottom_bar.setOnItemSelectedListener { item ->
+        mBinding.bottomBar.setOnItemSelectedListener { item ->
             var isSelect = false
             supportFragmentManager.beginTransaction().apply {
                 hideAllFragment(this)
