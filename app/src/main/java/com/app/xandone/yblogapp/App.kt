@@ -51,7 +51,7 @@ class App : Application() {
             setRetryIds(R.id.msg, R.id.iv, R.id.btn)
 
             onEmpty {
-                var resp = it as ApiEmptyResponse<*>
+                val resp = it as ApiEmptyResponse<*>
                 findViewById<TextView>(R.id.msg).text = resp.empty
             }
 

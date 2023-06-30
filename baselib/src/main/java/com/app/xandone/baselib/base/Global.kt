@@ -12,3 +12,9 @@ fun setClickAction(vararg views: View, block: View.() -> Unit) {
     val listener = View.OnClickListener(block)
     views.forEach { it.setOnClickListener(listener) }
 }
+
+
+fun setClickActionId(vararg views: View, block: View.() -> Unit) {
+    val listener = View.OnClickListener(block)
+    views.forEach { it.setOnClickListener(listener) }
+}

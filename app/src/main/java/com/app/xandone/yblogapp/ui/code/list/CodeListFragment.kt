@@ -26,9 +26,13 @@ import kotlinx.coroutines.*
  * created on: 2020/8/31 17:55
  * description:
  */
-class CodeListFragment : BaseListFragment<CodeArticleBean>() {
+open class CodeListFragment : BaseListFragment<CodeArticleBean>() {
     private var mType = 0
-    protected var mIsLoadedData = false
+
+    /**
+     * 是否已经加载过数据
+     */
+    protected var isLoadedData = false
 
     private val codeModel by lazy {
         ViewModelProvider(this, CodeViewModelFactory()).get(
@@ -72,7 +76,7 @@ class CodeListFragment : BaseListFragment<CodeArticleBean>() {
         }
     }
 
-    protected fun lazyLoadData() {
+    protected open fun lazyLoadData() {
         mPage = 1
         getCodeDatas()
     }
@@ -116,15 +120,15 @@ class CodeListFragment : BaseListFragment<CodeArticleBean>() {
 
     override fun onResume() {
         super.onResume()
-        if (!mIsLoadedData) {
+        if (!isLoadedData) {
             lazyLoadData()
-            mIsLoadedData = true
+            isLoadedData = true
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mIsLoadedData = false
+        isLoadedData = false
     }
 
     companion object {

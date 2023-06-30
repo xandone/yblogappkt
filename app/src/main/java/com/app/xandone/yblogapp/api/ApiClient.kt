@@ -22,6 +22,10 @@ import java.util.concurrent.TimeUnit
  */
 object ApiClient {
 
+    private const val OKHTTP_CALL_TIMEOUT = 10L
+    private const val OKHTTP_CONNECT_TIMEOUT = 10L
+    private const val OKHTTP_IO_TIMEOUT = 20L
+
     val cacheFile by lazy {
         File(getAppCacheDir(App.sContext))
     }
@@ -35,9 +39,10 @@ object ApiClient {
         .addNetworkInterceptor(CacheInterceptor())
         .addInterceptor(LogInterceptor())
         .cache(cache)
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .writeTimeout(10, TimeUnit.SECONDS)
+        .callTimeout(OKHTTP_CALL_TIMEOUT, TimeUnit.SECONDS)
+        .connectTimeout(OKHTTP_CONNECT_TIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(OKHTTP_IO_TIMEOUT, TimeUnit.SECONDS)
+        .writeTimeout(OKHTTP_IO_TIMEOUT, TimeUnit.SECONDS)
         //错误重连
         .retryOnConnectionFailure(true)
         .dns(WDns())

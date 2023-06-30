@@ -10,7 +10,7 @@ import java.io.File
  * description:
  */
 object ImageCache {
-    fun getImageCache(context: Context): String? {
+    fun getImageCache(context: Context): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             FileHelper.getExternalFilesDir(context)
         } else {

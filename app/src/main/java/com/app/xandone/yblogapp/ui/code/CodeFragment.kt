@@ -104,16 +104,10 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(FragCodeBinding::inflate)
                 return codeTypeList.size
             }
 
-            override fun getTitleView(
-                context: Context,
-                index: Int
-            ): IPagerTitleView {
+            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
                 val titleView = ColorTransitionPagerTitleView(context)
                 titleView.normalColor = Color.GRAY
-                titleView.selectedColor = ContextCompat.getColor(
-                    mActivity,
-                    R.color.colorPrimary
-                )
+                titleView.selectedColor = ContextCompat.getColor(mActivity, R.color.colorPrimary)
                 titleView.text = codeTypeList[index].typeName
                 titleView.setOnClickListener {
                     mBinding.viewPager.currentItem = index
@@ -148,8 +142,7 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(FragCodeBinding::inflate)
 
 
     private fun dealCacheType() {
-        val codeStr =
-            getDefaultString(App.sContext, OSpKey.CODE_TYPE_KEY)
+        val codeStr = getDefaultString(App.sContext, OSpKey.CODE_TYPE_KEY)
 
         if (codeStr.isNullOrEmpty()) {
             codeTypeList.addAll(apiTypeList)
@@ -187,16 +180,12 @@ class CodeFragment : BaseWallFragment<FragCodeBinding>(FragCodeBinding::inflate)
                 removeTypes!!.add(bean)
             }
         }
-        save2DefaultSp(
-            App.sContext,
-            OSpKey.CODE_TYPE_KEY,
-            JsonUtils.obj2Json(codeTypeList)
-        )
+
+        save2DefaultSp(App.sContext, OSpKey.CODE_TYPE_KEY, JsonUtils.obj2Json(codeTypeList))
     }
 
-    internal inner class MyViewPagerAdapter(
-        fm: FragmentManager, behavior: Int
-    ) : FragmentStatePagerAdapter(fm, behavior) {
+    internal inner class MyViewPagerAdapter(fm: FragmentManager, behavior: Int) :
+        FragmentStatePagerAdapter(fm, behavior) {
         override fun getItem(position: Int): Fragment {
             return fragments[position]
         }

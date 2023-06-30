@@ -2,6 +2,7 @@ package com.app.xandone.yblogapp.ui.articledetails
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
@@ -9,6 +10,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.app.xandone.baselib.base.setClickAction
 import com.app.xandone.baselib.cache.ImageCache.getImageCache
 import com.app.xandone.baselib.log.LogHelper
 import com.app.xandone.baselib.utils.ImageUtils.saveFile2SdCard
@@ -21,12 +23,15 @@ import com.app.xandone.yblogapp.base.BaseWallActivity
 import com.app.xandone.yblogapp.config.AppConfig
 import com.app.xandone.yblogapp.constant.OConstantKey
 import com.app.xandone.yblogapp.databinding.ActArticleDetailsBinding
+import com.blankj.utilcode.util.ImageUtils
+import com.hitomi.tilibrary.transfer.TransferConfig
 import com.hitomi.tilibrary.transfer.Transferee
 import com.liulishuo.okdownload.DownloadListener
 import com.liulishuo.okdownload.DownloadTask
 import com.liulishuo.okdownload.core.breakpoint.BreakpointInfo
 import com.liulishuo.okdownload.core.cause.EndCause
 import com.liulishuo.okdownload.core.cause.ResumeFailedCause
+import com.vansz.universalimageloader.UniversalImageLoader
 import java.io.File
 import java.util.*
 import kotlinx.coroutines.launch
@@ -173,42 +178,49 @@ class ArticleDetailsActivity :
     @SuppressLint("CheckResult")
     @JavascriptInterface
     fun showImg(url: String, position: Int) {
-//        Observable.just(url)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe { s ->
-//                urls!!.clear()
-//                urls!!.add(s)
-//                transfer!!.apply(
-//                    TransferConfig.build()
-//                        .setImageLoader(UniversalImageLoader.with(applicationContext))
-//                        .setSourceUrlList(urls)
-//                        .setOnLongClickListener { imageView, imageUri, pos ->
-//                            showDownloadDialog(
-//                                imageUri
-//                            )
-//                        }
-//                        .create()
-//                ).show()
-//            }
+        lifecycleScope.launch {
+            urls!!.clear()
+            urls!!.add(url)
+            transfer!!.apply(
+                TransferConfig.build()
+                    .setImageLoader(UniversalImageLoader.with(applicationContext))
+                    .setSourceUrlList(urls)
+                    .setOnLongClickListener { _, imageUri, _ ->
+                        showDownloadDialog(
+                            imageUri
+                        )
+                    }
+                    .create()
+            ).show()
+        }
     }
 
     private fun showDownloadDialog(imageUri: String) {
         downloadDialog = BottomDialog.create(supportFragmentManager)
             .setViewListener(object :
                 BottomDialog.ViewListener {
-                override fun bindView(v: View?) {
-                    val listener =
-                        View.OnClickListener { v ->
-                            when (v.id) {
+                override fun bindView(view: View?) {
+//                    val veiw1 = view!!.findViewById<View>(R.id.save_img_tv)
+//                    val veiw2 = view!!.findViewById<View>(R.id.cache_img_tv)
+//                    Log.d("gfdgdfg2342", "${veiw2.hashCode()}")
+                    //TODO view.apply 出现findViewById为null
+                    view.apply {
+                        val veiw1 = findViewById<View>(R.id.save_img_tv)
+                        val veiw2 = findViewById<View>(R.id.cache_img_tv)
+
+                        setClickAction(
+                            veiw1
+                        ) {
+                            when (id) {
                                 R.id.save_img_tv -> downloadImg(imageUri)
                                 else -> {
                                 }
                             }
                             downloadDialog.dismiss()
                         }
-                    v!!.findViewById<View>(R.id.save_img_tv).setOnClickListener(listener)
-                    v.findViewById<View>(R.id.cache_img_tv)
-                        .setOnClickListener(listener)
+                    }
+
+
                 }
             })
             .setLayoutRes(R.layout.dialog_download_img)
@@ -219,10 +231,7 @@ class ArticleDetailsActivity :
     }
 
     private fun downloadImg(url: String) {
-        task = DownloadTask.Builder(
-            url,
-            File(getImageCache(App.sContext))
-        )
+        task = DownloadTask.Builder(url, File(getImageCache(App.sContext)))
             .setFilename(
                 System.currentTimeMillis().toString() + ".jpg"
             ) // the minimal interval millisecond for callback progress
@@ -304,9 +313,7 @@ class ArticleDetailsActivity :
             ) {
                 LogHelper.d("image download taskEnd fileName=" + task.filename)
                 saveFile2SdCard(
-                    App.sContext,
-                    task.file!!,
-                    "yblog"
+                    App.sContext, task.file!!, "yblog"
                 )
             }
         }

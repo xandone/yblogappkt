@@ -115,5 +115,13 @@ dependencies {
     implementation 'com.github.Hitomis.transferee:GlideImageLoader:1.6.1'
 
 
+//    implementation(project(':umeng')) {
+//        exclude group: 'com.google.code.gson', module: 'gson'
+//    }
+//    implementation ('com.qiniu:qiniu-android-sdk:8.4.+'){
+//        exclude (group: 'com.squareup.okhttp3', module: 'okhttp')
+//    }
+
+
 
 }

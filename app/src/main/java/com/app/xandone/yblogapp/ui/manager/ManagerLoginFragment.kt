@@ -23,6 +23,7 @@ import com.app.xandone.yblogapp.constant.OSpKey
 import com.app.xandone.yblogapp.databinding.FragManagerLoginBinding
 import com.app.xandone.yblogapp.model.bean.AdminBean
 import com.app.xandone.yblogapp.model.event.SwitchEvent
+import com.app.xandone.yblogapp.model.repository.HttpResult
 import org.greenrobot.eventbus.EventBus
 import kotlinx.android.synthetic.main.frag_manager_login.*
 import kotlinx.coroutines.launch
@@ -32,7 +33,8 @@ import kotlinx.coroutines.launch
  * created on: 2020/9/29 09:52
  * description:
  */
-class ManagerLoginFragment : BaseSimpleFragment<FragManagerLoginBinding>(FragManagerLoginBinding::inflate),
+class ManagerLoginFragment :
+    BaseSimpleFragment<FragManagerLoginBinding>(FragManagerLoginBinding::inflate),
     SoftKeyboardStateListener {
     private lateinit var keyboardWatcher: KeyboardWatcher
 
@@ -56,9 +58,12 @@ class ManagerLoginFragment : BaseSimpleFragment<FragManagerLoginBinding>(FragMan
         }
 
         managerModel.datas.observe(this) {
-            EventBus.getDefault().post(SwitchEvent(SwitchEvent.MANAGER_DATA_RAG))
-            it.data?.get(0)?.let { it1 -> savaLoginInfo(it1) }
-            showShort("登录成功")
+            if (it.result == HttpResult.SUCCESS) {
+                EventBus.getDefault().post(SwitchEvent(SwitchEvent.MANAGER_DATA_RAG))
+                it.data?.get(0)?.let { it1 -> savaLoginInfo(it1) }
+                showShort("登录成功")
+            }
+
         }
     }
 
