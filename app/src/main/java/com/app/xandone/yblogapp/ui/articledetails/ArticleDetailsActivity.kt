@@ -200,16 +200,14 @@ class ArticleDetailsActivity :
             .setViewListener(object :
                 BottomDialog.ViewListener {
                 override fun bindView(view: View?) {
-//                    val veiw1 = view!!.findViewById<View>(R.id.save_img_tv)
-//                    val veiw2 = view!!.findViewById<View>(R.id.cache_img_tv)
-//                    Log.d("gfdgdfg2342", "${veiw2.hashCode()}")
-                    //TODO view.apply 出现findViewById为null
-                    view.apply {
-                        val veiw1 = findViewById<View>(R.id.save_img_tv)
-                        val veiw2 = findViewById<View>(R.id.cache_img_tv)
-
+                    //这里view是可空对象，
+                    // view.apply的上下文是外面的ArticleDetailsActivity
+                    // view?.apply的上下文是view本身
+                    view?.apply {
+                        val view1 = findViewById<View>(R.id.save_img_tv)
+                        val view2 = findViewById<View>(R.id.cache_img_tv)
                         setClickAction(
-                            veiw1
+                            view1, view2
                         ) {
                             when (id) {
                                 R.id.save_img_tv -> downloadImg(imageUri)
