@@ -3,7 +3,10 @@ package com.app.xandone.baselib.base
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
+import com.app.xandone.baselib.utils.KeyboardUtils
 import org.greenrobot.eventbus.EventBus
 
 
@@ -22,6 +25,8 @@ abstract class BaseActivity : AppCompatActivity(), IActivityInit {
         }
 
         initContentView()
+
+        initSoftKeyBoard()
 
         initView()
 
@@ -42,6 +47,12 @@ abstract class BaseActivity : AppCompatActivity(), IActivityInit {
 
     open fun isRegistEventBus(): Boolean {
         return false
+    }
+
+    private fun initSoftKeyBoard(){
+        findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT).setOnClickListener {
+            KeyboardUtils.hideSoftInput(this)
+        }
     }
 
 }

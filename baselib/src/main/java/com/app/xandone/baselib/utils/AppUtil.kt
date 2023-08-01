@@ -24,7 +24,7 @@ import java.util.*
 object AppUtil {
 
     @JvmStatic
-    private lateinit var sApp: Application
+    lateinit var sApp: Application
 
     fun init(app: Application) {
         sApp = app
@@ -52,8 +52,10 @@ object AppUtil {
      * @return 当前应用程序的版本名。
      */
     val appVersionName: String
-        get() = sApp.packageManager.getPackageInfo(appPackage,
-            0).versionName
+        get() = sApp.packageManager.getPackageInfo(
+            appPackage,
+            0
+        ).versionName
 
     /**
      * 获取当前应用程序的版本号。
@@ -61,11 +63,15 @@ object AppUtil {
      */
     val appVersionCode: Long
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            sApp.packageManager.getPackageInfo(appPackage,
-                0).longVersionCode
+            sApp.packageManager.getPackageInfo(
+                appPackage,
+                0
+            ).longVersionCode
         } else {
-            sApp.packageManager.getPackageInfo(appPackage,
-                0).versionCode.toLong()
+            sApp.packageManager.getPackageInfo(
+                appPackage,
+                0
+            ).versionCode.toLong()
         }
 
     /**
@@ -194,7 +200,8 @@ object AppUtil {
         var applicationInfo: ApplicationInfo? = null
         try {
             applicationInfo = sApp.packageManager.getApplicationInfo(
-                appPackage, PackageManager.GET_META_DATA)
+                appPackage, PackageManager.GET_META_DATA
+            )
         } catch (e: PackageManager.NameNotFoundException) {
         }
         if (applicationInfo == null) return ""
